@@ -78,18 +78,57 @@ input:focus,select:focus,textarea:focus,.rich-editor:focus{
 .outline{background:#fff;color:#395064;border:1px solid var(--line)}
 .hidden-file{display:none}
 
-.template-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.template-sections{display:flex;flex-direction:column;gap:12px}
+.template-section-title{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  font-size:10.5px;font-weight:850;color:#556473;margin:0 1px 6px
+}
+.template-section-title span{
+  font-size:9.5px;font-weight:650;color:#84909a
+}
+.template-grid{display:flex;flex-direction:column;gap:6px}
 .template-btn{
-  border:1px solid var(--line);border-radius:9px;background:#fff;padding:5px;
-  text-align:left;color:#4f5d69;transition:.15s
+  width:100%;display:grid;grid-template-columns:42px minmax(0,1fr);gap:9px;
+  align-items:center;border:1px solid var(--line);border-radius:9px;background:#fff;
+  padding:6px;text-align:left;color:#4f5d69;transition:.15s
 }
-.template-btn:hover{border-color:#98b4cc;transform:translateY(-1px)}
-.template-btn.active{outline:2px solid var(--blue);outline-offset:-2px;color:var(--blue);font-weight:800}
+.template-btn:hover{border-color:#98b4cc;background:#fbfdff;transform:translateX(1px)}
+.template-btn.active{
+  border-color:var(--blue);box-shadow:0 0 0 2px rgba(14,74,132,.10);
+  color:var(--blue);font-weight:800
+}
 .template-thumb{
-  width:100%;aspect-ratio:9/16;border-radius:6px;background:#f4f6f8 center/cover no-repeat;
-  border:1px solid #edf0f2;margin-bottom:5px
+  width:42px;height:74px;aspect-ratio:9/16;border-radius:5px;
+  background:#f4f6f8 center/cover no-repeat;border:1px solid #e7ecef;
+  margin:0;box-shadow:0 1px 3px rgba(20,35,50,.08)
 }
-.template-name{display:block;padding:1px 2px 2px;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.template-info{min-width:0}
+.template-name{
+  display:block;font-size:10.8px;font-weight:850;line-height:1.3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+.template-desc{
+  display:block;margin-top:3px;font-size:9.5px;line-height:1.4;color:#7b8791;
+  font-weight:550
+}
+.template-chip{
+  display:inline-block;margin-top:4px;padding:2px 5px;border-radius:999px;
+  background:#f0f4f7;color:#587085;font-size:8.5px;font-weight:750
+}
+.brand-colors{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px
+}
+.brand-color{
+  min-width:0;border:1px solid #e1e6ea;border-radius:7px;background:#fff;padding:5px;
+  font-size:8.5px;color:#64717c;line-height:1.25;text-align:center
+}
+.brand-color i{
+  display:block;width:100%;height:15px;border-radius:4px;margin-bottom:4px;
+  background:var(--c)
+}
+.brand-color b{
+  display:block;font-size:8px;color:#4f5c67;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
 
 .rich-help{
   border:1px solid #d9e3eb;background:#f6f9fb;border-radius:9px;
@@ -279,7 +318,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   <aside class="sidebar">
     <div class="header">
       <h1>디지털 사이니지 제작기</h1>
-      <span class="badge">V1.0.2</span>
+      <span class="badge">V1.1</span>
     </div>
     <p class="desc">
       ERICA 세로형 디지털 사이니지용 9:16 안내 화면 제작기.
@@ -289,8 +328,24 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
     <section class="section">
       <h2>1. 사이니지 디자인</h2>
-      <p class="note">기본 프리셋 6종 + 추가 이미지 시안 3종, 총 9종을 지원해. 추가 이미지 시안은 <code>templates/signage_01.png</code> ~ <code>signage_03.png</code>를 사용해.</p>
-      <div class="template-grid" id="templateGrid"></div>
+      <p class="note">
+        기존 기본 시안 6종 + 이미지 시안 3종 + 한양대학교 공식 색상 기반 그라데이션 6종.
+        작은 미리보기 옆 설명을 보고 선택하면 돼.
+      </p>
+      <div class="template-sections" id="templateSections"></div>
+
+      <div class="asset-info" style="margin-top:9px">
+        <strong>한양대학교 공식 지정색</strong>
+        <div class="brand-colors">
+          <div class="brand-color" style="--c:#0E4A84"><i></i><b>Blue</b>#0E4A84</div>
+          <div class="brand-color" style="--c:#898C8E"><i></i><b>Silver</b>#898C8E</div>
+          <div class="brand-color" style="--c:#7DB928"><i></i><b>Yellow Green</b>#7DB928</div>
+          <div class="brand-color" style="--c:#F08100"><i></i><b>Orange</b>#F08100</div>
+          <div class="brand-color" style="--c:#88774F"><i></i><b>Gold</b>#88774F</div>
+          <div class="brand-color" style="--c:#6CCA98"><i></i><b>Retro Mint</b>#6CCA98</div>
+          <div class="brand-color" style="--c:#FF8672"><i></i><b>Retro Coral</b>#FF8672</div>
+        </div>
+      </div>
 
       <div class="field" style="margin-top:10px">
         <label><strong>내 배경 이미지</strong><span>선택</span></label>
@@ -529,19 +584,21 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
         <section class="patch-panel">
           <div class="patch-head">
-            <strong>디지털 사이니지 제작기 V1.0.2</strong>
-            <span class="patch-current">V1.0.2 · 2026.09.01</span>
+            <strong>디지털 사이니지 제작기 V1.1</strong>
+            <span class="patch-current">V1.1 · 2026.09.01</span>
           </div>
           <ul>
-            <li>기존 기본 프리셋 6종을 다시 복구</li>
-            <li>추가 제작한 이미지 시안 3종을 07~09번으로 함께 제공해 총 9종 지원</li>
-            <li>템플릿마다 밝기 특성에 맞춰 기본 글자색 자동 적용</li>
+            <li>기존 기본 시안 01~06을 유지하면서 이미지 시안 07~09도 함께 제공</li>
+            <li>한양대학교 공식 지정색을 활용한 그라데이션 시안 10~15 추가</li>
+            <li>공식색: Hanyang Blue·Silver·Yellow Green·Orange·Gold·Retro Mint·Retro Coral 반영</li>
+            <li>템플릿 선택 UI를 큰 2열 카드에서 작은 미리보기 + 옆 설명 방식으로 압축</li>
+            <li>기본 / 이미지 / 한양 공식색 그라데이션으로 템플릿 목록을 구분</li>
             <li>9:16 세로형 1080×1920 작업 캔버스</li>
             <li>FHD / 4K PNG 출력</li>
             <li>제목·부제목·본문·강조문·하단문구 직접 드래그 이동</li>
             <li>부분 볼드·부분 글자색 지원</li>
             <li>사진·로고 업로드 및 직접 드래그 이동</li>
-            <li>기본 프리셋 6종 + 이미지 템플릿 3종, 총 9종</li>
+            <li>기본 6종 + 이미지 3종 + 한양 공식색 그라데이션 6종, 총 15종</li>
             <li>여러 화면을 재생목록으로 묶어 순차 파일 생성</li>
             <li>ZIP 내 <strong>MagicInfoSlide</strong> 폴더 자동 생성</li>
             <li>지원 브라우저에서는 선택 위치에 <strong>MagicInfoSlide</strong> 폴더 직접 생성</li>
@@ -562,15 +619,113 @@ const PAGE_H=1920;
 const RICH_KEYS=["title","subtitle","body","emphasis","footer"];
 
 const TEMPLATES=[
-  {id:1,name:"01 · ERICA 블루",path:"",textColor:"#FFFFFF",fallback:"linear-gradient(180deg,#082f5b 0%,#0E4A84 55%,#051d36 100%)"},
-  {id:2,name:"02 · 딥 네이비",path:"",textColor:"#FFFFFF",fallback:"linear-gradient(160deg,#071523 0%,#14263a 48%,#07111c 100%)"},
-  {id:3,name:"03 · 화이트 미니멀",path:"",textColor:"#16283B",fallback:"linear-gradient(180deg,#ffffff 0%,#f2f5f7 100%)"},
-  {id:4,name:"04 · 골드 다크",path:"",textColor:"#FFFFFF",fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"},
-  {id:5,name:"05 · 블루 그라데이션",path:"",textColor:"#FFFFFF",fallback:"linear-gradient(145deg,#6ca7d8 0%,#0E4A84 45%,#071d33 100%)"},
-  {id:6,name:"06 · 차콜 블랙",path:"",textColor:"#FFFFFF",fallback:"linear-gradient(180deg,#242424 0%,#111111 100%)"},
-  {id:7,name:"07 · 네이비 골드",path:"templates/signage_01.png",textColor:"#16283B",fallback:"linear-gradient(180deg,#f7f4ed 0%,#ffffff 72%,#0b376d 100%)"},
-  {id:8,name:"08 · 다크 골드",path:"templates/signage_02.png",textColor:"#FFFFFF",fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"},
-  {id:9,name:"09 · 화이트 블루",path:"templates/signage_03.png",textColor:"#16283B",fallback:"linear-gradient(180deg,#ffffff 0%,#f5f7fa 78%,#183b70 100%)"}
+  {
+    id:1,group:"basic",name:"01 · ERICA 블루",
+    desc:"기본 시안 · 한양 블루 중심의 정석형",
+    chip:"기존 기본 시안",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(180deg,#082f5b 0%,#0E4A84 55%,#051d36 100%)"
+  },
+  {
+    id:2,group:"basic",name:"02 · 딥 네이비",
+    desc:"기본 시안 · 차분하고 어두운 안내용",
+    chip:"기존 기본 시안",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(160deg,#071523 0%,#14263a 48%,#07111c 100%)"
+  },
+  {
+    id:3,group:"basic",name:"03 · 화이트 미니멀",
+    desc:"기본 시안 · 밝고 행정 안내에 무난",
+    chip:"기존 기본 시안",
+    path:"",textColor:"#16283B",
+    fallback:"linear-gradient(180deg,#ffffff 0%,#f2f5f7 100%)"
+  },
+  {
+    id:4,group:"basic",name:"04 · 골드 다크",
+    desc:"기본 시안 · 행사·VIP·환영 안내용",
+    chip:"기존 기본 시안",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"
+  },
+  {
+    id:5,group:"basic",name:"05 · 블루 그라데이션",
+    desc:"기본 시안 · 밝은 블루에서 네이비 전환",
+    chip:"기존 기본 시안",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(145deg,#6ca7d8 0%,#0E4A84 45%,#071d33 100%)"
+  },
+  {
+    id:6,group:"basic",name:"06 · 차콜 블랙",
+    desc:"기본 시안 · 사진·백색 로고와 잘 맞음",
+    chip:"기존 기본 시안",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(180deg,#242424 0%,#111111 100%)"
+  },
+
+  {
+    id:7,group:"image",name:"07 · 네이비 골드",
+    desc:"이미지 시안 · 밝은 본문 영역 + 네이비 골드",
+    chip:"templates/signage_01.png",
+    path:"templates/signage_01.png",textColor:"#16283B",
+    fallback:"linear-gradient(180deg,#f7f4ed 0%,#ffffff 72%,#0b376d 100%)"
+  },
+  {
+    id:8,group:"image",name:"08 · 다크 골드",
+    desc:"이미지 시안 · 블랙/골드의 격식 있는 구성",
+    chip:"templates/signage_02.png",
+    path:"templates/signage_02.png",textColor:"#FFFFFF",
+    fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"
+  },
+  {
+    id:9,group:"image",name:"09 · 화이트 블루",
+    desc:"이미지 시안 · 화이트 중심의 현대적 구성",
+    chip:"templates/signage_03.png",
+    path:"templates/signage_03.png",textColor:"#16283B",
+    fallback:"linear-gradient(180deg,#ffffff 0%,#f5f7fa 78%,#183b70 100%)"
+  },
+
+  {
+    id:10,group:"brand",name:"10 · 한양 블루 × 실버",
+    desc:"공식색 · Blue #0E4A84 + Silver #898C8E",
+    chip:"한양 공식색",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(155deg,#0E4A84 0%,#365f86 46%,#898C8E 100%)"
+  },
+  {
+    id:11,group:"brand",name:"11 · 한양 블루 × 골드",
+    desc:"공식색 · Blue #0E4A84 + Gold #88774F",
+    chip:"한양 공식색",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(160deg,#082f5b 0%,#0E4A84 48%,#88774F 100%)"
+  },
+  {
+    id:12,group:"brand",name:"12 · 한양 블루 × 민트",
+    desc:"공식색 · Blue #0E4A84 + Retro Mint #6CCA98",
+    chip:"한양 공식색",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(150deg,#0E4A84 0%,#287a8f 48%,#6CCA98 100%)"
+  },
+  {
+    id:13,group:"brand",name:"13 · 한양 블루 × 코랄",
+    desc:"공식색 · Blue #0E4A84 + Retro Coral #FF8672",
+    chip:"한양 공식색",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(150deg,#0E4A84 0%,#6d6682 52%,#FF8672 100%)"
+  },
+  {
+    id:14,group:"brand",name:"14 · 한양 블루 × 오렌지",
+    desc:"공식색 · Blue #0E4A84 + Orange #F08100",
+    chip:"한양 공식색",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(155deg,#0E4A84 0%,#285b7d 50%,#F08100 100%)"
+  },
+  {
+    id:15,group:"brand",name:"15 · 한양 블루 × 옐로그린",
+    desc:"공식색 · Blue #0E4A84 + Yellow Green #7DB928",
+    chip:"한양 공식색",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(155deg,#0E4A84 0%,#376b70 52%,#7DB928 100%)"
+  }
 ];
 
 function defaultTextBlocks(){
@@ -593,7 +748,7 @@ function defaultObjects(){
 
 function freshState(){
   return {
-    version:"1.0.2",
+    version:"1.1",
     template:1,
     customBg:"",
     title:"디지털 사이니지 안내",
@@ -714,36 +869,71 @@ function normalizeState(raw){
 }
 
 function buildTemplateGrid(){
-  const grid=$("templateGrid");
-  grid.innerHTML="";
-  TEMPLATES.forEach(t=>{
-    const btn=document.createElement("button");
-    btn.type="button";
-    btn.className="template-btn";
-    btn.dataset.template=String(t.id);
+  const host=$("templateSections");
+  host.innerHTML="";
 
-    const thumb=document.createElement("div");
-    thumb.className="template-thumb";
-    if(t.path){
-      thumb.style.backgroundImage=`url("${t.path}"), ${t.fallback}`;
-    }else{
-      thumb.style.background=t.fallback;
-    }
+  const groups=[
+    {key:"basic",title:"기본 시안",sub:"기존 01~06"},
+    {key:"image",title:"이미지 시안",sub:"PNG 3종"},
+    {key:"brand",title:"한양 공식색 그라데이션",sub:"공식 지정색 조합"}
+  ];
 
-    const name=document.createElement("span");
-    name.className="template-name";
-    name.textContent=t.name;
+  groups.forEach(group=>{
+    const section=document.createElement("div");
 
-    btn.append(thumb,name);
-    btn.onclick=()=>{
-      state.template=t.id;
-      state.customBg="";
-      state.textColor=t.textColor || "#FFFFFF";
-      $("customBgFile").value="";
-      renderAll();
-      saveLocal();
-    };
-    grid.appendChild(btn);
+    const head=document.createElement("div");
+    head.className="template-section-title";
+    head.innerHTML=`<strong>${group.title}</strong><span>${group.sub}</span>`;
+
+    const grid=document.createElement("div");
+    grid.className="template-grid";
+
+    TEMPLATES.filter(t=>t.group===group.key).forEach(t=>{
+      const btn=document.createElement("button");
+      btn.type="button";
+      btn.className="template-btn";
+      btn.dataset.template=String(t.id);
+
+      const thumb=document.createElement("div");
+      thumb.className="template-thumb";
+      if(t.path){
+        thumb.style.backgroundImage=`url("${t.path}"), ${t.fallback}`;
+      }else{
+        thumb.style.background=t.fallback;
+      }
+
+      const info=document.createElement("div");
+      info.className="template-info";
+
+      const name=document.createElement("span");
+      name.className="template-name";
+      name.textContent=t.name;
+
+      const desc=document.createElement("span");
+      desc.className="template-desc";
+      desc.textContent=t.desc||"";
+
+      const chip=document.createElement("span");
+      chip.className="template-chip";
+      chip.textContent=t.chip||"";
+
+      info.append(name,desc,chip);
+      btn.append(thumb,info);
+
+      btn.onclick=()=>{
+        state.template=t.id;
+        state.customBg="";
+        state.textColor=t.textColor || "#FFFFFF";
+        $("customBgFile").value="";
+        renderAll();
+        saveLocal();
+      };
+
+      grid.appendChild(btn);
+    });
+
+    section.append(head,grid);
+    host.appendChild(section);
   });
 }
 
