@@ -1,0 +1,1535 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>디지털 사이니지 제작기</title>
+
+<link rel="stylesheet" as="style" crossorigin
+href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=Noto+Serif+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<style>
+:root{
+  --blue:#0E4A84;
+  --line:#dce3e9;
+  --bg:#e9eef2;
+  --text:#1e2935;
+  --muted:#687581;
+  --page-w:1080px;
+  --page-h:1920px;
+  --scale:.38;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,
+  "Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+  color:var(--text);background:var(--bg)
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled,input:disabled{cursor:not-allowed;opacity:.48}
+.app{min-height:100vh;display:grid;grid-template-columns:410px minmax(0,1fr)}
+.sidebar{
+  height:100vh;overflow:auto;position:sticky;top:0;z-index:30;
+  background:#fff;border-right:1px solid var(--line);padding:22px 18px 34px
+}
+.header{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.header h1{margin:0;font-size:24px;letter-spacing:-.04em}
+.badge{font-size:11px;padding:5px 9px;border-radius:999px;background:#edf3f8;color:#45647e}
+.desc{font-size:12.5px;line-height:1.6;color:var(--muted);margin:8px 0 15px}
+.section{padding:16px 0;border-top:1px solid #edf0f2}
+.section h2{font-size:14px;margin:0 0 11px}
+.note{font-size:11px;color:var(--muted);line-height:1.55;margin:-4px 0 10px}
+.field{margin:0 0 10px}
+.field label{
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+  font-size:12px;color:#465463;margin-bottom:6px
+}
+.field label strong{color:#27333e}
+input[type=text],select,textarea,.control{
+  width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;
+  padding:9px 10px;outline:none;color:var(--text)
+}
+textarea{resize:vertical;min-height:70px;line-height:1.5}
+input:focus,select:focus,textarea:focus,.rich-editor:focus{
+  border-color:#8db1d2;box-shadow:0 0 0 3px rgba(14,74,132,.08)
+}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.btns.three{grid-template-columns:repeat(3,1fr)}
+.btn{
+  border:0;border-radius:9px;padding:11px 9px;font-size:12px;font-weight:800;
+  line-height:1.25
+}
+.primary{background:var(--blue);color:#fff}
+.secondary{background:#e9eef2;color:#293845}
+.dark{background:#26313a;color:#fff}
+.danger{background:#fff1f1;color:#a43434;border:1px solid #ffd2d2}
+.outline{background:#fff;color:#395064;border:1px solid var(--line)}
+.hidden-file{display:none}
+
+.template-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.template-btn{
+  border:1px solid var(--line);border-radius:9px;background:#fff;padding:5px;
+  text-align:left;color:#4f5d69;transition:.15s
+}
+.template-btn:hover{border-color:#98b4cc;transform:translateY(-1px)}
+.template-btn.active{outline:2px solid var(--blue);outline-offset:-2px;color:var(--blue);font-weight:800}
+.template-thumb{
+  width:100%;aspect-ratio:9/16;border-radius:6px;background:#f4f6f8 center/cover no-repeat;
+  border:1px solid #edf0f2;margin-bottom:5px
+}
+.template-name{display:block;padding:1px 2px 2px;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.rich-help{
+  border:1px solid #d9e3eb;background:#f6f9fb;border-radius:9px;
+  padding:9px 10px;margin-bottom:10px;font-size:10.8px;line-height:1.55;color:#5b6b78
+}
+.rich-toolbar{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:7px;border:1px solid #dfe6eb;background:#f8fafb;border-radius:9px;
+  margin-bottom:10px
+}
+.rich-toolbar button{
+  border:1px solid #d8e0e6;background:#fff;color:#334553;border-radius:7px;
+  min-width:34px;height:31px;padding:0 8px;font-size:11px;font-weight:750
+}
+.rich-toolbar button:hover{border-color:#93aec4;color:var(--blue)}
+.rich-toolbar .bold-btn{font-size:15px;font-weight:900}
+.rich-toolbar .toolbar-sep{width:1px;height:22px;background:#dde4e9;margin:0 1px}
+.rich-toolbar .toolbar-label{font-size:10px;color:#687682;margin-left:2px}
+.rich-toolbar input[type=color]{
+  width:34px;height:31px;border:1px solid #d8e0e6;border-radius:7px;padding:2px;background:#fff
+}
+.rich-swatch{
+  width:27px!important;min-width:27px!important;height:27px!important;padding:0!important;
+  border-radius:999px!important;position:relative
+}
+.rich-swatch:after{
+  content:"";position:absolute;inset:3px;border-radius:999px;background:var(--swatch);
+  border:1px solid rgba(0,0,0,.12)
+}
+.rich-editor{
+  width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;
+  padding:9px 10px;outline:none;color:var(--text);line-height:1.5;
+  min-height:42px;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;
+  cursor:text
+}
+.rich-editor.medium{min-height:64px}
+.rich-editor.tall{min-height:100px}
+.rich-editor:empty:before{content:attr(data-placeholder);color:#9aa5af;pointer-events:none}
+.rich-editor strong{font-weight:800}
+
+.range{
+  display:grid;grid-template-columns:82px 1fr 48px;gap:7px;align-items:center;
+  margin:7px 0;font-size:11.5px;color:#56636f
+}
+.range output{text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--blue)}
+input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-radius:7px;padding:2px;background:white}
+.color-pair{display:flex;gap:7px;align-items:center}
+.color-pair span{font-size:11px;color:var(--muted)}
+
+.asset-info{
+  border:1px dashed #c7d1da;border-radius:9px;background:#f8fafb;padding:10px;
+  font-size:11px;line-height:1.55;color:#5b6772
+}
+.asset-info code{font-family:ui-monospace,monospace;color:#245277;font-size:10px}
+.logo-presets{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:6px}
+.logo-presets button{
+  border:1px solid var(--line);background:#fff;border-radius:7px;padding:7px 4px;
+  font-size:10.5px;color:#55616c
+}
+.logo-presets button:hover{border-color:#91aec8;color:var(--blue)}
+
+.playlist{
+  display:flex;flex-direction:column;gap:6px;margin-top:8px
+}
+.play-item{
+  display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:7px;align-items:center;
+  border:1px solid #e2e7eb;border-radius:8px;background:#fff;padding:7px
+}
+.play-num{
+  width:28px;height:28px;border-radius:7px;background:#eef4f8;color:#46657d;
+  display:grid;place-items:center;font-size:10px;font-weight:850
+}
+.play-title{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#344653}
+.play-actions{display:flex;gap:4px}
+.play-actions button{
+  border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 6px;
+  font-size:9.5px;color:#53616d
+}
+.play-actions button:hover{border-color:#9bb2c5;color:var(--blue)}
+
+.workspace{height:100vh;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.toolbar{
+  min-height:54px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px
+}
+.toolbar .help{font-size:12px;color:var(--muted)}
+.status{
+  font-size:11px;padding:5px 9px;border-radius:999px;background:#eaf6ee;color:#2d6f46;
+  white-space:nowrap
+}
+.status.warn{background:#fff1d5;color:#8a6100}
+.stage{
+  flex:1;overflow:auto;display:flex;justify-content:flex-start;align-items:center;flex-direction:column;
+  padding:28px 32px 60px;
+  background:radial-gradient(circle at 20% 10%,rgba(255,255,255,.85),transparent 32%),#e8edf1
+}
+.stage-stack{display:flex;flex-direction:column;align-items:center;gap:18px;max-width:100%}
+.shell{
+  position:relative;width:calc(var(--page-w)*var(--scale));height:calc(var(--page-h)*var(--scale));
+  flex:0 0 auto
+}
+.page{
+  position:absolute;left:0;top:0;width:var(--page-w);height:var(--page-h);
+  transform:scale(var(--scale));transform-origin:top left;background:#0f2239;overflow:hidden;
+  box-shadow:0 14px 38px rgba(30,45,60,.22);isolation:isolate
+}
+.page.exporting{box-shadow:none}
+.template-bg{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none
+}
+.template-overlay{position:absolute;inset:0;z-index:1;pointer-events:none}
+.safe{position:absolute;inset:54px;border:2px dashed rgba(255,255,255,.25);z-index:99;pointer-events:none;display:none}
+.page.show-safe .safe{display:block}
+.page.exporting .safe{display:none}
+.guide{position:absolute;display:none;background:#34a6ed;opacity:.62;pointer-events:none;z-index:98}
+.guide.v{top:0;bottom:0;left:50%;width:2px}
+.guide.h{left:0;right:0;top:50%;height:2px}
+.page.dragging .guide{display:block}
+.page.exporting .guide{display:none}
+
+.text-block{
+  position:absolute;z-index:7;transform:translate(-50%,0);
+  color:var(--page-text,#fff);white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;
+  text-shadow:0 1px 3px rgba(0,0,0,.13)
+}
+.text-block:hover{outline:2px dashed rgba(54,166,237,.68);outline-offset:8px}
+.text-block.dragging{cursor:grabbing;outline:3px solid rgba(54,166,237,.88);outline-offset:8px}
+.page.exporting .text-block{outline:none!important}
+.text-block strong{font-weight:900}
+.text-block:empty{display:none}
+
+#pTitle{font-weight:850;line-height:1.15;letter-spacing:-.045em}
+#pSubtitle{font-weight:650;line-height:1.35;letter-spacing:-.02em}
+#pBody{font-weight:500;line-height:1.58;letter-spacing:-.015em}
+#pEmphasis{font-weight:800;line-height:1.35}
+#pFooter{font-weight:550;line-height:1.45;opacity:.9}
+
+.obj{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  transform-origin:center;z-index:5;touch-action:none;user-select:none;cursor:grab
+}
+.obj.hidden{display:none}
+.obj img{
+  display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none
+}
+.obj.photo img{object-fit:cover}
+.obj.selected:before{
+  content:"";position:absolute;inset:-8px;border:3px solid #34a6ed;border-radius:6px;
+  pointer-events:none;box-shadow:0 0 0 3px rgba(255,255,255,.7)
+}
+.page.exporting .obj.selected:before{display:none}
+
+.patch-panel{
+  width:min(760px,95vw);background:rgba(255,255,255,.96);border:1px solid #d7e0e7;border-radius:12px;
+  box-shadow:0 8px 24px rgba(39,55,70,.10);padding:15px 16px 14px;color:#35424f
+}
+.patch-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.patch-head strong{font-size:13px;color:#1e2b37}
+.patch-current{font-size:10.5px;color:#54728b;background:#eef5fa;border-radius:999px;padding:4px 7px}
+.patch-panel ul{margin:7px 0 0;padding-left:18px;font-size:11px;line-height:1.65}
+
+.export-note{
+  border:1px solid #ead7a8;background:#fff9ea;color:#745414;border-radius:9px;
+  padding:9px 10px;font-size:10.8px;line-height:1.55;margin-bottom:9px
+}
+.good-note{
+  border:1px solid #cfe6d6;background:#f2faf4;color:#356446;border-radius:9px;
+  padding:9px 10px;font-size:10.8px;line-height:1.55;margin-top:8px
+}
+
+@media(max-width:1050px){
+  .app{grid-template-columns:355px minmax(0,1fr)}
+  .sidebar{padding-left:14px;padding-right:14px}
+}
+@media(max-width:760px){
+  .app{display:block}
+  .sidebar{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line)}
+  .workspace{height:auto;min-height:100vh}
+  .stage{min-height:760px;padding-left:10px;padding-right:10px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="header">
+      <h1>디지털 사이니지 제작기</h1>
+      <span class="badge">V1.0</span>
+    </div>
+    <p class="desc">
+      ERICA 세로형 디지털 사이니지용 9:16 안내 화면 제작기.
+      텍스트·사진·로고를 배치하고 FHD 또는 4K 이미지로 출력할 수 있어.
+      자동재생용 내보내기는 <strong>MagicInfoSlide</strong> 폴더명으로 맞춰 저장해.
+    </p>
+
+    <section class="section">
+      <h2>1. 사이니지 디자인</h2>
+      <p class="note">기본 파일명은 <code>templates/signage_01.png</code> ~ <code>signage_06.png</code>. 이미지가 없어도 임시 배경으로 작업 가능해.</p>
+      <div class="template-grid" id="templateGrid"></div>
+
+      <div class="field" style="margin-top:10px">
+        <label><strong>내 배경 이미지</strong><span>선택</span></label>
+        <input type="file" id="customBgFile" accept="image/png,image/jpeg,image/webp">
+      </div>
+      <div class="btns">
+        <button class="btn secondary" type="button" id="removeCustomBg">내 배경 제거</button>
+        <button class="btn outline" type="button" id="safeToggle">안전영역 보기</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>2. 안내 내용</h2>
+
+      <div class="rich-help">
+        글자 일부만 드래그한 뒤 <strong>B</strong> 또는 색상을 적용할 수 있어.
+        이탤릭·밑줄·부분 글자크기는 넣지 않았어.
+      </div>
+
+      <div class="rich-toolbar" id="richToolbar">
+        <button type="button" class="bold-btn" id="richBold" title="선택 영역 굵게">B</button>
+        <span class="toolbar-sep"></span>
+        <span class="toolbar-label">글자색</span>
+        <button type="button" class="rich-swatch" data-rich-color="#FFFFFF" style="--swatch:#FFFFFF" title="화이트"></button>
+        <button type="button" class="rich-swatch" data-rich-color="#0E4A84" style="--swatch:#0E4A84" title="한양 블루"></button>
+        <button type="button" class="rich-swatch" data-rich-color="#F3C866" style="--swatch:#F3C866" title="골드"></button>
+        <button type="button" class="rich-swatch" data-rich-color="#FF6B6B" style="--swatch:#FF6B6B" title="레드"></button>
+        <button type="button" class="rich-swatch" data-rich-color="#111111" style="--swatch:#111111" title="블랙"></button>
+        <input type="color" id="richColor" value="#FFFFFF" title="직접 색상 선택">
+        <span class="toolbar-sep"></span>
+        <button type="button" id="richClear">서식 제거</button>
+      </div>
+
+      <div class="field">
+        <label><strong>제목</strong></label>
+        <div id="title" class="rich-editor medium" contenteditable="true"
+             data-rich-key="title" data-placeholder="제목을 입력하세요"></div>
+      </div>
+      <div class="field">
+        <label><strong>부제목</strong><span>선택</span></label>
+        <div id="subtitle" class="rich-editor" contenteditable="true"
+             data-rich-key="subtitle" data-placeholder="부제목 또는 짧은 안내"></div>
+      </div>
+      <div class="field">
+        <label><strong>본문</strong></label>
+        <div id="body" class="rich-editor tall" contenteditable="true"
+             data-rich-key="body" data-placeholder="안내 내용을 입력하세요"></div>
+      </div>
+      <div class="field">
+        <label><strong>강조문</strong><span>선택</span></label>
+        <div id="emphasis" class="rich-editor medium" contenteditable="true"
+             data-rich-key="emphasis" data-placeholder="강조할 문구가 있으면 입력"></div>
+      </div>
+      <div class="field">
+        <label><strong>하단 문구</strong><span>선택</span></label>
+        <div id="footer" class="rich-editor medium" contenteditable="true"
+             data-rich-key="footer" data-placeholder="문의처·행사 일시·장소 등"></div>
+      </div>
+
+      <div class="btns">
+        <button class="btn secondary" type="button" id="resetTextPosition">글 위치 초기화</button>
+        <button class="btn secondary" type="button" id="clearText">문구 비우기</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. 글자 스타일</h2>
+      <div class="field">
+        <label><strong>글꼴</strong><span>상업적 이용 가능 무료 폰트</span></label>
+        <select id="font">
+          <option value="pretendard">Pretendard</option>
+          <option value="suit">SUIT</option>
+          <option value="notoSans">Noto Sans KR</option>
+          <option value="notoSerif">Noto Serif KR</option>
+        </select>
+      </div>
+
+      <div class="range"><span>제목 크기</span><input id="titleSize" type="range" min="44" max="130" step="1"><output id="titleSizeOut"></output></div>
+      <div class="range"><span>부제목 크기</span><input id="subtitleSize" type="range" min="28" max="80" step="1"><output id="subtitleSizeOut"></output></div>
+      <div class="range"><span>본문 크기</span><input id="bodySize" type="range" min="24" max="68" step="1"><output id="bodySizeOut"></output></div>
+      <div class="range"><span>강조문 크기</span><input id="emSize" type="range" min="28" max="84" step="1"><output id="emSizeOut"></output></div>
+      <div class="range"><span>하단 크기</span><input id="footerSize" type="range" min="20" max="52" step="1"><output id="footerSizeOut"></output></div>
+
+      <div class="field">
+        <label><strong>기본 글자색</strong></label>
+        <div class="color-pair">
+          <input type="color" id="textColor">
+          <span>부분 색상이 지정된 글자는 해당 색상이 우선돼.</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label><strong>텍스트 정렬</strong></label>
+        <div class="three">
+          <button class="btn outline align-btn" type="button" data-align="left">왼쪽</button>
+          <button class="btn outline align-btn" type="button" data-align="center">가운데</button>
+          <button class="btn outline align-btn" type="button" data-align="right">오른쪽</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>4. 사진 · 로고</h2>
+
+      <div class="field">
+        <label><strong>메인 사진</strong><span>선택</span></label>
+        <input type="file" id="photoFile" accept="image/png,image/jpeg,image/webp">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label><strong>사진 너비</strong></label>
+          <input type="range" id="photoW" min="20" max="100" step="1">
+        </div>
+        <div class="field">
+          <label><strong>사진 높이</strong></label>
+          <input type="range" id="photoH" min="10" max="80" step="1">
+        </div>
+      </div>
+      <button class="btn secondary" type="button" id="photoRemove" style="width:100%">사진 제거</button>
+
+      <div style="height:10px"></div>
+
+      <div class="field">
+        <label><strong>로고 1</strong><span>드래그 이동 가능</span></label>
+        <input type="file" id="logo1File" accept="image/png,image/jpeg,image/webp">
+      </div>
+      <div class="field">
+        <label><strong>로고 2</strong><span>드래그 이동 가능</span></label>
+        <input type="file" id="logo2File" accept="image/png,image/jpeg,image/webp">
+      </div>
+
+      <div class="logo-presets">
+        <button type="button" data-preset-logo="logos/hyu_white.png" data-target-logo="logo1">한양대 흰색 → 로고1</button>
+        <button type="button" data-preset-logo="logos/hyu_erica_white.png" data-target-logo="logo1">ERICA 흰색 → 로고1</button>
+        <button type="button" data-preset-logo="logos/hyu_round_white.png" data-target-logo="logo2">원형 흰색 → 로고2</button>
+        <button type="button" data-preset-logo="logos/hyu_lion_white.png" data-target-logo="logo2">사자 흰색 → 로고2</button>
+      </div>
+
+      <div class="range"><span>로고1 크기</span><input id="logo1W" type="range" min="5" max="55" step="1"><output id="logo1WOut"></output></div>
+      <div class="range"><span>로고2 크기</span><input id="logo2W" type="range" min="5" max="55" step="1"><output id="logo2WOut"></output></div>
+
+      <div class="btns">
+        <button class="btn secondary" type="button" id="logo1Remove">로고1 제거</button>
+        <button class="btn secondary" type="button" id="logo2Remove">로고2 제거</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>5. 자동재생 묶음</h2>
+      <p class="note">
+        여러 화면을 순서대로 넣고 싶을 때 사용해. 목록이 비어 있으면 내보낼 때 현재 화면 1장만 생성해.
+      </p>
+      <div class="btns">
+        <button class="btn primary" type="button" id="playlistAdd">현재 화면 추가</button>
+        <button class="btn secondary" type="button" id="playlistUpdate">선택 화면 덮어쓰기</button>
+      </div>
+      <div class="playlist" id="playlist"></div>
+      <button class="btn danger" type="button" id="playlistClear" style="width:100%;margin-top:7px">재생 목록 전체 삭제</button>
+    </section>
+
+    <section class="section">
+      <h2>6. 출력 · MagicInfoSlide</h2>
+
+      <div class="field">
+        <label><strong>출력 해상도</strong></label>
+        <select id="quality">
+          <option value="1">FHD · 1080 × 1920</option>
+          <option value="2">4K · 2160 × 3840</option>
+        </select>
+      </div>
+
+      <div class="export-note">
+        일반 웹 다운로드는 보안상 “폴더 자체”를 바로 내려줄 수 없어서
+        <strong>ZIP 안에 MagicInfoSlide 폴더를 만들어</strong> 내보내.
+        Chrome/Edge에서는 아래 “폴더로 바로 저장”을 쓰면 선택한 위치에
+        <strong>MagicInfoSlide</strong> 폴더를 직접 만들 수 있어.
+      </div>
+
+      <div class="btns">
+        <button class="btn secondary" type="button" id="pngExport">현재 화면 PNG</button>
+        <button class="btn primary" type="button" id="zipExport">MagicInfoSlide ZIP</button>
+      </div>
+      <button class="btn dark" type="button" id="folderExport" style="width:100%;margin-top:7px">
+        MagicInfoSlide 폴더로 바로 저장
+      </button>
+
+      <div class="good-note" id="folderSupport"></div>
+    </section>
+
+    <section class="section">
+      <h2>7. 작업 저장</h2>
+      <div class="btns">
+        <button class="btn secondary" type="button" id="jobSave">작업파일 저장</button>
+        <button class="btn secondary" type="button" id="jobLoadBtn">작업파일 불러오기</button>
+      </div>
+      <input class="hidden-file" type="file" id="jobLoad" accept=".json,application/json">
+      <button class="btn danger" type="button" id="resetAll" style="width:100%;margin-top:7px">전체 초기화</button>
+    </section>
+  </aside>
+
+  <main class="workspace">
+    <div class="toolbar">
+      <div class="help">
+        9:16 세로형 · 미리보기의 글자·사진·로고를 직접 드래그해서 이동할 수 있어.
+      </div>
+      <div class="status" id="status">레이아웃 정상</div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="stage-stack">
+        <div class="shell" id="shell">
+          <div class="page" id="page">
+            <div class="template-overlay" id="templateOverlay"></div>
+            <img class="template-bg" id="templateBg" alt="">
+            <div class="safe"></div>
+            <div class="guide v"></div>
+            <div class="guide h"></div>
+
+            <div class="obj photo hidden" id="photoObj" data-obj-key="photo">
+              <img id="photoImg" alt="">
+            </div>
+            <div class="obj hidden" id="logo1Obj" data-obj-key="logo1">
+              <img id="logo1Img" alt="">
+            </div>
+            <div class="obj hidden" id="logo2Obj" data-obj-key="logo2">
+              <img id="logo2Img" alt="">
+            </div>
+
+            <div class="text-block" id="pTitle" data-text-key="title"></div>
+            <div class="text-block" id="pSubtitle" data-text-key="subtitle"></div>
+            <div class="text-block" id="pBody" data-text-key="body"></div>
+            <div class="text-block" id="pEmphasis" data-text-key="emphasis"></div>
+            <div class="text-block" id="pFooter" data-text-key="footer"></div>
+          </div>
+        </div>
+
+        <section class="patch-panel">
+          <div class="patch-head">
+            <strong>디지털 사이니지 제작기 V1.0</strong>
+            <span class="patch-current">V1.0 · 2026.08.31</span>
+          </div>
+          <ul>
+            <li>9:16 세로형 1080×1920 작업 캔버스</li>
+            <li>FHD / 4K PNG 출력</li>
+            <li>제목·부제목·본문·강조문·하단문구 직접 드래그 이동</li>
+            <li>부분 볼드·부분 글자색 지원</li>
+            <li>사진·로고 업로드 및 직접 드래그 이동</li>
+            <li>최대 6개 배경 템플릿 파일 교체 구조</li>
+            <li>여러 화면을 재생목록으로 묶어 순차 파일 생성</li>
+            <li>ZIP 내 <strong>MagicInfoSlide</strong> 폴더 자동 생성</li>
+            <li>지원 브라우저에서는 선택 위치에 <strong>MagicInfoSlide</strong> 폴더 직접 생성</li>
+            <li>작업 JSON 저장·불러오기 지원</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+"use strict";
+
+const $=id=>document.getElementById(id);
+const PAGE_W=1080;
+const PAGE_H=1920;
+const RICH_KEYS=["title","subtitle","body","emphasis","footer"];
+
+const TEMPLATES=[
+  {id:1,name:"01 · ERICA 블루",path:"templates/signage_01.png",fallback:"linear-gradient(180deg,#082f5b 0%,#0E4A84 55%,#051d36 100%)"},
+  {id:2,name:"02 · 딥 네이비",path:"templates/signage_02.png",fallback:"linear-gradient(160deg,#071523 0%,#14263a 48%,#07111c 100%)"},
+  {id:3,name:"03 · 화이트 미니멀",path:"templates/signage_03.png",fallback:"linear-gradient(180deg,#ffffff 0%,#f2f5f7 100%)"},
+  {id:4,name:"04 · 골드 다크",path:"templates/signage_04.png",fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"},
+  {id:5,name:"05 · 블루 그라데이션",path:"templates/signage_05.png",fallback:"linear-gradient(145deg,#6ca7d8 0%,#0E4A84 45%,#071d33 100%)"},
+  {id:6,name:"06 · 자유 배경",path:"templates/signage_06.png",fallback:"linear-gradient(180deg,#242424 0%,#111 100%)"}
+];
+
+function defaultTextBlocks(){
+  return {
+    title:{x:50,y:13,w:84,size:86,align:"center"},
+    subtitle:{x:50,y:28,w:82,size:46,align:"center"},
+    body:{x:50,y:43,w:82,size:38,align:"center"},
+    emphasis:{x:50,y:67,w:82,size:50,align:"center"},
+    footer:{x:50,y:84,w:82,size:30,align:"center"}
+  };
+}
+
+function defaultObjects(){
+  return {
+    photo:{src:"",x:50,y:54,w:78,h:34},
+    logo1:{src:"",x:35,y:92,w:24,h:10},
+    logo2:{src:"",x:65,y:92,w:24,h:10}
+  };
+}
+
+function freshState(){
+  return {
+    version:"1.0",
+    template:1,
+    customBg:"",
+    title:"디지털 사이니지 안내",
+    subtitle:"HANYANG UNIVERSITY ERICA",
+    body:"행사·공간·일정 등\\n필요한 안내 내용을 입력하세요.",
+    emphasis:"",
+    footer:"",
+    font:"pretendard",
+    textColor:"#FFFFFF",
+    textBlocks:defaultTextBlocks(),
+    objects:defaultObjects()
+  };
+}
+
+let state=freshState();
+let playlist=[];
+let selectedPlaylistIndex=-1;
+let activeRichEditor=null;
+let savedRichRange=null;
+let drag=null;
+let selectedObjKey=null;
+
+const page=$("page");
+const templateBg=$("templateBg");
+const templateOverlay=$("templateOverlay");
+
+function deepCopy(v){return JSON.parse(JSON.stringify(v));}
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function fontFamily(v){
+  if(v==="suit")return '"SUIT Variable","SUIT",sans-serif';
+  if(v==="notoSans")return '"Noto Sans KR",sans-serif';
+  if(v==="notoSerif")return '"Noto Serif KR",serif';
+  return '"Pretendard Variable",Pretendard,sans-serif';
+}
+
+function escapeHtml(value){
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function normalizeColor(value){
+  const v=String(value||"").trim();
+  if(/^#[0-9a-fA-F]{6}$/.test(v))return v.toUpperCase();
+  if(/^#[0-9a-fA-F]{3}$/.test(v)){
+    return ("#"+v.slice(1).split("").map(x=>x+x).join("")).toUpperCase();
+  }
+  const m=v.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+  if(m){
+    const hex=[m[1],m[2],m[3]].map(n=>
+      clamp(Number(n),0,255).toString(16).padStart(2,"0")
+    ).join("");
+    return "#"+hex.toUpperCase();
+  }
+  return "";
+}
+
+function sanitizeRichHtml(html){
+  const box=document.createElement("div");
+  box.innerHTML=String(html||"");
+
+  function walk(node){
+    if(node.nodeType===Node.TEXT_NODE)return escapeHtml(node.nodeValue);
+    if(node.nodeType!==Node.ELEMENT_NODE)return "";
+    const tag=node.tagName.toUpperCase();
+    const inner=[...node.childNodes].map(walk).join("");
+
+    if(tag==="BR")return "<br>";
+    if(tag==="B"||tag==="STRONG")return `<strong>${inner}</strong>`;
+    if(tag==="FONT"||tag==="SPAN"){
+      const color=normalizeColor(tag==="FONT"?node.getAttribute("color"):node.style.color);
+      return color?`<span style="color:${color}">${inner}</span>`:inner;
+    }
+    if(["DIV","P","LI"].includes(tag))return inner+"<br>";
+    return inner;
+  }
+
+  return [...box.childNodes].map(walk).join("")
+    .replace(/(<br>){3,}/g,"<br><br>")
+    .replace(/^(<br>)+|(<br>)+$/g,"");
+}
+
+function richPlainText(html){
+  const box=document.createElement("div");
+  box.innerHTML=sanitizeRichHtml(html);
+  return (box.innerText||box.textContent||"").replace(/\u00A0/g," ");
+}
+
+function migrateRich(value){
+  const raw=String(value??"");
+  if(!/<\s*(strong|b|span|font|br|div|p)\b/i.test(raw)){
+    return escapeHtml(raw).replace(/\r?\n/g,"<br>");
+  }
+  return sanitizeRichHtml(raw);
+}
+
+function normalizeState(raw){
+  const b=freshState();
+  const x=raw&&typeof raw==="object"?raw:{};
+  const merged={...b,...x};
+
+  for(const key of RICH_KEYS)merged[key]=migrateRich(merged[key]);
+
+  merged.textBlocks={...defaultTextBlocks(),...(x.textBlocks||{})};
+  for(const key of RICH_KEYS){
+    merged.textBlocks[key]={...defaultTextBlocks()[key],...(merged.textBlocks[key]||{})};
+  }
+
+  merged.objects={...defaultObjects(),...(x.objects||{})};
+  for(const key of ["photo","logo1","logo2"]){
+    merged.objects[key]={...defaultObjects()[key],...(merged.objects[key]||{})};
+  }
+  return merged;
+}
+
+function buildTemplateGrid(){
+  const grid=$("templateGrid");
+  grid.innerHTML="";
+  TEMPLATES.forEach(t=>{
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="template-btn";
+    btn.dataset.template=String(t.id);
+
+    const thumb=document.createElement("div");
+    thumb.className="template-thumb";
+    thumb.style.backgroundImage=`url("${t.path}"), ${t.fallback}`;
+
+    const name=document.createElement("span");
+    name.className="template-name";
+    name.textContent=t.name;
+
+    btn.append(thumb,name);
+    btn.onclick=()=>{
+      state.template=t.id;
+      state.customBg="";
+      $("customBgFile").value="";
+      renderAll();
+      saveLocal();
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function applyTemplate(){
+  const t=TEMPLATES.find(v=>v.id===Number(state.template))||TEMPLATES[0];
+  const src=state.customBg||t.path;
+
+  page.style.background=t.fallback;
+  templateOverlay.style.background=Number(state.template)===3
+    ?"linear-gradient(180deg,rgba(255,255,255,.02),rgba(0,0,0,.03))"
+    :"linear-gradient(180deg,rgba(0,0,0,.03),rgba(0,0,0,.06))";
+
+  if(src){
+    templateBg.onload=()=>{templateBg.style.display="block";};
+    templateBg.onerror=()=>{templateBg.style.display="none";};
+    templateBg.src=src;
+  }else{
+    templateBg.style.display="none";
+    templateBg.removeAttribute("src");
+  }
+
+  document.querySelectorAll(".template-btn").forEach(btn=>{
+    btn.classList.toggle("active",Number(btn.dataset.template)===Number(state.template)&&!state.customBg);
+  });
+}
+
+function renderText(){
+  const map={
+    title:$("pTitle"),
+    subtitle:$("pSubtitle"),
+    body:$("pBody"),
+    emphasis:$("pEmphasis"),
+    footer:$("pFooter")
+  };
+
+  for(const key of RICH_KEYS){
+    const el=map[key];
+    const cfg=state.textBlocks[key];
+    el.innerHTML=sanitizeRichHtml(state[key]);
+    el.style.left=cfg.x+"%";
+    el.style.top=cfg.y+"%";
+    el.style.width=cfg.w+"%";
+    el.style.fontSize=cfg.size+"px";
+    el.style.textAlign=cfg.align||"center";
+    el.style.fontFamily=fontFamily(state.font);
+    el.style.color=state.textColor;
+  }
+
+  $("pEmphasis").style.padding=richPlainText(state.emphasis).trim()?"22px 26px":"0";
+  $("pEmphasis").style.background=richPlainText(state.emphasis).trim()?"rgba(255,255,255,.10)":"transparent";
+  $("pEmphasis").style.borderRadius=richPlainText(state.emphasis).trim()?"18px":"0";
+  $("pEmphasis").style.backdropFilter=richPlainText(state.emphasis).trim()?"blur(3px)":"none";
+}
+
+function renderObjects(){
+  const defs=[
+    ["photo","photoObj","photoImg"],
+    ["logo1","logo1Obj","logo1Img"],
+    ["logo2","logo2Obj","logo2Img"]
+  ];
+
+  defs.forEach(([key,objId,imgId])=>{
+    const cfg=state.objects[key];
+    const obj=$(objId);
+    const img=$(imgId);
+
+    obj.style.left=cfg.x+"%";
+    obj.style.top=cfg.y+"%";
+    obj.style.width=cfg.w+"%";
+    obj.style.height=cfg.h+"%";
+    obj.classList.toggle("hidden",!cfg.src);
+    obj.classList.toggle("selected",selectedObjKey===key);
+
+    if(cfg.src && img.src!==cfg.src)img.src=cfg.src;
+    if(!cfg.src)img.removeAttribute("src");
+  });
+
+  $("photoW").value=state.objects.photo.w;
+  $("photoH").value=state.objects.photo.h;
+  $("logo1W").value=state.objects.logo1.w;
+  $("logo2W").value=state.objects.logo2.w;
+  $("logo1WOut").textContent=state.objects.logo1.w+"%";
+  $("logo2WOut").textContent=state.objects.logo2.w+"%";
+}
+
+function renderControls(){
+  for(const key of RICH_KEYS){
+    const ed=$(key);
+    const clean=sanitizeRichHtml(state[key]);
+    if(ed.innerHTML!==clean)ed.innerHTML=clean;
+  }
+
+  $("font").value=state.font;
+  $("textColor").value=state.textColor;
+
+  const sizes={
+    titleSize:["title","titleSizeOut"],
+    subtitleSize:["subtitle","subtitleSizeOut"],
+    bodySize:["body","bodySizeOut"],
+    emSize:["emphasis","emSizeOut"],
+    footerSize:["footer","footerSizeOut"]
+  };
+
+  for(const [id,[key,outId]] of Object.entries(sizes)){
+    $(id).value=state.textBlocks[key].size;
+    $(outId).textContent=state.textBlocks[key].size;
+  }
+
+  document.querySelectorAll(".align-btn").forEach(btn=>{
+    const allSame=RICH_KEYS.every(k=>(state.textBlocks[k].align||"center")===btn.dataset.align);
+    btn.style.borderColor=allSame?"#0E4A84":"#dce3e9";
+    btn.style.color=allSame?"#0E4A84":"#395064";
+    btn.style.fontWeight=allSame?"850":"800";
+  });
+}
+
+function renderPlaylist(){
+  const box=$("playlist");
+  box.innerHTML="";
+  if(!playlist.length){
+    const empty=document.createElement("div");
+    empty.className="asset-info";
+    empty.textContent="재생 목록이 비어 있어. 현재 화면을 추가하거나, 그대로 내보내면 현재 화면 1장만 저장돼.";
+    box.appendChild(empty);
+    return;
+  }
+
+  playlist.forEach((item,i)=>{
+    const row=document.createElement("div");
+    row.className="play-item";
+    if(i===selectedPlaylistIndex)row.style.outline="2px solid #0E4A84";
+
+    const num=document.createElement("div");
+    num.className="play-num";
+    num.textContent=String(i+1).padStart(2,"0");
+
+    const title=document.createElement("div");
+    title.className="play-title";
+    title.textContent=richPlainText(item.title).trim()||`슬라이드 ${i+1}`;
+
+    const actions=document.createElement("div");
+    actions.className="play-actions";
+
+    const load=document.createElement("button");
+    load.type="button";
+    load.textContent="불러오기";
+    load.onclick=()=>{
+      selectedPlaylistIndex=i;
+      state=normalizeState(deepCopy(playlist[i]));
+      renderAll();
+      saveLocal();
+    };
+
+    const del=document.createElement("button");
+    del.type="button";
+    del.textContent="삭제";
+    del.onclick=()=>{
+      playlist.splice(i,1);
+      if(selectedPlaylistIndex===i)selectedPlaylistIndex=-1;
+      else if(selectedPlaylistIndex>i)selectedPlaylistIndex--;
+      renderPlaylist();
+      saveLocal();
+    };
+
+    actions.append(load,del);
+    row.append(num,title,actions);
+    box.appendChild(row);
+  });
+}
+
+function renderAll(){
+  state=normalizeState(state);
+  applyTemplate();
+  renderText();
+  renderObjects();
+  renderControls();
+  renderPlaylist();
+  updateStatus();
+}
+
+function updateStatus(msg,kind="ok"){
+  const s=$("status");
+  s.textContent=msg||"레이아웃 정상";
+  s.classList.toggle("warn",kind==="warn");
+}
+
+function saveLocal(){
+  try{
+    localStorage.setItem("digitalSignageMakerV1",JSON.stringify({
+      state,playlist,selectedPlaylistIndex
+    }));
+  }catch(e){}
+}
+
+function loadLocal(){
+  try{
+    const raw=JSON.parse(localStorage.getItem("digitalSignageMakerV1")||"null");
+    if(raw){
+      state=normalizeState(raw.state);
+      playlist=Array.isArray(raw.playlist)?raw.playlist.map(normalizeState):[];
+      selectedPlaylistIndex=Number.isInteger(raw.selectedPlaylistIndex)?raw.selectedPlaylistIndex:-1;
+      return;
+    }
+  }catch(e){}
+  state=normalizeState(freshState());
+}
+
+function fitPreview(){
+  const workspace=document.querySelector(".workspace");
+  const maxW=Math.max(260,workspace.clientWidth-90);
+  const maxH=Math.max(520,window.innerHeight-120);
+  const scale=Math.min(maxW/PAGE_W,maxH/PAGE_H,.48);
+  document.documentElement.style.setProperty("--scale",Math.max(.18,scale).toFixed(4));
+}
+
+/* ───────── Rich text ───────── */
+function editorFromNode(node){
+  const el=node?.nodeType===Node.ELEMENT_NODE?node:node?.parentElement;
+  return el?.closest?.(".rich-editor")||null;
+}
+
+function rememberRichSelection(){
+  const sel=window.getSelection();
+  if(!sel||!sel.rangeCount)return;
+  const editor=editorFromNode(sel.anchorNode);
+  if(!editor)return;
+  activeRichEditor=editor;
+  savedRichRange=sel.getRangeAt(0).cloneRange();
+}
+
+function restoreRichSelection(requireText=true){
+  if(!activeRichEditor||!savedRichRange){
+    alert("서식을 적용할 글자를 먼저 드래그해줘.");
+    return false;
+  }
+  const sel=window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(savedRichRange);
+  if(requireText&&sel.getRangeAt(0).collapsed){
+    alert("서식을 적용할 글자를 먼저 드래그해줘.");
+    return false;
+  }
+  return true;
+}
+
+function syncEditor(editor){
+  const key=editor.dataset.richKey;
+  if(!key)return;
+  state[key]=sanitizeRichHtml(editor.innerHTML);
+  renderText();
+  saveLocal();
+}
+
+function bindRichEditor(id){
+  const editor=$(id);
+  editor.addEventListener("focus",()=>{activeRichEditor=editor;rememberRichSelection();});
+  editor.addEventListener("mouseup",rememberRichSelection);
+  editor.addEventListener("keyup",rememberRichSelection);
+  editor.addEventListener("input",()=>{syncEditor(editor);rememberRichSelection();});
+
+  editor.addEventListener("paste",e=>{
+    e.preventDefault();
+    const plain=(e.clipboardData||window.clipboardData).getData("text/plain");
+    document.execCommand("insertText",false,plain);
+    setTimeout(()=>syncEditor(editor),0);
+  });
+
+  editor.addEventListener("keydown",e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="i"){
+      e.preventDefault();
+      return;
+    }
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="b"){
+      e.preventDefault();
+      rememberRichSelection();
+      applyRichBold();
+    }
+  });
+}
+
+function applyRichBold(){
+  if(!restoreRichSelection(true))return;
+  document.execCommand("bold",false,null);
+  syncEditor(activeRichEditor);
+  rememberRichSelection();
+}
+function applyRichColor(color){
+  const c=normalizeColor(color);
+  if(!c||!restoreRichSelection(true))return;
+  document.execCommand("foreColor",false,c);
+  syncEditor(activeRichEditor);
+  rememberRichSelection();
+}
+function clearRichFormat(){
+  if(!restoreRichSelection(true))return;
+  document.execCommand("removeFormat",false,null);
+  syncEditor(activeRichEditor);
+  rememberRichSelection();
+}
+
+/* ───────── Drag ───────── */
+function pointerToPage(e){
+  const r=page.getBoundingClientRect();
+  return {
+    x:(e.clientX-r.left)/r.width*100,
+    y:(e.clientY-r.top)/r.height*100
+  };
+}
+
+function textDragStart(e){
+  e.preventDefault();
+  e.stopPropagation();
+  const key=e.currentTarget.dataset.textKey;
+  const p=pointerToPage(e);
+  const cfg=state.textBlocks[key];
+  drag={
+    type:"text",key,el:e.currentTarget,pointerId:e.pointerId,
+    startPX:p.x,startPY:p.y,startX:cfg.x,startY:cfg.y
+  };
+  e.currentTarget.classList.add("dragging");
+  page.classList.add("dragging");
+  e.currentTarget.setPointerCapture?.(e.pointerId);
+}
+
+function objDragStart(e){
+  e.preventDefault();
+  e.stopPropagation();
+  const key=e.currentTarget.dataset.objKey;
+  selectedObjKey=key;
+  renderObjects();
+  const p=pointerToPage(e);
+  const cfg=state.objects[key];
+  drag={
+    type:"obj",key,el:e.currentTarget,pointerId:e.pointerId,
+    startPX:p.x,startPY:p.y,startX:cfg.x,startY:cfg.y
+  };
+  page.classList.add("dragging");
+  e.currentTarget.setPointerCapture?.(e.pointerId);
+}
+
+function dragMove(e){
+  if(!drag||e.pointerId!==drag.pointerId)return;
+  const p=pointerToPage(e);
+  let x=drag.startX+(p.x-drag.startPX);
+  let y=drag.startY+(p.y-drag.startPY);
+
+  if(Math.abs(x-50)<1.2)x=50;
+  if(Math.abs(y-50)<1.2)y=50;
+
+  if(drag.type==="text"){
+    const cfg=state.textBlocks[drag.key];
+    const half=(cfg.w||80)/2;
+    x=clamp(x,Math.min(half,49),100-Math.min(half,49));
+    y=clamp(y,2,94);
+    cfg.x=Math.round(x*10)/10;
+    cfg.y=Math.round(y*10)/10;
+    renderText();
+  }else{
+    const cfg=state.objects[drag.key];
+    x=clamp(x,3,97);
+    y=clamp(y,3,97);
+    cfg.x=Math.round(x*10)/10;
+    cfg.y=Math.round(y*10)/10;
+    renderObjects();
+  }
+}
+
+function dragEnd(e){
+  if(!drag)return;
+  if(e?.pointerId!==undefined&&e.pointerId!==drag.pointerId)return;
+  drag.el.classList.remove("dragging");
+  drag=null;
+  page.classList.remove("dragging");
+  saveLocal();
+}
+
+/* ───────── File helpers ───────── */
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>resolve(r.result);
+    r.onerror=reject;
+    r.readAsDataURL(file);
+  });
+}
+
+function downloadBlob(blob,name){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1200);
+}
+
+function safeFilename(base){
+  const clean=String(base||"signage")
+    .replace(/[\\/:*?"<>|]/g," ")
+    .replace(/\s+/g," ")
+    .trim()
+    .slice(0,50);
+  return clean||"signage";
+}
+
+async function waitImages(root){
+  const imgs=[...root.querySelectorAll("img")].filter(img=>img.src);
+  await Promise.all(imgs.map(img=>{
+    if(img.complete)return Promise.resolve();
+    return new Promise(resolve=>{
+      img.addEventListener("load",resolve,{once:true});
+      img.addEventListener("error",resolve,{once:true});
+    });
+  }));
+}
+
+async function captureStateBlob(snapshot,scale=1){
+  const original=deepCopy(state);
+  const originalSelected=selectedObjKey;
+
+  state=normalizeState(deepCopy(snapshot));
+  selectedObjKey=null;
+  renderAll();
+
+  await document.fonts.ready;
+  await waitImages(page);
+  await sleep(30);
+
+  const holder=document.createElement("div");
+  holder.style.cssText="position:fixed;left:-20000px;top:0;width:1080px;height:1920px;overflow:hidden;z-index:-9999";
+  const clone=page.cloneNode(true);
+  clone.classList.add("exporting");
+  clone.classList.remove("show-safe","dragging");
+  clone.style.transform="none";
+  clone.style.position="relative";
+  clone.style.left="0";
+  clone.style.top="0";
+  clone.style.width=PAGE_W+"px";
+  clone.style.height=PAGE_H+"px";
+  clone.style.boxShadow="none";
+
+  holder.appendChild(clone);
+  document.body.appendChild(holder);
+  await waitImages(clone);
+  await sleep(20);
+
+  const canvas=await html2canvas(clone,{
+    scale,
+    useCORS:true,
+    allowTaint:false,
+    backgroundColor:null,
+    width:PAGE_W,
+    height:PAGE_H,
+    logging:false
+  });
+
+  holder.remove();
+
+  const expectedW=PAGE_W*scale;
+  const expectedH=PAGE_H*scale;
+  if(canvas.width!==expectedW||canvas.height!==expectedH){
+    state=original;
+    selectedObjKey=originalSelected;
+    renderAll();
+    throw new Error(`출력 크기 오류: ${canvas.width}×${canvas.height} / 기대값 ${expectedW}×${expectedH}`);
+  }
+
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png",1));
+
+  state=original;
+  selectedObjKey=originalSelected;
+  renderAll();
+  return blob;
+}
+
+function exportStates(){
+  return playlist.length?playlist.map(normalizeState):[normalizeState(state)];
+}
+
+async function buildExportBlobs(){
+  const scale=Number($("quality").value)||1;
+  const states=exportStates();
+  const result=[];
+  updateStatus(`이미지 생성 중 · 0/${states.length}`,"warn");
+
+  for(let i=0;i<states.length;i++){
+    const blob=await captureStateBlob(states[i],scale);
+    const title=safeFilename(richPlainText(states[i].title));
+    const filename=`${String(i+1).padStart(3,"0")}_${title}.png`;
+    result.push({blob,filename});
+    updateStatus(`이미지 생성 중 · ${i+1}/${states.length}`,"warn");
+  }
+
+  updateStatus(`출력 준비 완료 · ${states.length}장`);
+  return result;
+}
+
+/* ───────── Export ───────── */
+async function exportCurrentPNG(){
+  try{
+    updateStatus("PNG 생성 중…","warn");
+    const scale=Number($("quality").value)||1;
+    const blob=await captureStateBlob(state,scale);
+    const title=safeFilename(richPlainText(state.title));
+    downloadBlob(blob,title+".png");
+    updateStatus("PNG 저장 완료");
+  }catch(err){
+    console.error(err);
+    updateStatus("PNG 생성 실패","warn");
+    alert("PNG 생성 중 오류가 났어.\n"+err.message);
+  }
+}
+
+async function exportMagicZip(){
+  if(typeof JSZip==="undefined"){
+    alert("ZIP 라이브러리를 불러오지 못했어. 인터넷 연결을 확인해줘.");
+    return;
+  }
+
+  try{
+    const files=await buildExportBlobs();
+    updateStatus("MagicInfoSlide ZIP 묶는 중…","warn");
+
+    const zip=new JSZip();
+    const folder=zip.folder("MagicInfoSlide");
+    files.forEach(f=>folder.file(f.filename,f.blob));
+
+    const blob=await zip.generateAsync({
+      type:"blob",
+      compression:"DEFLATE",
+      compressionOptions:{level:6}
+    });
+
+    downloadBlob(blob,"MagicInfoSlide.zip");
+    updateStatus(`MagicInfoSlide ZIP 저장 완료 · ${files.length}장`);
+  }catch(err){
+    console.error(err);
+    updateStatus("ZIP 생성 실패","warn");
+    alert("ZIP 생성 중 오류가 났어.\n"+err.message);
+  }
+}
+
+async function exportMagicFolder(){
+  if(!window.showDirectoryPicker){
+    alert("이 브라우저는 폴더 직접 저장을 지원하지 않아.\n위의 MagicInfoSlide ZIP을 사용해줘.");
+    return;
+  }
+
+  try{
+    const files=await buildExportBlobs();
+    updateStatus("저장할 상위 폴더 선택 대기 중…","warn");
+
+    const chosen=await window.showDirectoryPicker({mode:"readwrite"});
+    const target=chosen.name==="MagicInfoSlide"
+      ?chosen
+      :await chosen.getDirectoryHandle("MagicInfoSlide",{create:true});
+
+    for(let i=0;i<files.length;i++){
+      updateStatus(`MagicInfoSlide 폴더 저장 중 · ${i+1}/${files.length}`,"warn");
+      const handle=await target.getFileHandle(files[i].filename,{create:true});
+      const writable=await handle.createWritable();
+      await writable.write(files[i].blob);
+      await writable.close();
+    }
+
+    updateStatus(`MagicInfoSlide 폴더 저장 완료 · ${files.length}장`);
+    alert(
+      chosen.name==="MagicInfoSlide"
+      ?"선택한 MagicInfoSlide 폴더에 파일 저장 완료."
+      :"선택한 위치 안에 MagicInfoSlide 폴더를 만들고 파일 저장 완료."
+    );
+  }catch(err){
+    if(err?.name==="AbortError"){
+      updateStatus("폴더 저장 취소됨","warn");
+      return;
+    }
+    console.error(err);
+    updateStatus("폴더 저장 실패","warn");
+    alert("폴더 저장 중 오류가 났어.\n"+err.message);
+  }
+}
+
+/* ───────── Job save/load ───────── */
+function saveJob(){
+  const payload={
+    app:"digital-signage-maker",
+    version:"1.0",
+    savedAt:new Date().toISOString(),
+    state,
+    playlist,
+    selectedPlaylistIndex
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  downloadBlob(blob,"digital-signage-work.json");
+}
+
+async function loadJob(file){
+  try{
+    const data=JSON.parse(await file.text());
+    state=normalizeState(data.state||data);
+    playlist=Array.isArray(data.playlist)?data.playlist.map(normalizeState):[];
+    selectedPlaylistIndex=Number.isInteger(data.selectedPlaylistIndex)?data.selectedPlaylistIndex:-1;
+    renderAll();
+    saveLocal();
+    updateStatus("작업파일 불러오기 완료");
+  }catch(err){
+    alert("작업파일을 읽지 못했어.\n"+err.message);
+  }
+}
+
+/* ───────── Events ───────── */
+buildTemplateGrid();
+loadLocal();
+
+RICH_KEYS.forEach(bindRichEditor);
+
+document.addEventListener("selectionchange",()=>{
+  const sel=window.getSelection();
+  if(!sel||!sel.rangeCount)return;
+  if(editorFromNode(sel.anchorNode))rememberRichSelection();
+});
+
+document.querySelectorAll("#richToolbar button").forEach(btn=>{
+  btn.addEventListener("mousedown",e=>e.preventDefault());
+});
+
+$("richBold").onclick=applyRichBold;
+$("richClear").onclick=clearRichFormat;
+document.querySelectorAll("[data-rich-color]").forEach(btn=>{
+  btn.onclick=()=>applyRichColor(btn.dataset.richColor);
+});
+$("richColor").addEventListener("mousedown",rememberRichSelection);
+$("richColor").oninput=e=>applyRichColor(e.target.value);
+
+document.querySelectorAll(".text-block").forEach(el=>{
+  el.addEventListener("pointerdown",textDragStart);
+  el.addEventListener("pointermove",dragMove);
+  el.addEventListener("pointerup",dragEnd);
+  el.addEventListener("pointercancel",dragEnd);
+});
+document.querySelectorAll(".obj").forEach(el=>{
+  el.addEventListener("pointerdown",objDragStart);
+  el.addEventListener("pointermove",dragMove);
+  el.addEventListener("pointerup",dragEnd);
+  el.addEventListener("pointercancel",dragEnd);
+});
+
+$("customBgFile").onchange=async e=>{
+  const f=e.target.files?.[0];
+  if(!f)return;
+  state.customBg=await fileToDataURL(f);
+  renderAll();saveLocal();
+};
+$("removeCustomBg").onclick=()=>{
+  state.customBg="";$("customBgFile").value="";renderAll();saveLocal();
+};
+$("safeToggle").onclick=()=>{
+  page.classList.toggle("show-safe");
+  $("safeToggle").textContent=page.classList.contains("show-safe")?"안전영역 숨기기":"안전영역 보기";
+};
+
+const sizeBindings={
+  titleSize:"title",
+  subtitleSize:"subtitle",
+  bodySize:"body",
+  emSize:"emphasis",
+  footerSize:"footer"
+};
+for(const [id,key] of Object.entries(sizeBindings)){
+  $(id).oninput=e=>{
+    state.textBlocks[key].size=Number(e.target.value);
+    renderAll();saveLocal();
+  };
+}
+
+$("font").onchange=e=>{state.font=e.target.value;renderAll();saveLocal();};
+$("textColor").oninput=e=>{state.textColor=e.target.value;renderAll();saveLocal();};
+
+document.querySelectorAll(".align-btn").forEach(btn=>{
+  btn.onclick=()=>{
+    for(const key of RICH_KEYS)state.textBlocks[key].align=btn.dataset.align;
+    renderAll();saveLocal();
+  };
+});
+
+$("resetTextPosition").onclick=()=>{
+  const defaults=defaultTextBlocks();
+  for(const key of RICH_KEYS){
+    state.textBlocks[key].x=defaults[key].x;
+    state.textBlocks[key].y=defaults[key].y;
+  }
+  renderAll();saveLocal();
+};
+$("clearText").onclick=()=>{
+  if(!confirm("제목·부제목·본문·강조문·하단 문구를 모두 비울까?"))return;
+  for(const key of RICH_KEYS)state[key]="";
+  renderAll();saveLocal();
+};
+
+$("photoFile").onchange=async e=>{
+  const f=e.target.files?.[0];if(!f)return;
+  state.objects.photo.src=await fileToDataURL(f);
+  selectedObjKey="photo";
+  renderAll();saveLocal();
+};
+$("logo1File").onchange=async e=>{
+  const f=e.target.files?.[0];if(!f)return;
+  state.objects.logo1.src=await fileToDataURL(f);
+  selectedObjKey="logo1";
+  renderAll();saveLocal();
+};
+$("logo2File").onchange=async e=>{
+  const f=e.target.files?.[0];if(!f)return;
+  state.objects.logo2.src=await fileToDataURL(f);
+  selectedObjKey="logo2";
+  renderAll();saveLocal();
+};
+
+$("photoW").oninput=e=>{state.objects.photo.w=Number(e.target.value);renderObjects();saveLocal();};
+$("photoH").oninput=e=>{state.objects.photo.h=Number(e.target.value);renderObjects();saveLocal();};
+$("logo1W").oninput=e=>{
+  state.objects.logo1.w=Number(e.target.value);
+  state.objects.logo1.h=Math.max(4,Math.round(state.objects.logo1.w*.42));
+  renderObjects();saveLocal();
+};
+$("logo2W").oninput=e=>{
+  state.objects.logo2.w=Number(e.target.value);
+  state.objects.logo2.h=Math.max(4,Math.round(state.objects.logo2.w*.42));
+  renderObjects();saveLocal();
+};
+
+$("photoRemove").onclick=()=>{state.objects.photo.src="";selectedObjKey=null;renderAll();saveLocal();};
+$("logo1Remove").onclick=()=>{state.objects.logo1.src="";selectedObjKey=null;renderAll();saveLocal();};
+$("logo2Remove").onclick=()=>{state.objects.logo2.src="";selectedObjKey=null;renderAll();saveLocal();};
+
+document.querySelectorAll("[data-preset-logo]").forEach(btn=>{
+  btn.onclick=()=>{
+    const key=btn.dataset.targetLogo;
+    state.objects[key].src=btn.dataset.presetLogo;
+    selectedObjKey=key;
+    renderAll();saveLocal();
+  };
+});
+
+$("playlistAdd").onclick=()=>{
+  playlist.push(normalizeState(deepCopy(state)));
+  selectedPlaylistIndex=playlist.length-1;
+  renderPlaylist();saveLocal();
+  updateStatus(`재생 목록 추가 완료 · ${playlist.length}장`);
+};
+$("playlistUpdate").onclick=()=>{
+  if(selectedPlaylistIndex<0||!playlist[selectedPlaylistIndex]){
+    alert("먼저 재생 목록에서 불러올 화면을 선택해줘.");
+    return;
+  }
+  playlist[selectedPlaylistIndex]=normalizeState(deepCopy(state));
+  renderPlaylist();saveLocal();
+  updateStatus(`재생 목록 ${selectedPlaylistIndex+1}번 덮어쓰기 완료`);
+};
+$("playlistClear").onclick=()=>{
+  if(!playlist.length)return;
+  if(!confirm("재생 목록을 전부 지울까? 현재 편집 화면은 유지돼."))return;
+  playlist=[];
+  selectedPlaylistIndex=-1;
+  renderPlaylist();saveLocal();
+};
+
+$("pngExport").onclick=exportCurrentPNG;
+$("zipExport").onclick=exportMagicZip;
+$("folderExport").onclick=exportMagicFolder;
+
+$("jobSave").onclick=saveJob;
+$("jobLoadBtn").onclick=()=>$("jobLoad").click();
+$("jobLoad").onchange=e=>{
+  const f=e.target.files?.[0];
+  if(f)loadJob(f);
+  e.target.value="";
+};
+
+$("resetAll").onclick=()=>{
+  if(!confirm("사이니지 제작기의 모든 작업내용과 재생 목록을 초기화할까?"))return;
+  localStorage.removeItem("digitalSignageMakerV1");
+  state=normalizeState(freshState());
+  playlist=[];
+  selectedPlaylistIndex=-1;
+  selectedObjKey=null;
+  renderAll();
+  updateStatus("전체 초기화 완료");
+};
+
+$("folderSupport").textContent=window.showDirectoryPicker
+  ?"이 브라우저는 폴더 직접 저장을 지원해. USB 루트나 상위 폴더를 선택하면 그 안에 MagicInfoSlide 폴더를 자동 생성해."
+  :"이 브라우저에서는 폴더 직접 저장이 지원되지 않아. MagicInfoSlide ZIP을 사용하면 돼.";
+
+window.addEventListener("resize",fitPreview);
+
+renderAll();
+fitPreview();
+</script>
+</body>
+</html>
