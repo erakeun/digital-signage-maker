@@ -86,34 +86,35 @@ input:focus,select:focus,textarea:focus,.rich-editor:focus{
 .template-section-title span{
   font-size:9.5px;font-weight:650;color:#84909a
 }
-.template-grid{display:flex;flex-direction:column;gap:6px}
+.template-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
 .template-btn{
-  width:100%;display:grid;grid-template-columns:42px minmax(0,1fr);gap:9px;
+  width:100%;display:grid;grid-template-columns:38px minmax(0,1fr);gap:7px;
   align-items:center;border:1px solid var(--line);border-radius:9px;background:#fff;
-  padding:6px;text-align:left;color:#4f5d69;transition:.15s
+  padding:6px;text-align:left;color:#4f5d69;transition:.15s;min-height:80px
 }
-.template-btn:hover{border-color:#98b4cc;background:#fbfdff;transform:translateX(1px)}
+.template-btn:hover{border-color:#98b4cc;background:#fbfdff;transform:translateY(-1px)}
 .template-btn.active{
   border-color:var(--blue);box-shadow:0 0 0 2px rgba(14,74,132,.10);
   color:var(--blue);font-weight:800
 }
 .template-thumb{
-  width:42px;height:74px;aspect-ratio:9/16;border-radius:5px;
+  width:38px;height:68px;aspect-ratio:9/16;border-radius:5px;
   background:#f4f6f8 center/cover no-repeat;border:1px solid #e7ecef;
   margin:0;box-shadow:0 1px 3px rgba(20,35,50,.08)
 }
 .template-info{min-width:0}
 .template-name{
-  display:block;font-size:10.8px;font-weight:850;line-height:1.3;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+  display:block;font-size:9.8px;font-weight:850;line-height:1.25;
+  white-space:normal;overflow:hidden
 }
 .template-desc{
-  display:block;margin-top:3px;font-size:9.5px;line-height:1.4;color:#7b8791;
-  font-weight:550
+  display:block;margin-top:2px;font-size:8.6px;line-height:1.3;color:#7b8791;
+  font-weight:550;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden
 }
 .template-chip{
-  display:inline-block;margin-top:4px;padding:2px 5px;border-radius:999px;
-  background:#f0f4f7;color:#587085;font-size:8.5px;font-weight:750
+  display:inline-block;margin-top:3px;padding:2px 4px;border-radius:999px;
+  background:#f0f4f7;color:#587085;font-size:7.8px;font-weight:750;
+  max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
 }
 .brand-colors{
   display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px
@@ -306,6 +307,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   .sidebar{padding-left:14px;padding-right:14px}
 }
 @media(max-width:760px){
+  .template-grid{grid-template-columns:1fr}
   .app{display:block}
   .sidebar{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line)}
   .workspace{height:auto;min-height:100vh}
@@ -318,7 +320,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   <aside class="sidebar">
     <div class="header">
       <h1>디지털 사이니지 제작기</h1>
-      <span class="badge">V1.1</span>
+      <span class="badge">V1.1.1</span>
     </div>
     <p class="desc">
       ERICA 세로형 디지털 사이니지용 9:16 안내 화면 제작기.
@@ -584,14 +586,14 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
         <section class="patch-panel">
           <div class="patch-head">
-            <strong>디지털 사이니지 제작기 V1.1</strong>
-            <span class="patch-current">V1.1 · 2026.09.01</span>
+            <strong>디지털 사이니지 제작기 V1.1.1</strong>
+            <span class="patch-current">V1.1.1 · 2026.09.01</span>
           </div>
           <ul>
-            <li>기존 기본 시안 01~06을 유지하면서 이미지 시안 07~09도 함께 제공</li>
-            <li>한양대학교 공식 지정색을 활용한 그라데이션 시안 10~15 추가</li>
+            <li>템플릿 선택 UI를 안내문 제작기처럼 한 줄에 2개씩 보이는 2열 카드로 변경</li>
+            <li>07번 실제 시안 성격에 맞춰 ‘네이비 골드’ → ‘화이트 네이비 골드’로 명칭 수정</li>
+            <li>기존 기본 시안 01~06, 이미지 시안 07~09, 한양 공식색 그라데이션 10~15 유지</li>
             <li>공식색: Hanyang Blue·Silver·Yellow Green·Orange·Gold·Retro Mint·Retro Coral 반영</li>
-            <li>템플릿 선택 UI를 큰 2열 카드에서 작은 미리보기 + 옆 설명 방식으로 압축</li>
             <li>기본 / 이미지 / 한양 공식색 그라데이션으로 템플릿 목록을 구분</li>
             <li>9:16 세로형 1080×1920 작업 캔버스</li>
             <li>FHD / 4K PNG 출력</li>
@@ -663,8 +665,8 @@ const TEMPLATES=[
   },
 
   {
-    id:7,group:"image",name:"07 · 네이비 골드",
-    desc:"이미지 시안 · 밝은 본문 영역 + 네이비 골드",
+    id:7,group:"image",name:"07 · 화이트 네이비 골드",
+    desc:"이미지 시안 · 화이트 중심 + 네이비·골드 프레임",
     chip:"templates/signage_01.png",
     path:"templates/signage_01.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#f7f4ed 0%,#ffffff 72%,#0b376d 100%)"
@@ -748,12 +750,12 @@ function defaultObjects(){
 
 function freshState(){
   return {
-    version:"1.1",
+    version:"1.1.1",
     template:1,
     customBg:"",
     title:"디지털 사이니지 안내",
     subtitle:"HANYANG UNIVERSITY ERICA",
-    body:"행사·공간·일정 등 필요한 안내 내용을 입력하세요.",
+    body:"행사·공간·일정 등\\n필요한 안내 내용을 입력하세요.",
     emphasis:"",
     footer:"",
     font:"pretendard",
