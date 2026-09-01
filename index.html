@@ -320,7 +320,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   <aside class="sidebar">
     <div class="header">
       <h1>디지털 사이니지 제작기</h1>
-      <span class="badge">V1.1.2</span>
+      <span class="badge">V1.2</span>
     </div>
     <p class="desc">
       ERICA 세로형 디지털 사이니지용 9:16 안내 화면 제작기.
@@ -331,7 +331,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
     <section class="section">
       <h2>1. 사이니지 디자인</h2>
       <p class="note">
-        기존 기본 시안 6종 + 이미지 시안 5종 + 한양대학교 공식 색상 기반 그라데이션 6종.
+        기존 기본 시안 6종 + 이미지 시안 10종 + 한양대학교 공식 색상 기반 그라데이션 6종.
         작은 미리보기 옆 설명을 보고 선택하면 돼.
       </p>
       <div class="template-sections" id="templateSections"></div>
@@ -586,15 +586,16 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
         <section class="patch-panel">
           <div class="patch-head">
-            <strong>디지털 사이니지 제작기 V1.1.2</strong>
-            <span class="patch-current">V1.1.2 · 2026.09.01</span>
+            <strong>디지털 사이니지 제작기 V1.2</strong>
+            <span class="patch-current">V1.2 · 2026.09.01</span>
           </div>
           <ul>
-            <li>신규 이미지 시안 2종 추가: 블랙 골드 클래식 / 화이트 네이비 골드 웨이브</li>
-            <li>이미지 시안을 07~11 총 5종으로 확대</li>
-            <li>한양 공식색 그라데이션 표기 번호를 12~17로 정리</li>
-            <li>템플릿 선택 UI는 안내문 제작기처럼 한 줄에 2개씩 보이는 2열 카드 유지</li>
-            <li>기존 기본 시안 01~06 유지</li>
+            <li>기존 안내문 제작기 계열의 가로형 느낌을 세로형 9:16으로 재구성한 이미지 시안 5종 추가</li>
+            <li>이미지 시안을 07~16 총 10종으로 확대</li>
+            <li>한양 공식색 그라데이션 표기 번호를 17~22로 이동</li>
+            <li>기본 예시 본문에서 화면에 그대로 보이던 문자 ‘\\n’을 제거하고 실제 줄바꿈으로 처리</li>
+            <li>이전 저장 데이터에 ‘\\n’이 남아 있어도 자동 줄바꿈으로 변환</li>
+            <li>기존 기본 시안 01~06 및 기존 이미지 시안은 모두 유지</li>
             <li>공식색: Hanyang Blue·Silver·Yellow Green·Orange·Gold·Retro Mint·Retro Coral 반영</li>
             <li>기본 / 이미지 / 한양 공식색 그라데이션으로 템플릿 목록을 구분</li>
             <li>9:16 세로형 1080×1920 작업 캔버스</li>
@@ -602,7 +603,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
             <li>제목·부제목·본문·강조문·하단문구 직접 드래그 이동</li>
             <li>부분 볼드·부분 글자색 지원</li>
             <li>사진·로고 업로드 및 직접 드래그 이동</li>
-            <li>기본 6종 + 이미지 5종 + 한양 공식색 그라데이션 6종, 총 17종</li>
+            <li>기본 6종 + 이미지 10종 + 한양 공식색 그라데이션 6종, 총 22종</li>
             <li>여러 화면을 재생목록으로 묶어 순차 파일 생성</li>
             <li>ZIP 내 <strong>MagicInfoSlide</strong> 폴더 자동 생성</li>
             <li>지원 브라우저에서는 선택 위치에 <strong>MagicInfoSlide</strong> 폴더 직접 생성</li>
@@ -701,44 +702,79 @@ const TEMPLATES=[
     path:"templates/signage_05.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#ffffff 0%,#f6f3ea 74%,#173a70 100%)"
   },
+  {
+    id:18,group:"image",name:"12 · 네이비 골드 레터헤드",
+    desc:"세로형 변환 시안 · 네이비 상하단 + 골드 라인 + 넓은 화이트 본문",
+    chip:"templates/signage_vertical_01_navy_gold_letterhead.png",
+    path:"templates/signage_vertical_01_navy_gold_letterhead.png",textColor:"#16283B",
+    fallback:"linear-gradient(180deg,#0E3F78 0%,#ffffff 18%,#ffffff 82%,#0E3F78 100%)"
+  },
+  {
+    id:19,group:"image",name:"13 · 네이비 골드 보더",
+    desc:"세로형 변환 시안 · 네이비와 골드 곡선 테두리가 감싸는 밝은 구성",
+    chip:"templates/signage_vertical_02_navy_gold_border.png",
+    path:"templates/signage_vertical_02_navy_gold_border.png",textColor:"#16283B",
+    fallback:"linear-gradient(160deg,#0E3F78 0%,#ffffff 22%,#ffffff 78%,#0E3F78 100%)"
+  },
+  {
+    id:20,group:"image",name:"14 · 블루 웨이브",
+    desc:"세로형 변환 시안 · 블루 그라데이션 + 하단 웨이브",
+    chip:"templates/signage_vertical_03_blue_wave.png",
+    path:"templates/signage_vertical_03_blue_wave.png",textColor:"#FFFFFF",
+    fallback:"linear-gradient(180deg,#083768 0%,#0E5A9A 52%,#1878B3 100%)"
+  },
+  {
+    id:21,group:"image",name:"15 · 네이비 골드 커브 프레임",
+    desc:"세로형 변환 시안 · 좌상단/우하단 골드 곡선 프레임",
+    chip:"templates/signage_vertical_04_navy_gold_curve_frame.png",
+    path:"templates/signage_vertical_04_navy_gold_curve_frame.png",textColor:"#16283B",
+    fallback:"linear-gradient(150deg,#0E3F78 0%,#ffffff 24%,#ffffff 76%,#0E3F78 100%)"
+  },
+  {
+    id:22,group:"image",name:"16 · 아이보리 골드 프레임",
+    desc:"세로형 변환 시안 · 아이보리 바탕 + 얇은 골드 프레임",
+    chip:"templates/signage_vertical_05_ivory_gold_frame.png",
+    path:"templates/signage_vertical_05_ivory_gold_frame.png",textColor:"#263746",
+    fallback:"linear-gradient(180deg,#fffdfa 0%,#f9f5ec 100%)"
+  },
 
   {
-    id:10,group:"brand",name:"12 · 한양 블루 × 실버",
+    id:10,group:"brand",name:"17 · 한양 블루 × 실버",
     desc:"공식색 · Blue #0E4A84 + Silver #898C8E",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(155deg,#0E4A84 0%,#365f86 46%,#898C8E 100%)"
   },
   {
-    id:11,group:"brand",name:"13 · 한양 블루 × 골드",
+    id:11,group:"brand",name:"18 · 한양 블루 × 골드",
     desc:"공식색 · Blue #0E4A84 + Gold #88774F",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(160deg,#082f5b 0%,#0E4A84 48%,#88774F 100%)"
   },
   {
-    id:12,group:"brand",name:"14 · 한양 블루 × 민트",
+    id:12,group:"brand",name:"19 · 한양 블루 × 민트",
     desc:"공식색 · Blue #0E4A84 + Retro Mint #6CCA98",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(150deg,#0E4A84 0%,#287a8f 48%,#6CCA98 100%)"
   },
   {
-    id:13,group:"brand",name:"15 · 한양 블루 × 코랄",
+    id:13,group:"brand",name:"20 · 한양 블루 × 코랄",
     desc:"공식색 · Blue #0E4A84 + Retro Coral #FF8672",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(150deg,#0E4A84 0%,#6d6682 52%,#FF8672 100%)"
   },
   {
-    id:14,group:"brand",name:"16 · 한양 블루 × 오렌지",
+    id:14,group:"brand",name:"21 · 한양 블루 × 오렌지",
     desc:"공식색 · Blue #0E4A84 + Orange #F08100",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(155deg,#0E4A84 0%,#285b7d 50%,#F08100 100%)"
   },
   {
-    id:15,group:"brand",name:"17 · 한양 블루 × 옐로그린",
+    id:15,group:"brand",name:"22 · 한양 블루 × 옐로그린",
     desc:"공식색 · Blue #0E4A84 + Yellow Green #7DB928",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
@@ -766,12 +802,12 @@ function defaultObjects(){
 
 function freshState(){
   return {
-    version:"1.1.2",
+    version:"1.2",
     template:1,
     customBg:"",
     title:"디지털 사이니지 안내",
     subtitle:"HANYANG UNIVERSITY ERICA",
-    body:"행사·공간·일정 등\\n필요한 안내 내용을 입력하세요.",
+    body:"행사·공간·일정 등<br>필요한 안내 내용을 입력하세요.",
     emphasis:"",
     footer:"",
     font:"pretendard",
@@ -860,7 +896,7 @@ function richPlainText(html){
 }
 
 function migrateRich(value){
-  const raw=String(value??"");
+  const raw=String(value??"").replace(/\\n/g,"\n");
   if(!/<\s*(strong|b|span|font|br|div|p)\b/i.test(raw)){
     return escapeHtml(raw).replace(/\r?\n/g,"<br>");
   }
@@ -892,7 +928,7 @@ function buildTemplateGrid(){
 
   const groups=[
     {key:"basic",title:"기본 시안",sub:"기존 01~06"},
-    {key:"image",title:"이미지 시안",sub:"PNG 5종"},
+    {key:"image",title:"이미지 시안",sub:"PNG 10종"},
     {key:"brand",title:"한양 공식색 그라데이션",sub:"공식 지정색 조합"}
   ];
 
@@ -960,7 +996,7 @@ function applyTemplate(){
   const src=state.customBg||t.path;
 
   page.style.background=t.fallback;
-  templateOverlay.style.background=[3,7,9,17].includes(Number(state.template))
+  templateOverlay.style.background=[3,7,9,17,18,19,21,22].includes(Number(state.template))
     ?"linear-gradient(180deg,rgba(255,255,255,.01),rgba(0,0,0,.025))"
     :"linear-gradient(180deg,rgba(0,0,0,.03),rgba(0,0,0,.06))";
 
