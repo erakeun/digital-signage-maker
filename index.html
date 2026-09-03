@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>디지털 사이니지 제작기</title>
+<link rel="icon" href="data:,">
 
 <link rel="stylesheet" as="style" crossorigin
 href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
@@ -53,6 +54,38 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .section{padding:16px 0;border-top:1px solid #edf0f2}
 .section h2{font-size:14px;margin:0 0 11px}
 .note{font-size:11px;color:var(--muted);line-height:1.55;margin:-4px 0 10px}
+.quick-start-section{
+  margin:0 -8px 2px;padding:15px 12px;border:1px solid #c9deec;border-radius:12px;
+  background:linear-gradient(145deg,#f7fbfe 0%,#eef6fb 100%)
+}
+.quick-start-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.quick-start-head h2{margin:2px 0 4px;font-size:16px;color:#173f60}
+.quick-start-kicker{font-size:9px;font-weight:900;letter-spacing:.12em;color:#0E4A84}
+.quick-start-count{
+  flex:0 0 auto;padding:4px 7px;border-radius:999px;background:#dcecf7;
+  color:#275a7d;font-size:9px;font-weight:850
+}
+.editor-mode-switch{
+  display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:4px;margin:10px 0;
+  border:1px solid #d4e2eb;border-radius:10px;background:#fff
+}
+.editor-mode-switch button{
+  min-height:36px;border:0;border-radius:7px;background:transparent;color:#60717e;
+  font-size:10.5px;font-weight:850
+}
+.editor-mode-switch button[aria-pressed="true"]{
+  background:#0E4A84;color:#fff;box-shadow:0 2px 7px rgba(14,74,132,.18)
+}
+.quick-start-grid{display:grid;gap:7px}
+.quick-start-grid .field{margin:0}
+.quick-start-grid label{margin-bottom:4px}
+.quick-start-grid textarea{
+  min-height:42px;resize:vertical;line-height:1.4;padding:9px 10px;background:#fff
+}
+.quick-start-help{margin:8px 0 0;font-size:9.8px;line-height:1.5;color:#617582}
+.quick-start-actions{display:flex;gap:7px;margin-top:9px}
+.quick-preview-action{display:none}
+[data-advanced-only][hidden]{display:none!important}
 .field{margin:0 0 10px}
 .field label{
   display:flex;justify-content:space-between;align-items:center;gap:8px;
@@ -188,6 +221,40 @@ input[type=range]{width:100%;accent-color:var(--blue)}
 input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-radius:7px;padding:2px;background:white}
 .color-pair{display:flex;gap:7px;align-items:center}
 .color-pair span{font-size:11px;color:var(--muted)}
+.quick-color{
+  border:1px solid #cbdde9;background:#f5f9fc;border-radius:10px;padding:11px;
+  margin:0 0 12px
+}
+.quick-color-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.quick-color-head strong{font-size:11.5px;color:#25435d}
+.auto-color-mode{
+  flex:0 0 auto;padding:3px 7px;border-radius:999px;background:#e3f1fa;color:#245b86;
+  font-size:9.5px;font-weight:850
+}
+.quick-color p{margin:6px 0 9px;font-size:10.5px;line-height:1.5;color:#637381}
+.quick-color-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.quick-color-actions .btn{padding:8px 10px;min-height:34px}
+.auto-color-fields{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:8px}
+.auto-color-fields span{font-size:9.5px;color:#6b7d89;margin-right:2px}
+.auto-field-toggle{
+  min-width:47px;min-height:30px;padding:5px 7px;border:1px solid #d5e0e7;
+  border-radius:7px;background:#fff;color:#687985;font-size:9.5px;font-weight:750
+}
+.auto-field-toggle[aria-pressed="true"]{
+  border-color:#79a6c9;background:#eaf4fb;color:#174f7a;box-shadow:inset 0 0 0 1px rgba(14,74,132,.08)
+}
+.auto-color-result{
+  display:inline-flex;align-items:center;gap:6px;min-width:0;padding:6px 8px;
+  border:1px solid #d8e3ea;border-radius:8px;background:#fff;font-size:10px;color:#536674
+}
+.auto-color-result i{
+  display:block;width:16px;height:16px;flex:0 0 16px;border-radius:999px;
+  background:var(--auto-color,#fff);border:1px solid rgba(0,0,0,.18)
+}
+.auto-color-status{margin-top:7px;font-size:10px;line-height:1.45;color:#5d7080}
+.auto-color-status.warn{color:#8a6100}
+.page.auto-color-sampling .text-block,
+.page.auto-color-sampling .text-block *{color:transparent!important;text-shadow:none!important}
 
 .asset-info{
   border:1px dashed #c7d1da;border-radius:9px;background:#f8fafb;padding:10px;
@@ -327,6 +394,9 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   input[type=file],select{min-height:44px}
   .rich-editor,input[type=range]{min-height:44px}
   .rich-toolbar input[type=color],input[type=color]{min-width:44px;min-height:44px}
+  .auto-field-toggle{min-height:44px}
+  .editor-mode-switch button,.quick-start-grid textarea{min-height:44px}
+  .quick-preview-action{display:block;width:100%;min-height:44px}
   .mobile-preview-toggle{
     display:flex;align-items:center;justify-content:center;position:fixed;right:14px;bottom:14px;
     min-width:112px;min-height:46px;padding:10px 14px;border:0;border-radius:999px;
@@ -348,13 +418,81 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   <aside class="sidebar">
     <div class="header">
       <h1>디지털 사이니지 제작기</h1>
-      <span class="badge" id="appVersionBadge">V1.3.0</span>
+      <span class="badge" id="appVersionBadge">V1.3.1</span>
     </div>
     <p class="desc">
       ERICA 세로형 디지털 사이니지용 9:16 안내 화면 제작기.
       텍스트·사진·로고를 배치하고 FHD 또는 4K 이미지로 출력할 수 있어.
       자동재생용 내보내기는 <strong>MagicInfoSlide</strong> 폴더명으로 맞춰 저장해.
     </p>
+
+    <section class="section quick-start-section" id="quickStartSection">
+      <div class="quick-start-head">
+        <div>
+          <div class="quick-start-kicker">QUICK START</div>
+          <h2>행사 안내 빠르게 만들기</h2>
+        </div>
+        <span class="quick-start-count" id="quickStartCount">3개 입력</span>
+      </div>
+      <p class="note">행사명·일시·장소만 입력하면 기본 사이니지와 미리보기에 바로 반영돼.</p>
+
+      <div class="editor-mode-switch" role="group" aria-label="편집 모드">
+        <button type="button" id="quickModeButton" aria-pressed="true">QUICK START</button>
+        <button type="button" id="advancedModeButton" aria-pressed="false"
+                aria-controls="advancedTextSection advancedStyleSection advancedMediaSection">고급 편집</button>
+      </div>
+
+      <div class="quick-start-grid">
+        <div class="field">
+          <label for="quickEventName"><strong>행사명</strong></label>
+          <textarea id="quickEventName" rows="1" data-quick-key="title"
+                    placeholder="예: ERICA Innovation Day"></textarea>
+        </div>
+        <div class="field">
+          <label for="quickDate"><strong>일시</strong></label>
+          <textarea id="quickDate" rows="1" data-quick-key="subtitle"
+                    placeholder="예: 2026. 9. 15. 14:00"></textarea>
+        </div>
+        <div class="field">
+          <label for="quickLocation"><strong>장소</strong></label>
+          <textarea id="quickLocation" rows="1" data-quick-key="body"
+                    placeholder="예: ERICA 컨벤션센터"></textarea>
+        </div>
+      </div>
+      <p class="quick-start-help" id="quickStartStatus" role="status" aria-live="polite">
+        고급 편집의 제목·부제목·본문과 같은 내용을 사용해.
+      </p>
+      <div class="quick-start-actions">
+        <button class="btn primary quick-preview-action" type="button" id="quickPreviewButton"
+                aria-controls="workspace">빠른 미리보기</button>
+      </div>
+
+      <div class="quick-color" id="quickColorPanel">
+        <div class="quick-color-head">
+          <strong>자동 텍스트 색상</strong>
+          <span class="auto-color-mode" id="autoColorMode">자동</span>
+        </div>
+        <p>글자가 놓인 실제 배경 영역을 분석해 WCAG 대비 4.5:1 이상인 ERICA 톤의 색을 우선 선택해.</p>
+        <div class="quick-color-actions">
+          <button class="btn outline" type="button" id="useAutoTextColor"
+                  aria-pressed="true" aria-describedby="autoColorStatus">자동 색상 다시 분석</button>
+          <span class="auto-color-result" id="autoColorResult">
+            <i aria-hidden="true"></i><b id="autoColorName">분석 준비</b>
+          </span>
+        </div>
+        <div class="auto-color-fields" role="group" aria-label="항목별 자동 색상">
+          <span>항목별 자동</span>
+          <button type="button" class="auto-field-toggle" data-auto-color-key="title" aria-pressed="true">제목</button>
+          <button type="button" class="auto-field-toggle" data-auto-color-key="subtitle" aria-pressed="true">부제목</button>
+          <button type="button" class="auto-field-toggle" data-auto-color-key="body" aria-pressed="true">본문</button>
+          <button type="button" class="auto-field-toggle" data-auto-color-key="emphasis" aria-pressed="true">강조</button>
+          <button type="button" class="auto-field-toggle" data-auto-color-key="footer" aria-pressed="true">하단</button>
+        </div>
+        <div class="auto-color-status" id="autoColorStatus" role="status" aria-live="polite">
+          배경과 텍스트 영역을 분석할 준비가 됐어.
+        </div>
+      </div>
+    </section>
 
     <section class="section">
       <h2>1. 사이니지 디자인</h2>
@@ -387,7 +525,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="advancedTextSection" data-advanced-only hidden>
       <h2>2. 안내 내용</h2>
 
       <div class="rich-help">
@@ -446,7 +584,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="advancedStyleSection" data-advanced-only hidden>
       <h2>3. 글자 스타일</h2>
       <div class="field">
         <label for="font"><strong>글꼴</strong><span>상업적 이용 가능 무료 폰트</span></label>
@@ -465,10 +603,10 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       <div class="range"><label for="footerSize">하단 크기</label><input id="footerSize" type="range" min="20" max="52" step="1"><output id="footerSizeOut" for="footerSize"></output></div>
 
       <div class="field">
-        <label for="textColor"><strong>기본 글자색</strong></label>
+        <label for="textColor"><strong>고급 편집 · 수동 기본색</strong><span id="textColorModeLabel">자동</span></label>
         <div class="color-pair">
-          <input type="color" id="textColor">
-          <span>부분 색상이 지정된 글자는 해당 색상이 우선돼.</span>
+          <input type="color" id="textColor" aria-describedby="textColorHelp autoColorStatus">
+          <span id="textColorHelp">직접 바꾸면 전체 항목이 수동으로 전환돼. 부분 색상은 계속 우선해.</span>
         </div>
       </div>
 
@@ -482,7 +620,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="advancedMediaSection" data-advanced-only hidden>
       <h2>4. 사진 · 로고</h2>
 
       <div class="field">
@@ -618,11 +756,13 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
         <section class="patch-panel">
           <div class="patch-head">
-            <strong id="appVersionHeading">디지털 사이니지 제작기 V1.3.0</strong>
-            <span class="patch-current" id="appVersionCurrent">V1.3.0 · OUTPUT RELIABILITY</span>
+            <strong id="appVersionHeading">디지털 사이니지 제작기 V1.3.1</strong>
+            <span class="patch-current" id="appVersionCurrent">V1.3.1 · QUICK START</span>
           </div>
           <ul>
             <li>템플릿 07~09 파일명 정합성 복구 및 22종 자산 자동 검사</li>
+            <li>행사명·일시·장소 3개 입력 QUICK START와 고급 편집 상태 공유</li>
+            <li>QUICK START 실제 텍스트 영역 기반 WCAG 자동 글자색과 수동색 보존</li>
             <li>다중 줄 붙여넣기 줄바꿈 보존</li>
             <li>텍스트·사진·로고·안전영역 충돌 감지 및 문제 출력 차단</li>
             <li>원본 이미지 비율 기반 로고 크기 계산과 FHD/4K 출력 비율 보존</li>
@@ -650,14 +790,28 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 "use strict";
 
 const $=id=>document.getElementById(id);
-const APP_VERSION="1.3.0";
-const APP_RELEASE_NAME="OUTPUT RELIABILITY";
+const APP_VERSION="1.3.1";
+const APP_RELEASE_NAME="QUICK START";
 const PAGE_W=1080;
 const PAGE_H=1920;
 const SAFE_MARGIN=54;
 const RICH_KEYS=["title","subtitle","body","emphasis","footer"];
+const QUICK_START_FIELDS=[
+  {id:"quickEventName",key:"title",label:"행사명"},
+  {id:"quickDate",key:"subtitle",label:"일시"},
+  {id:"quickLocation",key:"body",label:"장소"}
+];
 const TEXT_LABELS={title:"제목",subtitle:"부제목",body:"본문",emphasis:"강조문",footer:"하단 문구"};
 const OBJECT_LABELS={photo:"사진",logo1:"로고 1",logo2:"로고 2"};
+const AUTO_CONTRAST_TARGET=4.5;
+const AUTO_SAMPLE_SCALE=.25;
+const AUTO_TEXT_COLORS=[
+  {name:"White",value:"#FFFFFF"},
+  {name:"ERICA Navy",value:"#16283B"},
+  {name:"Dark Charcoal",value:"#111820"},
+  {name:"Light Gold",value:"#F3C866"}
+];
+const AUTO_SAFE_COLORS=[{name:"Safe Black",value:"#000000"}];
 
 const TEMPLATES=[
   {
@@ -685,7 +839,7 @@ const TEMPLATES=[
     id:4,group:"basic",name:"04 · 골드 다크",
     desc:"기본 시안 · 행사·VIP·환영 안내용",
     chip:"기존 기본 시안",
-    path:"",textColor:"#FFFFFF",
+    path:"",textColor:"#FFFFFF",autoTextColor:"#F3C866",
     fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"
   },
   {
@@ -714,7 +868,7 @@ const TEMPLATES=[
     id:8,group:"image",name:"08 · 다크 골드",
     desc:"이미지 시안 · 블랙/골드의 격식 있는 구성",
     chip:"templates/signage_02.png",
-    path:"templates/signage_02.png",textColor:"#FFFFFF",
+    path:"templates/signage_02.png",textColor:"#FFFFFF",autoTextColor:"#F3C866",
     fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"
   },
   {
@@ -728,7 +882,7 @@ const TEMPLATES=[
     id:16,group:"image",name:"10 · 블랙 골드 클래식",
     desc:"이미지 시안 · 블랙 중심 + 화려한 골드 장식 프레임",
     chip:"templates/signage_04.png",
-    path:"templates/signage_04.png",textColor:"#FFFFFF",
+    path:"templates/signage_04.png",textColor:"#FFFFFF",autoTextColor:"#F3C866",
     fallback:"linear-gradient(180deg,#16110d 0%,#21170f 50%,#080706 100%)"
   },
   {
@@ -836,18 +990,28 @@ function defaultObjects(){
   };
 }
 
+function defaultTextColors(color="#FFFFFF"){
+  return Object.fromEntries(RICH_KEYS.map(key=>[key,color]));
+}
+
+function defaultTextColorModes(mode="auto"){
+  return Object.fromEntries(RICH_KEYS.map(key=>[key,mode]));
+}
+
 function freshState(){
   return {
     version:APP_VERSION,
     template:1,
     customBg:"",
     title:"디지털 사이니지 안내",
-    subtitle:"HANYANG UNIVERSITY ERICA",
-    body:"행사·공간·일정 등<br>필요한 안내 내용을 입력하세요.",
+    subtitle:"행사 일시를 입력하세요",
+    body:"행사 장소를 입력하세요",
     emphasis:"",
     footer:"",
     font:"pretendard",
     textColor:"#FFFFFF",
+    textColors:defaultTextColors(),
+    textColorModes:defaultTextColorModes(),
     textBlocks:defaultTextBlocks(),
     objects:defaultObjects()
   };
@@ -861,6 +1025,12 @@ let savedRichRange=null;
 let drag=null;
 let selectedObjKey=null;
 let suppressPersistence=false;
+let editorMode="quick";
+let autoColorReport=null;
+let autoColorTimer=null;
+let autoColorRunId=0;
+let lastExportContrastWarningCount=0;
+let exportInProgress=false;
 
 const page=$("page");
 const templateBg=$("templateBg");
@@ -955,7 +1125,8 @@ function sanitizeRichHtml(html){
 function richPlainText(html){
   const box=document.createElement("div");
   box.innerHTML=sanitizeRichHtml(html);
-  return (box.innerText||box.textContent||"").replace(/\u00A0/g," ");
+  box.querySelectorAll("br").forEach(br=>br.replaceWith("\n"));
+  return (box.textContent||"").replace(/\u00A0/g," ");
 }
 
 function migrateRich(value){
@@ -971,6 +1142,18 @@ function normalizeState(raw){
   const x=raw&&typeof raw==="object"?raw:{};
   const merged={...b,...x};
   merged.version=APP_VERSION;
+
+  const baseColor=normalizeColor(merged.textColor)||"#FFFFFF";
+  const hasLegacyColor=Object.prototype.hasOwnProperty.call(x,"textColor");
+  const legacyMode=x.textColorMode==="manual"?"manual":(hasLegacyColor?"manual":"auto");
+  merged.textColor=baseColor;
+  merged.textColors={...defaultTextColors(baseColor),...(x.textColors||{})};
+  merged.textColorModes={...defaultTextColorModes(legacyMode),...(x.textColorModes||{})};
+  for(const key of RICH_KEYS){
+    merged.textColors[key]=normalizeColor(merged.textColors[key])||baseColor;
+    const mode=merged.textColorModes[key]||x.textColorMode;
+    merged.textColorModes[key]=mode==="manual"?"manual":"auto";
+  }
 
   for(const key of RICH_KEYS)merged[key]=migrateRich(merged[key]);
 
@@ -1042,7 +1225,6 @@ function buildTemplateGrid(){
       btn.onclick=()=>{
         state.template=t.id;
         state.customBg="";
-        state.textColor=t.textColor || "#FFFFFF";
         $("customBgFile").value="";
         renderAll();
         saveLocal();
@@ -1066,8 +1248,14 @@ function applyTemplate(){
     :"linear-gradient(180deg,rgba(0,0,0,.03),rgba(0,0,0,.06))";
 
   if(src){
-    templateBg.onload=()=>{templateBg.style.display="block";};
-    templateBg.onerror=()=>{templateBg.style.display="none";};
+    templateBg.onload=()=>{
+      templateBg.style.display="block";
+      if(!suppressPersistence)scheduleAutoTextColor(0);
+    };
+    templateBg.onerror=()=>{
+      templateBg.style.display="none";
+      if(!suppressPersistence)scheduleAutoTextColor(0);
+    };
     templateBg.src=src;
   }else{
     templateBg.style.display="none";
@@ -1079,6 +1267,10 @@ function applyTemplate(){
     btn.classList.toggle("active",active);
     btn.setAttribute("aria-pressed",String(active));
   });
+}
+
+function resolvedTextColor(key){
+  return state.textColors?.[key]||state.textColor;
 }
 
 function renderText(){
@@ -1100,7 +1292,7 @@ function renderText(){
     el.style.fontSize=cfg.size+"px";
     el.style.textAlign=cfg.align||"center";
     el.style.fontFamily=fontFamily(state.font);
-    el.style.color=state.textColor;
+    el.style.color=resolvedTextColor(key);
   }
 
   $("pEmphasis").style.padding=richPlainText(state.emphasis).trim()?"22px 26px":"0";
@@ -1125,6 +1317,7 @@ function syncLogoAspect(key,img){
   $(key+"Obj").style.height=height+"%";
   saveLocal();
   updateLayoutStatus();
+  if(!suppressPersistence)scheduleAutoTextColor();
 }
 
 function renderObjects(){
@@ -1164,6 +1357,49 @@ function renderObjects(){
   $("logo2WOut").textContent=state.objects.logo2.w+"%";
 }
 
+function renderQuickStart(){
+  let filled=0;
+  for(const field of QUICK_START_FIELDS){
+    const input=$(field.id);
+    const value=richPlainText(state[field.key]);
+    if(value.trim())filled++;
+    if(document.activeElement!==input&&input.value!==value)input.value=value;
+  }
+  $("quickStartCount").textContent=`${filled}/3 입력`;
+  $("quickStartStatus").textContent=editorMode==="advanced"
+    ?"고급 편집에서 바꾼 내용도 QUICK START에 그대로 유지돼."
+    :"고급 편집의 제목·부제목·본문과 같은 내용을 사용해.";
+}
+
+function setEditorMode(mode,{focus=false}={}){
+  editorMode=mode==="advanced"?"advanced":"quick";
+  const advanced=editorMode==="advanced";
+  document.querySelectorAll("[data-advanced-only]").forEach(section=>{
+    section.hidden=!advanced;
+  });
+  $("quickModeButton").setAttribute("aria-pressed",String(!advanced));
+  $("advancedModeButton").setAttribute("aria-pressed",String(advanced));
+  renderQuickStart();
+  requestAnimationFrame(()=>{
+    fitPreview();
+    if(focus)$(advanced?"title":"quickEventName").focus();
+  });
+}
+
+function syncQuickStartInput(input){
+  const key=input.dataset.quickKey;
+  if(!RICH_KEYS.includes(key))return;
+  state[key]=migrateRich(input.value);
+  const editor=$(key);
+  const clean=sanitizeRichHtml(state[key]);
+  if(document.activeElement!==editor&&editor.innerHTML!==clean)editor.innerHTML=clean;
+  renderText();
+  renderQuickStart();
+  updateLayoutStatus();
+  saveLocal();
+  if(!suppressPersistence)scheduleAutoTextColor();
+}
+
 function renderControls(){
   for(const key of RICH_KEYS){
     const ed=$(key);
@@ -1172,7 +1408,7 @@ function renderControls(){
   }
 
   $("font").value=state.font;
-  $("textColor").value=state.textColor;
+  $("textColor").value=state.textColor||resolvedTextColor("title");
 
   const sizes={
     titleSize:["title","titleSizeOut"],
@@ -1194,6 +1430,9 @@ function renderControls(){
     btn.style.fontWeight=allSame?"850":"800";
     btn.setAttribute("aria-pressed",String(allSame));
   });
+
+  renderQuickStart();
+  renderAutoColorControls();
 }
 
 function renderPlaylist(){
@@ -1269,6 +1508,403 @@ function rectInPage(el){
   };
 }
 
+function clientRectInPage(rect){
+  const pageRect=page.getBoundingClientRect();
+  const scaleX=pageRect.width/PAGE_W;
+  const scaleY=pageRect.height/PAGE_H;
+  return {
+    left:(rect.left-pageRect.left)/scaleX,
+    top:(rect.top-pageRect.top)/scaleY,
+    right:(rect.right-pageRect.left)/scaleX,
+    bottom:(rect.bottom-pageRect.top)/scaleY
+  };
+}
+
+function previewTextElement(key){
+  return $("p"+key[0].toUpperCase()+key.slice(1));
+}
+
+function textSampleRects(key){
+  const el=previewTextElement(key);
+  if(!el||!richPlainText(state[key]).trim())return [];
+  const range=document.createRange();
+  range.selectNodeContents(el);
+  const lineRects=[...range.getClientRects()]
+    .filter(rect=>rect.width>.5&&rect.height>.5)
+    .map(clientRectInPage);
+  const source=lineRects.length?lineRects:[rectInPage(el)];
+  return source.map(rect=>({
+    left:clamp(rect.left-5,0,PAGE_W),
+    top:clamp(rect.top-3,0,PAGE_H),
+    right:clamp(rect.right+5,0,PAGE_W),
+    bottom:clamp(rect.bottom+3,0,PAGE_H)
+  })).filter(rect=>rect.right>rect.left&&rect.bottom>rect.top);
+}
+
+function shortAssetSignature(value){
+  const source=String(value||"");
+  if(!source)return "";
+  return `${source.length}:${source.slice(0,36)}:${source.slice(-20)}`;
+}
+
+function autoColorStateSignature(){
+  return JSON.stringify({
+    template:Number(state.template),
+    customBg:shortAssetSignature(state.customBg),
+    font:state.font,
+    text:RICH_KEYS.map(key=>state[key]),
+    modes:RICH_KEYS.map(key=>state.textColorModes?.[key]),
+    blocks:RICH_KEYS.map(key=>{
+      const cfg=state.textBlocks[key];
+      return [cfg.x,cfg.y,cfg.w,cfg.size,cfg.align];
+    }),
+    objects:["photo","logo1","logo2"].map(key=>{
+      const cfg=state.objects[key];
+      return [key,shortAssetSignature(cfg.src),cfg.x,cfg.y,cfg.w,cfg.h];
+    })
+  });
+}
+
+function hexToRgb(color){
+  const normalized=normalizeColor(color);
+  if(!normalized)return null;
+  return {
+    r:parseInt(normalized.slice(1,3),16),
+    g:parseInt(normalized.slice(3,5),16),
+    b:parseInt(normalized.slice(5,7),16)
+  };
+}
+
+function linearSrgb(value){
+  const channel=value/255;
+  return channel<=.04045?channel/12.92:Math.pow((channel+.055)/1.055,2.4);
+}
+
+function rgbRelativeLuminance(rgb){
+  return .2126*linearSrgb(rgb.r)+.7152*linearSrgb(rgb.g)+.0722*linearSrgb(rgb.b);
+}
+
+function relativeLuminance(color){
+  const rgb=typeof color==="string"?hexToRgb(color):color;
+  return rgb?rgbRelativeLuminance(rgb):0;
+}
+
+function contrastRatio(foreground,background){
+  const fg=typeof foreground==="number"?foreground:relativeLuminance(foreground);
+  const bg=typeof background==="number"?background:relativeLuminance(background);
+  return (Math.max(fg,bg)+.05)/(Math.min(fg,bg)+.05);
+}
+
+function effectiveForeground(foreground,background,alpha=1){
+  if(alpha>=1)return foreground;
+  return {
+    r:foreground.r*alpha+background.r*(1-alpha),
+    g:foreground.g*alpha+background.g*(1-alpha),
+    b:foreground.b*alpha+background.b*(1-alpha)
+  };
+}
+
+function robustContrast(samples,color,alpha=1){
+  if(!samples.length)return 0;
+  const foreground=hexToRgb(color);
+  const ratios=samples.map(background=>
+    contrastRatio(
+      rgbRelativeLuminance(effectiveForeground(foreground,background,alpha)),
+      rgbRelativeLuminance(background)
+    )
+  ).sort((a,b)=>a-b);
+  const lowerIndex=Math.floor((ratios.length-1)*.10);
+  return ratios[lowerIndex];
+}
+
+function selectContrastCandidate(groups,preferredColor=""){
+  const rank=candidates=>candidates.map(candidate=>({
+    ...candidate,
+    ratio:Math.min(...groups.map(group=>
+      robustContrast(group.samples,candidate.value,group.key==="footer"?.9:1)
+    ))
+  })).sort((a,b)=>b.ratio-a.ratio);
+
+  let ranked=rank(AUTO_TEXT_COLORS);
+  const passing=ranked.filter(candidate=>candidate.ratio>=AUTO_CONTRAST_TARGET);
+  if(passing.length){
+    const preferred=normalizeColor(preferredColor);
+    return passing.find(candidate=>candidate.value===preferred)||passing[0];
+  }
+  ranked=rank([...AUTO_TEXT_COLORS,...AUTO_SAFE_COLORS]);
+  return ranked[0]||{...AUTO_TEXT_COLORS[0],ratio:0};
+}
+
+function collectBackgroundSamples(imageData,canvas,rects){
+  const samples=[];
+  const scaleX=canvas.width/PAGE_W;
+  const scaleY=canvas.height/PAGE_H;
+  const data=imageData.data;
+
+  for(const rect of rects){
+    const left=clamp(Math.floor(rect.left*scaleX),0,canvas.width-1);
+    const top=clamp(Math.floor(rect.top*scaleY),0,canvas.height-1);
+    const right=clamp(Math.ceil(rect.right*scaleX),left+1,canvas.width);
+    const bottom=clamp(Math.ceil(rect.bottom*scaleY),top+1,canvas.height);
+    const area=(right-left)*(bottom-top);
+    const step=Math.max(1,Math.floor(Math.sqrt(area/1400)));
+
+    for(let y=top;y<bottom;y+=step){
+      for(let x=left;x<right;x+=step){
+        const offset=(y*canvas.width+x)*4;
+        const alpha=data[offset+3]/255;
+        samples.push({
+          r:data[offset]*alpha+255*(1-alpha),
+          g:data[offset+1]*alpha+255*(1-alpha),
+          b:data[offset+2]*alpha+255*(1-alpha)
+        });
+      }
+    }
+  }
+  return samples;
+}
+
+async function renderBackgroundSampleCanvas(){
+  if(typeof html2canvas!=="function")throw new Error("배경 분석 모듈을 불러오지 못함");
+  const holder=document.createElement("div");
+  holder.style.cssText="position:fixed;left:-20000px;top:0;width:1080px;height:1920px;overflow:hidden;z-index:-9999";
+  const clone=page.cloneNode(true);
+  clone.classList.add("exporting","auto-color-sampling");
+  clone.classList.remove("show-safe","dragging");
+  clone.style.transform="none";
+  clone.style.position="relative";
+  clone.style.left="0";
+  clone.style.top="0";
+  clone.style.width=PAGE_W+"px";
+  clone.style.height=PAGE_H+"px";
+  clone.style.boxShadow="none";
+  holder.appendChild(clone);
+  document.body.appendChild(holder);
+
+  try{
+    await waitImages(clone);
+    await sleep(0);
+    return await html2canvas(clone,{
+      scale:AUTO_SAMPLE_SCALE,
+      useCORS:true,
+      allowTaint:false,
+      backgroundColor:null,
+      width:PAGE_W,
+      height:PAGE_H,
+      logging:false
+    });
+  }finally{
+    holder.remove();
+  }
+}
+
+function autoColorName(color){
+  const normalized=normalizeColor(color);
+  return [...AUTO_TEXT_COLORS,...AUTO_SAFE_COLORS].find(item=>item.value===normalized)?.name||normalized;
+}
+
+function templateFallbackColor(template){
+  const preferred=normalizeColor(template?.autoTextColor||template?.textColor)||"#FFFFFF";
+  return [...AUTO_TEXT_COLORS,...AUTO_SAFE_COLORS].find(item=>item.value===preferred)
+    ||{name:"Template Safe",value:preferred};
+}
+
+function renderAutoColorControls(){
+  const autoKeys=RICH_KEYS.filter(key=>state.textColorModes?.[key]==="auto");
+  const manualKeys=RICH_KEYS.filter(key=>state.textColorModes?.[key]==="manual");
+  const resultColor=resolvedTextColor(autoKeys[0]||"title")||"#FFFFFF";
+  const button=$("useAutoTextColor");
+  const status=$("autoColorStatus");
+  const result=$("autoColorResult");
+  const mode=$("autoColorMode");
+
+  mode.textContent=manualKeys.length?`자동 ${autoKeys.length} · 수동 ${manualKeys.length}`:"자동";
+  $("textColorModeLabel").textContent=manualKeys.length?`수동 ${manualKeys.length}개 포함`:"자동";
+  button.setAttribute("aria-pressed",String(!manualKeys.length));
+  button.textContent=manualKeys.length?"자동 색상 사용":"자동 색상 다시 분석";
+  document.querySelectorAll("[data-auto-color-key]").forEach(toggle=>{
+    const key=toggle.dataset.autoColorKey;
+    const isAuto=state.textColorModes?.[key]==="auto";
+    toggle.setAttribute("aria-pressed",String(isAuto));
+    toggle.setAttribute("aria-label",`${TEXT_LABELS[key]} 자동 색상 ${isAuto?"사용 중":"사용 안 함"}`);
+    toggle.title=isAuto?`${TEXT_LABELS[key]} 자동 색상을 끄고 현재 색 유지`:`${TEXT_LABELS[key]}만 자동 색상으로 전환`;
+  });
+  result.style.setProperty("--auto-color",resultColor);
+  $("autoColorName").textContent=autoColorName(resultColor)||"분석 준비";
+  status.classList.remove("warn");
+
+  if(!autoKeys.length){
+    status.textContent="전체 항목이 수동 색상이야. 배경이나 템플릿을 바꿔도 유지돼.";
+    return;
+  }
+
+  const signature=autoColorStateSignature();
+  if(!autoColorReport||autoColorReport.signature!==signature||autoColorReport.status==="pending"){
+    status.textContent=`실제 텍스트 영역 분석 중…${manualKeys.length?` 수동 ${manualKeys.map(key=>TEXT_LABELS[key]).join(", ")} 제외`:""}`;
+    return;
+  }
+
+  if(autoColorReport.status==="error"){
+    status.textContent=`자동 분석 경고 · ${autoColorReport.message}`;
+    status.classList.add("warn");
+    return;
+  }
+
+  const colors=[...new Set(autoColorReport.fields.map(field=>field.colorName))];
+  const ratio=autoColorReport.minRatio;
+  const warning=autoColorReport.warnings[0]?` · 경고: ${autoColorReport.warnings[0]}`:"";
+  status.textContent=`${autoColorReport.split?"영역별 자동":"공통 자동"} · ${colors.join(" / ")} · 최저 대비 ${ratio.toFixed(2)}:1${manualKeys.length?` · 수동 ${manualKeys.length}개 유지`:""}${warning}`;
+  if(autoColorReport.warnings.length)status.classList.add("warn");
+}
+
+function cancelAutoTextColor(){
+  if(autoColorTimer!==null)clearTimeout(autoColorTimer);
+  autoColorTimer=null;
+  autoColorRunId++;
+}
+
+function scheduleAutoTextColor(delay=90){
+  cancelAutoTextColor();
+  if(!RICH_KEYS.some(key=>state.textColorModes?.[key]==="auto")){
+    autoColorReport=null;
+    renderAutoColorControls();
+    return;
+  }
+  const scheduledId=autoColorRunId;
+  autoColorReport={status:"pending",signature:autoColorStateSignature()};
+  renderAutoColorControls();
+  autoColorTimer=setTimeout(()=>{
+    autoColorTimer=null;
+    if(scheduledId!==autoColorRunId)return;
+    resolveAutoTextColors().catch(()=>{});
+  },delay);
+}
+
+function applyResolvedTextColors(){
+  for(const key of RICH_KEYS){
+    const el=previewTextElement(key);
+    if(el)el.style.color=resolvedTextColor(key);
+  }
+  const colors=RICH_KEYS.map(key=>resolvedTextColor(key));
+  state.textColor=colors.every(color=>color===colors[0])?colors[0]:resolvedTextColor("title");
+  $("textColor").value=state.textColor;
+  renderAutoColorControls();
+}
+
+async function resolveAutoTextColors({persist=true}={}){
+  if(autoColorTimer!==null)clearTimeout(autoColorTimer);
+  autoColorTimer=null;
+  const runId=++autoColorRunId;
+  const targetState=state;
+  let signature=autoColorStateSignature();
+  const autoKeys=RICH_KEYS.filter(key=>state.textColorModes?.[key]==="auto");
+  const previousAutoColors=Object.fromEntries(autoKeys.map(key=>[key,state.textColors[key]]));
+  if(!autoKeys.length)return null;
+
+  autoColorReport={status:"pending",signature};
+  renderAutoColorControls();
+
+  try{
+    await Promise.all([document.fonts.ready,waitImages(page)]);
+    await sleep(0);
+    if(runId!==autoColorRunId||targetState!==state)return null;
+    signature=autoColorStateSignature();
+    autoColorReport={status:"pending",signature};
+    renderAutoColorControls();
+    const rects=Object.fromEntries(autoKeys.map(key=>[key,textSampleRects(key)]));
+    const canvas=await renderBackgroundSampleCanvas();
+    if(runId!==autoColorRunId||targetState!==state||signature!==autoColorStateSignature())return null;
+    const imageData=canvas.getContext("2d",{willReadFrequently:true})
+      .getImageData(0,0,canvas.width,canvas.height);
+    const groups=autoKeys.map(key=>({
+      key,
+      samples:collectBackgroundSamples(imageData,canvas,rects[key])
+    })).filter(group=>group.samples.length);
+    const template=TEMPLATES.find(item=>item.id===Number(state.template))||TEMPLATES[0];
+    const fallback=templateFallbackColor(template);
+    const fields=[];
+    let split=false;
+
+    if(groups.length){
+      const common=selectContrastCandidate(groups,fallback.value);
+      if(common.ratio>=AUTO_CONTRAST_TARGET){
+        for(const key of autoKeys)state.textColors[key]=common.value;
+        for(const group of groups){
+          fields.push({
+            key:group.key,
+            color:common.value,
+            colorName:common.name,
+            ratio:robustContrast(group.samples,common.value,group.key==="footer"?.9:1)
+          });
+        }
+      }else{
+        split=true;
+        for(const group of groups){
+          const choice=selectContrastCandidate([group],fallback.value);
+          state.textColors[group.key]=choice.value;
+          fields.push({key:group.key,color:choice.value,colorName:choice.name,ratio:choice.ratio});
+        }
+        const defaultChoice=selectContrastCandidate(groups,fallback.value);
+        for(const key of autoKeys){
+          if(!groups.some(group=>group.key===key))state.textColors[key]=defaultChoice.value;
+        }
+      }
+    }else{
+      for(const key of autoKeys)state.textColors[key]=fallback.value;
+    }
+
+    const warnings=fields
+      .filter(field=>field.ratio<AUTO_CONTRAST_TARGET)
+      .map(field=>`${TEXT_LABELS[field.key]} 대비 ${field.ratio.toFixed(2)}:1`);
+    autoColorReport={
+      status:"complete",
+      signature,
+      fields,
+      split,
+      minRatio:fields.length?Math.min(...fields.map(field=>field.ratio)):AUTO_CONTRAST_TARGET,
+      warnings
+    };
+    applyResolvedTextColors();
+    updateLayoutStatus();
+    if(persist)saveLocal();
+    return autoColorReport;
+  }catch(error){
+    if(runId!==autoColorRunId||targetState!==state)return null;
+    const template=TEMPLATES.find(item=>item.id===Number(state.template))||TEMPLATES[0];
+    const fallback=templateFallbackColor(template);
+    for(const key of autoKeys){
+      state.textColors[key]=state.customBg?(previousAutoColors[key]||fallback.value):fallback.value;
+    }
+    const fallbackMessage=state.customBg
+      ?"사용자 배경을 읽지 못해 직전 자동색 유지"
+      :`템플릿 안전색 ${fallback.name} 사용`;
+    autoColorReport={
+      status:"error",
+      signature,
+      message:`${error?.message||"배경을 읽지 못함"} · ${fallbackMessage}`,
+      warnings:["자동 글자색 배경 분석 실패"]
+    };
+    applyResolvedTextColors();
+    updateLayoutStatus();
+    if(persist)saveLocal();
+    return autoColorReport;
+  }
+}
+
+async function resolveStableAutoTextColors(options={}){
+  for(let attempt=0;attempt<3;attempt++){
+    const report=await resolveAutoTextColors(options);
+    if(report||!RICH_KEYS.some(key=>state.textColorModes?.[key]==="auto"))return report;
+    await sleep(0);
+  }
+  throw new Error("자동 글자색 분석 중 편집 상태가 계속 변경됐어. 다시 출력해줘.");
+}
+
+function collectContrastWarnings(){
+  if(!autoColorReport||autoColorReport.signature!==autoColorStateSignature())return [];
+  return Array.isArray(autoColorReport.warnings)?autoColorReport.warnings:[];
+}
+
 function rectanglesOverlap(a,b,gap=8){
   return a.left<b.right+gap&&a.right>b.left-gap&&a.top<b.bottom+gap&&a.bottom>b.top-gap;
 }
@@ -1307,13 +1943,15 @@ function updateLayoutStatus(){
     const visible=issues.slice(0,3).join(" · ");
     const rest=issues.length>3?` 외 ${issues.length-3}건`:"";
     updateStatus(`출력 불가 · ${visible}${rest}`,"error");
+  }else if(collectContrastWarnings().length){
+    updateStatus(`자동 색상 주의 · ${collectContrastWarnings()[0]}`,"warn");
   }else{
     updateStatus("레이아웃 정상");
   }
   return issues;
 }
 
-function renderAll(){
+function renderAll({scheduleAutoColor=true}={}){
   state=normalizeState(state);
   renderVersion();
   applyTemplate();
@@ -1322,6 +1960,7 @@ function renderAll(){
   renderControls();
   renderPlaylist();
   updateLayoutStatus();
+  if(scheduleAutoColor&&!suppressPersistence)scheduleAutoTextColor();
 }
 
 function updateStatus(msg,kind="ok"){
@@ -1396,8 +2035,10 @@ function syncEditor(editor){
   if(!key)return;
   state[key]=sanitizeRichHtml(editor.innerHTML);
   renderText();
+  renderQuickStart();
   updateLayoutStatus();
   saveLocal();
+  if(!suppressPersistence)scheduleAutoTextColor();
 }
 
 function normalizeEditorAfterPaste(editor){
@@ -1447,10 +2088,42 @@ function applyRichBold(){
   syncEditor(activeRichEditor);
   rememberRichSelection();
 }
+function markTextColorsManual(keys,color=""){
+  const resolved=Object.fromEntries(keys.map(key=>[key,normalizeColor(color)||resolvedTextColor(key)]));
+  cancelAutoTextColor();
+  for(const key of keys){
+    state.textColors[key]=resolved[key];
+    state.textColorModes[key]="manual";
+  }
+  autoColorReport=null;
+  renderAutoColorControls();
+}
+
+function clearInlineTextColors(value){
+  const box=document.createElement("div");
+  box.innerHTML=sanitizeRichHtml(value);
+  box.querySelectorAll("span[style]").forEach(span=>{
+    span.style.removeProperty("color");
+    if(!span.getAttribute("style"))span.removeAttribute("style");
+  });
+  return sanitizeRichHtml(box.innerHTML);
+}
+
+function enableAutoTextColors(keys){
+  cancelAutoTextColor();
+  for(const key of keys){
+    state[key]=clearInlineTextColors(state[key]);
+    state.textColorModes[key]="auto";
+  }
+  autoColorReport=null;
+}
+
 function applyRichColor(color){
   const c=normalizeColor(color);
   if(!c||!restoreRichSelection(true))return false;
   document.execCommand("foreColor",false,c);
+  const key=activeRichEditor?.dataset.richKey;
+  if(key)markTextColorsManual([key]);
   syncEditor(activeRichEditor);
   rememberRichSelection();
   return true;
@@ -1538,6 +2211,7 @@ function dragEnd(e){
   drag=null;
   page.classList.remove("dragging");
   saveLocal();
+  if(!suppressPersistence)scheduleAutoTextColor();
 }
 
 /* ───────── File helpers ───────── */
@@ -1585,16 +2259,20 @@ async function waitImages(root){
 async function captureStateBlob(snapshot,scale=1){
   const original=deepCopy(state);
   const originalSelected=selectedObjKey;
+  const originalAutoColorReport=autoColorReport?deepCopy(autoColorReport):null;
   let holder=null;
+  cancelAutoTextColor();
   suppressPersistence=true;
 
   try{
     state=normalizeState(deepCopy(snapshot));
     selectedObjKey=null;
-    renderAll();
+    autoColorReport=null;
+    renderAll({scheduleAutoColor:false});
 
     await document.fonts.ready;
     await waitImages(page);
+    await resolveStableAutoTextColors({persist:false});
     await sleep(30);
 
     holder=document.createElement("div");
@@ -1636,8 +2314,10 @@ async function captureStateBlob(snapshot,scale=1){
     return blob;
   }finally{
     holder?.remove();
-    state=original;
+    cancelAutoTextColor();
+    state=normalizeState(original);
     selectedObjKey=originalSelected;
+    autoColorReport=originalAutoColorReport;
     suppressPersistence=false;
     renderAll();
   }
@@ -1647,35 +2327,50 @@ function exportStates(){
   return playlist.length?playlist.map(normalizeState):[normalizeState(state)];
 }
 
-async function invalidExportLayouts(){
+async function inspectExportLayouts(sourceSnapshots=exportStates()){
   const original=deepCopy(state);
   const originalSelected=selectedObjKey;
-  const snapshots=exportStates().map(deepCopy);
+  const originalAutoColorReport=autoColorReport?deepCopy(autoColorReport):null;
+  const snapshots=sourceSnapshots.map(snapshot=>normalizeState(deepCopy(snapshot)));
   const invalid=[];
+  const warnings=[];
+  cancelAutoTextColor();
   suppressPersistence=true;
 
   try{
     for(let i=0;i<snapshots.length;i++){
       state=normalizeState(snapshots[i]);
       selectedObjKey=null;
-      renderAll();
+      autoColorReport=null;
+      renderAll({scheduleAutoColor:false});
       await waitImages(page);
+      await resolveStableAutoTextColors({persist:false});
       await sleep(0);
       const issues=collectLayoutIssues();
+      const contrastWarnings=collectContrastWarnings();
       if(issues.length)invalid.push({index:i+1,issues});
+      if(contrastWarnings.length)warnings.push({index:i+1,warnings:contrastWarnings});
     }
   }finally{
+    cancelAutoTextColor();
     state=normalizeState(original);
     selectedObjKey=originalSelected;
+    autoColorReport=originalAutoColorReport;
     suppressPersistence=false;
     renderAll();
   }
-  return invalid;
+  return {invalid,warnings};
 }
 
-async function ensureExportLayoutsValid(){
-  const invalid=await invalidExportLayouts();
-  if(!invalid.length)return true;
+async function ensureExportLayoutsValid(snapshots){
+  const {invalid,warnings}=await inspectExportLayouts(snapshots);
+  lastExportContrastWarningCount=warnings.reduce((count,item)=>count+item.warnings.length,0);
+  if(!invalid.length){
+    if(warnings.length){
+      updateStatus(`출력 주의 · ${warnings[0].index}번 화면 ${warnings[0].warnings[0]}`,"warn");
+    }
+    return true;
+  }
   const first=invalid[0];
   const details=invalid.slice(0,3).map(item=>
     `${item.index}번 화면: ${item.issues.slice(0,3).join(", ")}`
@@ -1686,9 +2381,8 @@ async function ensureExportLayoutsValid(){
   return false;
 }
 
-async function buildExportBlobs(){
-  const scale=Number($("quality").value)||1;
-  const states=exportStates();
+async function buildExportBlobs(sourceStates,scale){
+  const states=sourceStates.map(snapshot=>normalizeState(deepCopy(snapshot)));
   const result=[];
   updateStatus(`이미지 생성 중 · 0/${states.length}`,"warn");
 
@@ -1700,20 +2394,53 @@ async function buildExportBlobs(){
     updateStatus(`이미지 생성 중 · ${i+1}/${states.length}`,"warn");
   }
 
-  updateStatus(`출력 준비 완료 · ${states.length}장`);
+  updateStatus(
+    `출력 준비 완료 · ${states.length}장${lastExportContrastWarningCount?` · 자동 대비 경고 ${lastExportContrastWarningCount}건`:""}`,
+    lastExportContrastWarningCount?"warn":"ok"
+  );
   return result;
 }
 
 /* ───────── Export ───────── */
+function setExportBusy(busy){
+  const app=document.querySelector(".app");
+  app.inert=busy;
+  app.setAttribute("aria-busy",String(busy));
+  for(const id of ["pngExport","zipExport","folderExport"])$(id).disabled=busy;
+}
+
+async function runExport(task){
+  if(exportInProgress){
+    updateStatus("다른 출력 작업이 진행 중이야.","warn");
+    return;
+  }
+  exportInProgress=true;
+  setExportBusy(true);
+  try{
+    await task();
+  }catch(error){
+    console.error(error);
+    updateStatus("출력 생성 실패","error");
+    alert("출력 생성 중 오류가 났어.\n"+(error?.message||error));
+  }finally{
+    exportInProgress=false;
+    setExportBusy(false);
+  }
+}
+
 async function exportCurrentPNG(){
-  if(!await ensureExportLayoutsValid())return;
+  const snapshots=[normalizeState(deepCopy(state))];
+  const scale=Number($("quality").value)||1;
+  if(!await ensureExportLayoutsValid(snapshots))return;
   try{
     updateStatus("PNG 생성 중…","warn");
-    const scale=Number($("quality").value)||1;
-    const blob=await captureStateBlob(state,scale);
-    const title=safeFilename(richPlainText(state.title));
+    const blob=await captureStateBlob(snapshots[0],scale);
+    const title=safeFilename(richPlainText(snapshots[0].title));
     downloadBlob(blob,title+".png");
-    updateStatus("PNG 저장 완료");
+    updateStatus(
+      `PNG 저장 완료${lastExportContrastWarningCount?` · 자동 대비 경고 ${lastExportContrastWarningCount}건`:""}`,
+      lastExportContrastWarningCount?"warn":"ok"
+    );
   }catch(err){
     console.error(err);
     updateStatus("PNG 생성 실패","warn");
@@ -1727,10 +2454,12 @@ async function exportMagicZip(){
     return;
   }
 
-  if(!await ensureExportLayoutsValid())return;
+  const snapshots=exportStates().map(snapshot=>normalizeState(deepCopy(snapshot)));
+  const scale=Number($("quality").value)||1;
+  if(!await ensureExportLayoutsValid(snapshots))return;
 
   try{
-    const files=await buildExportBlobs();
+    const files=await buildExportBlobs(snapshots,scale);
     updateStatus("MagicInfoSlide ZIP 묶는 중…","warn");
 
     const zip=new JSZip();
@@ -1744,7 +2473,10 @@ async function exportMagicZip(){
     });
 
     downloadBlob(blob,"MagicInfoSlide.zip");
-    updateStatus(`MagicInfoSlide ZIP 저장 완료 · ${files.length}장`);
+    updateStatus(
+      `MagicInfoSlide ZIP 저장 완료 · ${files.length}장${lastExportContrastWarningCount?` · 자동 대비 경고 ${lastExportContrastWarningCount}건`:""}`,
+      lastExportContrastWarningCount?"warn":"ok"
+    );
   }catch(err){
     console.error(err);
     updateStatus("ZIP 생성 실패","warn");
@@ -1758,13 +2490,24 @@ async function exportMagicFolder(){
     return;
   }
 
-  if(!await ensureExportLayoutsValid())return;
+  let chosen;
+  try{
+    updateStatus("저장할 상위 폴더 선택 대기 중…","warn");
+    chosen=await window.showDirectoryPicker({mode:"readwrite"});
+  }catch(err){
+    if(err?.name==="AbortError"){
+      updateStatus("폴더 저장 취소됨","warn");
+      return;
+    }
+    throw err;
+  }
+
+  const snapshots=exportStates().map(snapshot=>normalizeState(deepCopy(snapshot)));
+  const scale=Number($("quality").value)||1;
+  if(!await ensureExportLayoutsValid(snapshots))return;
 
   try{
-    const files=await buildExportBlobs();
-    updateStatus("저장할 상위 폴더 선택 대기 중…","warn");
-
-    const chosen=await window.showDirectoryPicker({mode:"readwrite"});
+    const files=await buildExportBlobs(snapshots,scale);
     const target=chosen.name==="MagicInfoSlide"
       ?chosen
       :await chosen.getDirectoryHandle("MagicInfoSlide",{create:true});
@@ -1777,17 +2520,16 @@ async function exportMagicFolder(){
       await writable.close();
     }
 
-    updateStatus(`MagicInfoSlide 폴더 저장 완료 · ${files.length}장`);
+    updateStatus(
+      `MagicInfoSlide 폴더 저장 완료 · ${files.length}장${lastExportContrastWarningCount?` · 자동 대비 경고 ${lastExportContrastWarningCount}건`:""}`,
+      lastExportContrastWarningCount?"warn":"ok"
+    );
     alert(
       chosen.name==="MagicInfoSlide"
       ?"선택한 MagicInfoSlide 폴더에 파일 저장 완료."
       :"선택한 위치 안에 MagicInfoSlide 폴더를 만들고 파일 저장 완료."
     );
   }catch(err){
-    if(err?.name==="AbortError"){
-      updateStatus("폴더 저장 취소됨","warn");
-      return;
-    }
     console.error(err);
     updateStatus("폴더 저장 실패","warn");
     alert("폴더 저장 중 오류가 났어.\n"+err.message);
@@ -1827,6 +2569,12 @@ buildTemplateGrid();
 loadLocal();
 
 RICH_KEYS.forEach(bindRichEditor);
+QUICK_START_FIELDS.forEach(field=>{
+  $(field.id).addEventListener("input",event=>syncQuickStartInput(event.currentTarget));
+});
+
+$("quickModeButton").onclick=()=>setEditorMode("quick",{focus:true});
+$("advancedModeButton").onclick=()=>setEditorMode("advanced",{focus:true});
 
 document.addEventListener("selectionchange",()=>{
   const sel=window.getSelection();
@@ -1896,7 +2644,30 @@ for(const [id,key] of Object.entries(sizeBindings)){
 }
 
 $("font").onchange=e=>{state.font=e.target.value;renderAll();saveLocal();};
-$("textColor").oninput=e=>{state.textColor=e.target.value;renderAll();saveLocal();};
+$("textColor").oninput=e=>{
+  const color=normalizeColor(e.target.value)||"#FFFFFF";
+  state.textColor=color;
+  markTextColorsManual(RICH_KEYS,color);
+  renderAll();
+  saveLocal();
+};
+$("useAutoTextColor").onclick=()=>{
+  enableAutoTextColors(RICH_KEYS);
+  renderAll();
+  saveLocal();
+};
+document.querySelectorAll("[data-auto-color-key]").forEach(toggle=>{
+  toggle.onclick=()=>{
+    const key=toggle.dataset.autoColorKey;
+    if(state.textColorModes[key]==="auto"){
+      markTextColorsManual([key]);
+    }else{
+      enableAutoTextColors([key]);
+    }
+    renderAll();
+    saveLocal();
+  };
+});
 
 document.querySelectorAll(".align-btn").forEach(btn=>{
   btn.onclick=()=>{
@@ -1940,17 +2711,17 @@ $("logo2File").onchange=async e=>{
   renderAll();saveLocal();
 };
 
-$("photoW").oninput=e=>{state.objects.photo.w=Number(e.target.value);renderObjects();updateLayoutStatus();saveLocal();};
-$("photoH").oninput=e=>{state.objects.photo.h=Number(e.target.value);renderObjects();updateLayoutStatus();saveLocal();};
+$("photoW").oninput=e=>{state.objects.photo.w=Number(e.target.value);renderObjects();updateLayoutStatus();saveLocal();scheduleAutoTextColor();};
+$("photoH").oninput=e=>{state.objects.photo.h=Number(e.target.value);renderObjects();updateLayoutStatus();saveLocal();scheduleAutoTextColor();};
 $("logo1W").oninput=e=>{
   state.objects.logo1.w=Number(e.target.value);
   state.objects.logo1.h=logoHeightPercent(state.objects.logo1.w,state.objects.logo1.aspect)||state.objects.logo1.h;
-  renderObjects();updateLayoutStatus();saveLocal();
+  renderObjects();updateLayoutStatus();saveLocal();scheduleAutoTextColor();
 };
 $("logo2W").oninput=e=>{
   state.objects.logo2.w=Number(e.target.value);
   state.objects.logo2.h=logoHeightPercent(state.objects.logo2.w,state.objects.logo2.aspect)||state.objects.logo2.h;
-  renderObjects();updateLayoutStatus();saveLocal();
+  renderObjects();updateLayoutStatus();saveLocal();scheduleAutoTextColor();
 };
 
 $("photoRemove").onclick=()=>{state.objects.photo.src="";selectedObjKey=null;renderAll();saveLocal();};
@@ -1990,9 +2761,9 @@ $("playlistClear").onclick=()=>{
   renderPlaylist();saveLocal();
 };
 
-$("pngExport").onclick=exportCurrentPNG;
-$("zipExport").onclick=exportMagicZip;
-$("folderExport").onclick=exportMagicFolder;
+$("pngExport").onclick=()=>runExport(exportCurrentPNG);
+$("zipExport").onclick=()=>runExport(exportMagicZip);
+$("folderExport").onclick=()=>runExport(exportMagicFolder);
 
 $("jobSave").onclick=saveJob;
 $("jobLoadBtn").onclick=()=>$("jobLoad").click();
@@ -2009,6 +2780,7 @@ $("resetAll").onclick=()=>{
   playlist=[];
   selectedPlaylistIndex=-1;
   selectedObjKey=null;
+  setEditorMode("quick");
   renderAll();
   updateStatus("전체 초기화 완료");
 };
@@ -2026,12 +2798,14 @@ function setMobilePreview(open){
 }
 
 $("mobilePreviewToggle").onclick=()=>setMobilePreview(!document.body.classList.contains("mobile-preview-open"));
+$("quickPreviewButton").onclick=()=>setMobilePreview(true);
 
 window.addEventListener("resize",()=>{
   if(window.innerWidth>760)setMobilePreview(false);
   else fitPreview();
 });
 
+setEditorMode(editorMode);
 renderAll();
 fitPreview();
 </script>
