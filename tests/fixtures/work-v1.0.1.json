@@ -1,0 +1,18 @@
+{
+  "app": "digital-signage-maker",
+  "version": "1.0.1",
+  "savedAt": "2024-01-01T00:00:00.000Z",
+  "state": {
+    "version": "1.0.1",
+    "template": 1,
+    "title": "<strong>구형</strong> 작업 복원",
+    "subtitle": "V1.0.1 fixture",
+    "body": "첫 문단\n둘째 문단\nThird line",
+    "emphasis": "<span style=\"color:#F3C866\">호환성</span> 확인",
+    "footer": "이전 형식",
+    "font": "pretendard",
+    "textColor": "#FFFFFF"
+  },
+  "playlist": [],
+  "selectedPlaylistIndex": -1
+}

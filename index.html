@@ -37,6 +37,10 @@ body{
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 button:disabled,input:disabled{cursor:not-allowed;opacity:.48}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+.rich-editor:focus-visible,[tabindex]:focus-visible{
+  outline:3px solid rgba(14,74,132,.42);outline-offset:2px
+}
 .app{min-height:100vh;display:grid;grid-template-columns:410px minmax(0,1fr)}
 .sidebar{
   height:100vh;overflow:auto;position:sticky;top:0;z-index:30;
@@ -159,6 +163,11 @@ input:focus,select:focus,textarea:focus,.rich-editor:focus{
   content:"";position:absolute;inset:3px;border-radius:999px;background:var(--swatch);
   border:1px solid rgba(0,0,0,.12)
 }
+.rich-swatch[aria-pressed="true"]{border-color:#0E4A84!important;box-shadow:0 0 0 2px rgba(14,74,132,.22)}
+.rich-swatch[aria-pressed="true"]:before{
+  content:"✓";position:absolute;inset:0;display:grid;place-items:center;z-index:2;
+  color:#fff;font-size:14px;font-weight:950;text-shadow:0 1px 3px #000,0 0 2px #000
+}
 .rich-editor{
   width:100%;border:1px solid var(--line);border-radius:9px;background:#fff;
   padding:9px 10px;outline:none;color:var(--text);line-height:1.5;
@@ -222,6 +231,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   white-space:nowrap
 }
 .status.warn{background:#fff1d5;color:#8a6100}
+.status.error{background:#ffe8e8;color:#9d2525}
 .stage{
   flex:1;overflow:auto;display:flex;justify-content:flex-start;align-items:center;flex-direction:column;
   padding:28px 32px 60px;
@@ -301,6 +311,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   border:1px solid #cfe6d6;background:#f2faf4;color:#356446;border-radius:9px;
   padding:9px 10px;font-size:10.8px;line-height:1.55;margin-top:8px
 }
+.mobile-preview-toggle{display:none}
 
 @media(max-width:1050px){
   .app{grid-template-columns:355px minmax(0,1fr)}
@@ -309,9 +320,26 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 @media(max-width:760px){
   .template-grid{grid-template-columns:1fr}
   .app{display:block}
-  .sidebar{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line)}
+  .sidebar{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line);padding-bottom:78px}
   .workspace{height:auto;min-height:100vh}
   .stage{min-height:760px;padding-left:10px;padding-right:10px}
+  .btn,.rich-toolbar button,.logo-presets button,.play-actions button,
+  input[type=file],select{min-height:44px}
+  .rich-editor,input[type=range]{min-height:44px}
+  .rich-toolbar input[type=color],input[type=color]{min-width:44px;min-height:44px}
+  .mobile-preview-toggle{
+    display:flex;align-items:center;justify-content:center;position:fixed;right:14px;bottom:14px;
+    min-width:112px;min-height:46px;padding:10px 14px;border:0;border-radius:999px;
+    background:#0E4A84;color:#fff;font-weight:850;box-shadow:0 8px 24px rgba(14,45,75,.28);z-index:300
+  }
+  body.mobile-preview-open{overflow:hidden}
+  body.mobile-preview-open .workspace{
+    position:fixed;inset:0;width:100%;height:100dvh;min-height:0;background:var(--bg);z-index:200
+  }
+  body.mobile-preview-open .stage{
+    height:calc(100dvh - 54px);min-height:0;padding:16px 10px 74px;overflow:auto
+  }
+  body.mobile-preview-open .patch-panel{display:none}
 }
 </style>
 </head>
@@ -320,7 +348,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   <aside class="sidebar">
     <div class="header">
       <h1>디지털 사이니지 제작기</h1>
-      <span class="badge">V1.2</span>
+      <span class="badge" id="appVersionBadge">V1.3.0</span>
     </div>
     <p class="desc">
       ERICA 세로형 디지털 사이니지용 9:16 안내 화면 제작기.
@@ -350,7 +378,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       </div>
 
       <div class="field" style="margin-top:10px">
-        <label><strong>내 배경 이미지</strong><span>선택</span></label>
+        <label for="customBgFile"><strong>내 배경 이미지</strong><span>선택</span></label>
         <input type="file" id="customBgFile" accept="image/png,image/jpeg,image/webp">
       </div>
       <div class="btns">
@@ -368,42 +396,47 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       </div>
 
       <div class="rich-toolbar" id="richToolbar">
-        <button type="button" class="bold-btn" id="richBold" title="선택 영역 굵게">B</button>
+        <button type="button" class="bold-btn" id="richBold" title="선택 영역 굵게" aria-label="선택 영역 굵게">B</button>
         <span class="toolbar-sep"></span>
         <span class="toolbar-label">글자색</span>
-        <button type="button" class="rich-swatch" data-rich-color="#FFFFFF" style="--swatch:#FFFFFF" title="화이트"></button>
-        <button type="button" class="rich-swatch" data-rich-color="#0E4A84" style="--swatch:#0E4A84" title="한양 블루"></button>
-        <button type="button" class="rich-swatch" data-rich-color="#F3C866" style="--swatch:#F3C866" title="골드"></button>
-        <button type="button" class="rich-swatch" data-rich-color="#FF6B6B" style="--swatch:#FF6B6B" title="레드"></button>
-        <button type="button" class="rich-swatch" data-rich-color="#111111" style="--swatch:#111111" title="블랙"></button>
-        <input type="color" id="richColor" value="#FFFFFF" title="직접 색상 선택">
+        <button type="button" class="rich-swatch" data-rich-color="#FFFFFF" style="--swatch:#FFFFFF" title="화이트" aria-label="부분 글자색 화이트" aria-pressed="false"></button>
+        <button type="button" class="rich-swatch" data-rich-color="#0E4A84" style="--swatch:#0E4A84" title="한양 블루" aria-label="부분 글자색 한양 블루" aria-pressed="false"></button>
+        <button type="button" class="rich-swatch" data-rich-color="#F3C866" style="--swatch:#F3C866" title="골드" aria-label="부분 글자색 골드" aria-pressed="false"></button>
+        <button type="button" class="rich-swatch" data-rich-color="#FF6B6B" style="--swatch:#FF6B6B" title="레드" aria-label="부분 글자색 레드" aria-pressed="false"></button>
+        <button type="button" class="rich-swatch" data-rich-color="#111111" style="--swatch:#111111" title="블랙" aria-label="부분 글자색 블랙" aria-pressed="false"></button>
+        <input type="color" id="richColor" value="#FFFFFF" title="직접 색상 선택" aria-label="부분 글자색 직접 선택">
         <span class="toolbar-sep"></span>
         <button type="button" id="richClear">서식 제거</button>
       </div>
 
       <div class="field">
-        <label><strong>제목</strong></label>
+        <label id="titleLabel"><strong>제목</strong></label>
         <div id="title" class="rich-editor medium" contenteditable="true"
+             role="textbox" aria-labelledby="titleLabel" aria-multiline="true"
              data-rich-key="title" data-placeholder="제목을 입력하세요"></div>
       </div>
       <div class="field">
-        <label><strong>부제목</strong><span>선택</span></label>
+        <label id="subtitleLabel"><strong>부제목</strong><span>선택</span></label>
         <div id="subtitle" class="rich-editor" contenteditable="true"
+             role="textbox" aria-labelledby="subtitleLabel" aria-multiline="true"
              data-rich-key="subtitle" data-placeholder="부제목 또는 짧은 안내"></div>
       </div>
       <div class="field">
-        <label><strong>본문</strong></label>
+        <label id="bodyLabel"><strong>본문</strong></label>
         <div id="body" class="rich-editor tall" contenteditable="true"
+             role="textbox" aria-labelledby="bodyLabel" aria-multiline="true"
              data-rich-key="body" data-placeholder="안내 내용을 입력하세요"></div>
       </div>
       <div class="field">
-        <label><strong>강조문</strong><span>선택</span></label>
+        <label id="emphasisLabel"><strong>강조문</strong><span>선택</span></label>
         <div id="emphasis" class="rich-editor medium" contenteditable="true"
+             role="textbox" aria-labelledby="emphasisLabel" aria-multiline="true"
              data-rich-key="emphasis" data-placeholder="강조할 문구가 있으면 입력"></div>
       </div>
       <div class="field">
-        <label><strong>하단 문구</strong><span>선택</span></label>
+        <label id="footerLabel"><strong>하단 문구</strong><span>선택</span></label>
         <div id="footer" class="rich-editor medium" contenteditable="true"
+             role="textbox" aria-labelledby="footerLabel" aria-multiline="true"
              data-rich-key="footer" data-placeholder="문의처·행사 일시·장소 등"></div>
       </div>
 
@@ -416,7 +449,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
     <section class="section">
       <h2>3. 글자 스타일</h2>
       <div class="field">
-        <label><strong>글꼴</strong><span>상업적 이용 가능 무료 폰트</span></label>
+        <label for="font"><strong>글꼴</strong><span>상업적 이용 가능 무료 폰트</span></label>
         <select id="font">
           <option value="pretendard">Pretendard</option>
           <option value="suit">SUIT</option>
@@ -425,14 +458,14 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
         </select>
       </div>
 
-      <div class="range"><span>제목 크기</span><input id="titleSize" type="range" min="44" max="130" step="1"><output id="titleSizeOut"></output></div>
-      <div class="range"><span>부제목 크기</span><input id="subtitleSize" type="range" min="28" max="80" step="1"><output id="subtitleSizeOut"></output></div>
-      <div class="range"><span>본문 크기</span><input id="bodySize" type="range" min="24" max="68" step="1"><output id="bodySizeOut"></output></div>
-      <div class="range"><span>강조문 크기</span><input id="emSize" type="range" min="28" max="84" step="1"><output id="emSizeOut"></output></div>
-      <div class="range"><span>하단 크기</span><input id="footerSize" type="range" min="20" max="52" step="1"><output id="footerSizeOut"></output></div>
+      <div class="range"><label for="titleSize">제목 크기</label><input id="titleSize" type="range" min="44" max="130" step="1"><output id="titleSizeOut" for="titleSize"></output></div>
+      <div class="range"><label for="subtitleSize">부제목 크기</label><input id="subtitleSize" type="range" min="28" max="80" step="1"><output id="subtitleSizeOut" for="subtitleSize"></output></div>
+      <div class="range"><label for="bodySize">본문 크기</label><input id="bodySize" type="range" min="24" max="68" step="1"><output id="bodySizeOut" for="bodySize"></output></div>
+      <div class="range"><label for="emSize">강조문 크기</label><input id="emSize" type="range" min="28" max="84" step="1"><output id="emSizeOut" for="emSize"></output></div>
+      <div class="range"><label for="footerSize">하단 크기</label><input id="footerSize" type="range" min="20" max="52" step="1"><output id="footerSizeOut" for="footerSize"></output></div>
 
       <div class="field">
-        <label><strong>기본 글자색</strong></label>
+        <label for="textColor"><strong>기본 글자색</strong></label>
         <div class="color-pair">
           <input type="color" id="textColor">
           <span>부분 색상이 지정된 글자는 해당 색상이 우선돼.</span>
@@ -442,9 +475,9 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       <div class="field">
         <label><strong>텍스트 정렬</strong></label>
         <div class="three">
-          <button class="btn outline align-btn" type="button" data-align="left">왼쪽</button>
-          <button class="btn outline align-btn" type="button" data-align="center">가운데</button>
-          <button class="btn outline align-btn" type="button" data-align="right">오른쪽</button>
+          <button class="btn outline align-btn" type="button" data-align="left" aria-pressed="false">왼쪽</button>
+          <button class="btn outline align-btn" type="button" data-align="center" aria-pressed="true">가운데</button>
+          <button class="btn outline align-btn" type="button" data-align="right" aria-pressed="false">오른쪽</button>
         </div>
       </div>
     </section>
@@ -453,16 +486,16 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       <h2>4. 사진 · 로고</h2>
 
       <div class="field">
-        <label><strong>메인 사진</strong><span>선택</span></label>
+        <label for="photoFile"><strong>메인 사진</strong><span>선택</span></label>
         <input type="file" id="photoFile" accept="image/png,image/jpeg,image/webp">
       </div>
       <div class="row">
         <div class="field">
-          <label><strong>사진 너비</strong></label>
+          <label for="photoW"><strong>사진 너비</strong></label>
           <input type="range" id="photoW" min="20" max="100" step="1">
         </div>
         <div class="field">
-          <label><strong>사진 높이</strong></label>
+          <label for="photoH"><strong>사진 높이</strong></label>
           <input type="range" id="photoH" min="10" max="80" step="1">
         </div>
       </div>
@@ -471,11 +504,11 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       <div style="height:10px"></div>
 
       <div class="field">
-        <label><strong>로고 1</strong><span>드래그 이동 가능</span></label>
+        <label for="logo1File"><strong>로고 1</strong><span>드래그 이동 가능</span></label>
         <input type="file" id="logo1File" accept="image/png,image/jpeg,image/webp">
       </div>
       <div class="field">
-        <label><strong>로고 2</strong><span>드래그 이동 가능</span></label>
+        <label for="logo2File"><strong>로고 2</strong><span>드래그 이동 가능</span></label>
         <input type="file" id="logo2File" accept="image/png,image/jpeg,image/webp">
       </div>
 
@@ -486,8 +519,8 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
         <button type="button" data-preset-logo="logos/hyu_lion_white.png" data-target-logo="logo2">사자 흰색 → 로고2</button>
       </div>
 
-      <div class="range"><span>로고1 크기</span><input id="logo1W" type="range" min="5" max="55" step="1"><output id="logo1WOut"></output></div>
-      <div class="range"><span>로고2 크기</span><input id="logo2W" type="range" min="5" max="55" step="1"><output id="logo2WOut"></output></div>
+      <div class="range"><label for="logo1W">로고1 크기</label><input id="logo1W" type="range" min="5" max="55" step="1"><output id="logo1WOut" for="logo1W"></output></div>
+      <div class="range"><label for="logo2W">로고2 크기</label><input id="logo2W" type="range" min="5" max="55" step="1"><output id="logo2WOut" for="logo2W"></output></div>
 
       <div class="btns">
         <button class="btn secondary" type="button" id="logo1Remove">로고1 제거</button>
@@ -512,7 +545,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       <h2>6. 출력 · MagicInfoSlide</h2>
 
       <div class="field">
-        <label><strong>출력 해상도</strong></label>
+        <label for="quality"><strong>출력 해상도</strong></label>
         <select id="quality">
           <option value="1">FHD · 1080 × 1920</option>
           <option value="2">4K · 2160 × 3840</option>
@@ -520,10 +553,9 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       </div>
 
       <div class="export-note">
-        일반 웹 다운로드는 보안상 “폴더 자체”를 바로 내려줄 수 없어서
-        <strong>ZIP 안에 MagicInfoSlide 폴더를 만들어</strong> 내보내.
-        Chrome/Edge에서는 아래 “폴더로 바로 저장”을 쓰면 선택한 위치에
-        <strong>MagicInfoSlide</strong> 폴더를 직접 만들 수 있어.
+        이 ZIP은 <strong>번호가 붙은 PNG 묶음</strong>이며 MagicINFO 서버에 바로 import되는
+        manifest·재생목록·스케줄 완성 패키지가 아니야. PNG를 MagicINFO 미디어에 등록한 뒤
+        재생목록과 스케줄을 별도로 구성해야 해.
       </div>
 
       <div class="btns">
@@ -543,17 +575,17 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
         <button class="btn secondary" type="button" id="jobSave">작업파일 저장</button>
         <button class="btn secondary" type="button" id="jobLoadBtn">작업파일 불러오기</button>
       </div>
-      <input class="hidden-file" type="file" id="jobLoad" accept=".json,application/json">
+      <input class="hidden-file" type="file" id="jobLoad" accept=".json,application/json" aria-label="작업 JSON 파일 선택">
       <button class="btn danger" type="button" id="resetAll" style="width:100%;margin-top:7px">전체 초기화</button>
     </section>
   </aside>
 
-  <main class="workspace">
+  <main class="workspace" id="workspace">
     <div class="toolbar">
       <div class="help">
         9:16 세로형 · 미리보기의 글자·사진·로고를 직접 드래그해서 이동할 수 있어.
       </div>
-      <div class="status" id="status">레이아웃 정상</div>
+      <div class="status" id="status" role="status" aria-live="polite" aria-atomic="true">레이아웃 정상</div>
     </div>
 
     <div class="stage" id="stage">
@@ -586,18 +618,15 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
         <section class="patch-panel">
           <div class="patch-head">
-            <strong>디지털 사이니지 제작기 V1.2</strong>
-            <span class="patch-current">V1.2 · 2026.09.01</span>
+            <strong id="appVersionHeading">디지털 사이니지 제작기 V1.3.0</strong>
+            <span class="patch-current" id="appVersionCurrent">V1.3.0 · OUTPUT RELIABILITY</span>
           </div>
           <ul>
-            <li>기존 안내문 제작기 계열의 가로형 느낌을 세로형 9:16으로 재구성한 이미지 시안 5종 추가</li>
-            <li>이미지 시안을 07~16 총 10종으로 확대</li>
-            <li>한양 공식색 그라데이션 표기 번호를 17~22로 이동</li>
-            <li>기본 예시 본문에서 화면에 그대로 보이던 문자 ‘\\n’을 제거하고 실제 줄바꿈으로 처리</li>
-            <li>이전 저장 데이터에 ‘\\n’이 남아 있어도 자동 줄바꿈으로 변환</li>
-            <li>기존 기본 시안 01~06 및 기존 이미지 시안은 모두 유지</li>
-            <li>공식색: Hanyang Blue·Silver·Yellow Green·Orange·Gold·Retro Mint·Retro Coral 반영</li>
-            <li>기본 / 이미지 / 한양 공식색 그라데이션으로 템플릿 목록을 구분</li>
+            <li>템플릿 07~09 파일명 정합성 복구 및 22종 자산 자동 검사</li>
+            <li>다중 줄 붙여넣기 줄바꿈 보존</li>
+            <li>텍스트·사진·로고·안전영역 충돌 감지 및 문제 출력 차단</li>
+            <li>원본 이미지 비율 기반 로고 크기 계산과 FHD/4K 출력 비율 보존</li>
+            <li>모바일 즉시 미리보기와 입력 접근성 보강</li>
             <li>9:16 세로형 1080×1920 작업 캔버스</li>
             <li>FHD / 4K PNG 출력</li>
             <li>제목·부제목·본문·강조문·하단문구 직접 드래그 이동</li>
@@ -614,14 +643,21 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
     </div>
   </main>
 </div>
+<button type="button" class="mobile-preview-toggle" id="mobilePreviewToggle"
+        aria-controls="workspace" aria-expanded="false">미리보기 열기</button>
 
 <script>
 "use strict";
 
 const $=id=>document.getElementById(id);
+const APP_VERSION="1.3.0";
+const APP_RELEASE_NAME="OUTPUT RELIABILITY";
 const PAGE_W=1080;
 const PAGE_H=1920;
+const SAFE_MARGIN=54;
 const RICH_KEYS=["title","subtitle","body","emphasis","footer"];
+const TEXT_LABELS={title:"제목",subtitle:"부제목",body:"본문",emphasis:"강조문",footer:"하단 문구"};
+const OBJECT_LABELS={photo:"사진",logo1:"로고 1",logo2:"로고 2"};
 
 const TEMPLATES=[
   {
@@ -795,14 +831,14 @@ function defaultTextBlocks(){
 function defaultObjects(){
   return {
     photo:{src:"",x:50,y:54,w:78,h:34},
-    logo1:{src:"",x:35,y:92,w:24,h:10},
-    logo2:{src:"",x:65,y:92,w:24,h:10}
+    logo1:{src:"",x:35,y:92,w:24,h:10,aspect:null},
+    logo2:{src:"",x:65,y:92,w:24,h:10,aspect:null}
   };
 }
 
 function freshState(){
   return {
-    version:"1.2",
+    version:APP_VERSION,
     template:1,
     customBg:"",
     title:"디지털 사이니지 안내",
@@ -824,6 +860,7 @@ let activeRichEditor=null;
 let savedRichRange=null;
 let drag=null;
 let selectedObjKey=null;
+let suppressPersistence=false;
 
 const page=$("page");
 const templateBg=$("templateBg");
@@ -868,11 +905,23 @@ function sanitizeRichHtml(html){
   const box=document.createElement("div");
   box.innerHTML=String(html||"");
 
-  function walk(node){
+  const blockTags=new Set(["DIV","P","LI"]);
+
+  function hasRenderableSibling(node){
+    let next=node.nextSibling;
+    while(next){
+      if(next.nodeType===Node.TEXT_NODE&&next.nodeValue!=="")return true;
+      if(next.nodeType===Node.ELEMENT_NODE)return true;
+      next=next.nextSibling;
+    }
+    return false;
+  }
+
+  function walkInline(node){
     if(node.nodeType===Node.TEXT_NODE)return escapeHtml(node.nodeValue);
     if(node.nodeType!==Node.ELEMENT_NODE)return "";
     const tag=node.tagName.toUpperCase();
-    const inner=[...node.childNodes].map(walk).join("");
+    const inner=serializeChildren(node);
 
     if(tag==="BR")return "<br>";
     if(tag==="B"||tag==="STRONG")return `<strong>${inner}</strong>`;
@@ -880,11 +929,25 @@ function sanitizeRichHtml(html){
       const color=normalizeColor(tag==="FONT"?node.getAttribute("color"):node.style.color);
       return color?`<span style="color:${color}">${inner}</span>`:inner;
     }
-    if(["DIV","P","LI"].includes(tag))return inner+"<br>";
     return inner;
   }
 
-  return [...box.childNodes].map(walk).join("")
+  function serializeChildren(parent){
+    let out="";
+    for(const node of parent.childNodes){
+      const isBlock=node.nodeType===Node.ELEMENT_NODE&&blockTags.has(node.tagName.toUpperCase());
+      if(isBlock){
+        if(out&&!out.endsWith("<br>"))out+="<br>";
+        out+=serializeChildren(node);
+        if(hasRenderableSibling(node)&&!out.endsWith("<br>"))out+="<br>";
+      }else{
+        out+=walkInline(node);
+      }
+    }
+    return out;
+  }
+
+  return serializeChildren(box)
     .replace(/(<br>){3,}/g,"<br><br>")
     .replace(/^(<br>)+|(<br>)+$/g,"");
 }
@@ -907,6 +970,7 @@ function normalizeState(raw){
   const b=freshState();
   const x=raw&&typeof raw==="object"?raw:{};
   const merged={...b,...x};
+  merged.version=APP_VERSION;
 
   for(const key of RICH_KEYS)merged[key]=migrateRich(merged[key]);
 
@@ -947,6 +1011,7 @@ function buildTemplateGrid(){
       btn.type="button";
       btn.className="template-btn";
       btn.dataset.template=String(t.id);
+      btn.setAttribute("aria-pressed","false");
 
       const thumb=document.createElement("div");
       thumb.className="template-thumb";
@@ -1010,7 +1075,9 @@ function applyTemplate(){
   }
 
   document.querySelectorAll(".template-btn").forEach(btn=>{
-    btn.classList.toggle("active",Number(btn.dataset.template)===Number(state.template)&&!state.customBg);
+    const active=Number(btn.dataset.template)===Number(state.template)&&!state.customBg;
+    btn.classList.toggle("active",active);
+    btn.setAttribute("aria-pressed",String(active));
   });
 }
 
@@ -1042,6 +1109,24 @@ function renderText(){
   $("pEmphasis").style.backdropFilter=richPlainText(state.emphasis).trim()?"blur(3px)":"none";
 }
 
+function logoHeightPercent(widthPercent,aspect){
+  if(!Number.isFinite(aspect)||aspect<=0)return null;
+  return Math.round(widthPercent*PAGE_W/aspect/PAGE_H*1000)/1000;
+}
+
+function syncLogoAspect(key,img){
+  if(key==="photo"||!img.naturalWidth||!img.naturalHeight)return;
+  const cfg=state.objects[key];
+  const aspect=img.naturalWidth/img.naturalHeight;
+  const height=logoHeightPercent(cfg.w,aspect);
+  if(Math.abs((cfg.aspect||0)-aspect)<.0001&&Math.abs(cfg.h-height)<.001)return;
+  cfg.aspect=aspect;
+  cfg.h=height;
+  $(key+"Obj").style.height=height+"%";
+  saveLocal();
+  updateLayoutStatus();
+}
+
 function renderObjects(){
   const defs=[
     ["photo","photoObj","photoImg"],
@@ -1061,8 +1146,14 @@ function renderObjects(){
     obj.classList.toggle("hidden",!cfg.src);
     obj.classList.toggle("selected",selectedObjKey===key);
 
-    if(cfg.src && img.src!==cfg.src)img.src=cfg.src;
-    if(!cfg.src)img.removeAttribute("src");
+    if(cfg.src){
+      img.onload=()=>syncLogoAspect(key,img);
+      if(img.getAttribute("src")!==cfg.src)img.setAttribute("src",cfg.src);
+      else if(img.complete)syncLogoAspect(key,img);
+    }else{
+      img.onload=null;
+      img.removeAttribute("src");
+    }
   });
 
   $("photoW").value=state.objects.photo.w;
@@ -1101,6 +1192,7 @@ function renderControls(){
     btn.style.borderColor=allSame?"#0E4A84":"#dce3e9";
     btn.style.color=allSame?"#0E4A84":"#395064";
     btn.style.fontWeight=allSame?"850":"800";
+    btn.setAttribute("aria-pressed",String(allSame));
   });
 }
 
@@ -1158,23 +1250,89 @@ function renderPlaylist(){
   });
 }
 
+function renderVersion(){
+  $("appVersionBadge").textContent=`V${APP_VERSION}`;
+  $("appVersionHeading").textContent=`디지털 사이니지 제작기 V${APP_VERSION}`;
+  $("appVersionCurrent").textContent=`V${APP_VERSION} · ${APP_RELEASE_NAME}`;
+}
+
+function rectInPage(el){
+  const pageRect=page.getBoundingClientRect();
+  const rect=el.getBoundingClientRect();
+  const scaleX=pageRect.width/PAGE_W;
+  const scaleY=pageRect.height/PAGE_H;
+  return {
+    left:(rect.left-pageRect.left)/scaleX,
+    top:(rect.top-pageRect.top)/scaleY,
+    right:(rect.right-pageRect.left)/scaleX,
+    bottom:(rect.bottom-pageRect.top)/scaleY
+  };
+}
+
+function rectanglesOverlap(a,b,gap=8){
+  return a.left<b.right+gap&&a.right>b.left-gap&&a.top<b.bottom+gap&&a.bottom>b.top-gap;
+}
+
+function collectLayoutIssues(){
+  const items=[];
+  for(const key of RICH_KEYS){
+    const el=$("p"+key[0].toUpperCase()+key.slice(1));
+    if(el&&richPlainText(state[key]).trim())items.push({name:TEXT_LABELS[key],rect:rectInPage(el)});
+  }
+  for(const key of ["photo","logo1","logo2"]){
+    const el=$(key+"Obj");
+    if(el&&state.objects[key].src&&!el.classList.contains("hidden"))items.push({name:OBJECT_LABELS[key],rect:rectInPage(el)});
+  }
+
+  const issues=[];
+  for(const item of items){
+    const r=item.rect;
+    if(r.left<SAFE_MARGIN||r.top<SAFE_MARGIN||r.right>PAGE_W-SAFE_MARGIN||r.bottom>PAGE_H-SAFE_MARGIN){
+      issues.push(`${item.name}이 안전영역을 벗어남`);
+    }
+  }
+  for(let i=0;i<items.length;i++){
+    for(let j=i+1;j<items.length;j++){
+      if(rectanglesOverlap(items[i].rect,items[j].rect)){
+        issues.push(`${items[i].name} ↔ ${items[j].name} 겹침`);
+      }
+    }
+  }
+  return [...new Set(issues)];
+}
+
+function updateLayoutStatus(){
+  const issues=collectLayoutIssues();
+  if(issues.length){
+    const visible=issues.slice(0,3).join(" · ");
+    const rest=issues.length>3?` 외 ${issues.length-3}건`:"";
+    updateStatus(`출력 불가 · ${visible}${rest}`,"error");
+  }else{
+    updateStatus("레이아웃 정상");
+  }
+  return issues;
+}
+
 function renderAll(){
   state=normalizeState(state);
+  renderVersion();
   applyTemplate();
   renderText();
   renderObjects();
   renderControls();
   renderPlaylist();
-  updateStatus();
+  updateLayoutStatus();
 }
 
 function updateStatus(msg,kind="ok"){
   const s=$("status");
   s.textContent=msg||"레이아웃 정상";
   s.classList.toggle("warn",kind==="warn");
+  s.classList.toggle("error",kind==="error");
 }
 
 function saveLocal(){
+  if(suppressPersistence)return;
   try{
     localStorage.setItem("digitalSignageMakerV1",JSON.stringify({
       state,playlist,selectedPlaylistIndex
@@ -1238,7 +1396,22 @@ function syncEditor(editor){
   if(!key)return;
   state[key]=sanitizeRichHtml(editor.innerHTML);
   renderText();
+  updateLayoutStatus();
   saveLocal();
+}
+
+function normalizeEditorAfterPaste(editor){
+  const clean=sanitizeRichHtml(editor.innerHTML);
+  if(editor.innerHTML!==clean)editor.innerHTML=clean;
+  syncEditor(editor);
+
+  const range=document.createRange();
+  range.selectNodeContents(editor);
+  range.collapse(false);
+  const sel=window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+  rememberRichSelection();
 }
 
 function bindRichEditor(id){
@@ -1252,7 +1425,7 @@ function bindRichEditor(id){
     e.preventDefault();
     const plain=(e.clipboardData||window.clipboardData).getData("text/plain");
     document.execCommand("insertText",false,plain);
-    setTimeout(()=>syncEditor(editor),0);
+    setTimeout(()=>normalizeEditorAfterPaste(editor),0);
   });
 
   editor.addEventListener("keydown",e=>{
@@ -1276,10 +1449,11 @@ function applyRichBold(){
 }
 function applyRichColor(color){
   const c=normalizeColor(color);
-  if(!c||!restoreRichSelection(true))return;
+  if(!c||!restoreRichSelection(true))return false;
   document.execCommand("foreColor",false,c);
   syncEditor(activeRichEditor);
   rememberRichSelection();
+  return true;
 }
 function clearRichFormat(){
   if(!restoreRichSelection(true))return;
@@ -1345,6 +1519,7 @@ function dragMove(e){
     cfg.x=Math.round(x*10)/10;
     cfg.y=Math.round(y*10)/10;
     renderText();
+    updateLayoutStatus();
   }else{
     const cfg=state.objects[drag.key];
     x=clamp(x,3,97);
@@ -1352,6 +1527,7 @@ function dragMove(e){
     cfg.x=Math.round(x*10)/10;
     cfg.y=Math.round(y*10)/10;
     renderObjects();
+    updateLayoutStatus();
   }
 }
 
@@ -1385,11 +1561,14 @@ function downloadBlob(blob,name){
 
 function safeFilename(base){
   const clean=String(base||"signage")
-    .replace(/[\\/:*?"<>|]/g," ")
+    .normalize("NFC")
+    .replace(/[\\/:*?"<>|\u0000-\u001F]/g," ")
     .replace(/\s+/g," ")
     .trim()
+    .replace(/[. ]+$/g,"")
     .slice(0,50);
-  return clean||"signage";
+  const safe=clean||"signage";
+  return /^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)/i.test(safe)?"_"+safe:safe;
 }
 
 async function waitImages(root){
@@ -1406,64 +1585,105 @@ async function waitImages(root){
 async function captureStateBlob(snapshot,scale=1){
   const original=deepCopy(state);
   const originalSelected=selectedObjKey;
+  let holder=null;
+  suppressPersistence=true;
 
-  state=normalizeState(deepCopy(snapshot));
-  selectedObjKey=null;
-  renderAll();
+  try{
+    state=normalizeState(deepCopy(snapshot));
+    selectedObjKey=null;
+    renderAll();
 
-  await document.fonts.ready;
-  await waitImages(page);
-  await sleep(30);
+    await document.fonts.ready;
+    await waitImages(page);
+    await sleep(30);
 
-  const holder=document.createElement("div");
-  holder.style.cssText="position:fixed;left:-20000px;top:0;width:1080px;height:1920px;overflow:hidden;z-index:-9999";
-  const clone=page.cloneNode(true);
-  clone.classList.add("exporting");
-  clone.classList.remove("show-safe","dragging");
-  clone.style.transform="none";
-  clone.style.position="relative";
-  clone.style.left="0";
-  clone.style.top="0";
-  clone.style.width=PAGE_W+"px";
-  clone.style.height=PAGE_H+"px";
-  clone.style.boxShadow="none";
+    holder=document.createElement("div");
+    holder.style.cssText="position:fixed;left:-20000px;top:0;width:1080px;height:1920px;overflow:hidden;z-index:-9999";
+    const clone=page.cloneNode(true);
+    clone.classList.add("exporting");
+    clone.classList.remove("show-safe","dragging");
+    clone.style.transform="none";
+    clone.style.position="relative";
+    clone.style.left="0";
+    clone.style.top="0";
+    clone.style.width=PAGE_W+"px";
+    clone.style.height=PAGE_H+"px";
+    clone.style.boxShadow="none";
 
-  holder.appendChild(clone);
-  document.body.appendChild(holder);
-  await waitImages(clone);
-  await sleep(20);
+    holder.appendChild(clone);
+    document.body.appendChild(holder);
+    await waitImages(clone);
+    await sleep(20);
 
-  const canvas=await html2canvas(clone,{
-    scale,
-    useCORS:true,
-    allowTaint:false,
-    backgroundColor:null,
-    width:PAGE_W,
-    height:PAGE_H,
-    logging:false
-  });
+    const canvas=await html2canvas(clone,{
+      scale,
+      useCORS:true,
+      allowTaint:false,
+      backgroundColor:null,
+      width:PAGE_W,
+      height:PAGE_H,
+      logging:false
+    });
 
-  holder.remove();
+    const expectedW=PAGE_W*scale;
+    const expectedH=PAGE_H*scale;
+    if(canvas.width!==expectedW||canvas.height!==expectedH){
+      throw new Error(`출력 크기 오류: ${canvas.width}×${canvas.height} / 기대값 ${expectedW}×${expectedH}`);
+    }
 
-  const expectedW=PAGE_W*scale;
-  const expectedH=PAGE_H*scale;
-  if(canvas.width!==expectedW||canvas.height!==expectedH){
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png",1));
+    if(!blob)throw new Error("PNG Blob을 만들지 못했어.");
+    return blob;
+  }finally{
+    holder?.remove();
     state=original;
     selectedObjKey=originalSelected;
+    suppressPersistence=false;
     renderAll();
-    throw new Error(`출력 크기 오류: ${canvas.width}×${canvas.height} / 기대값 ${expectedW}×${expectedH}`);
   }
-
-  const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png",1));
-
-  state=original;
-  selectedObjKey=originalSelected;
-  renderAll();
-  return blob;
 }
 
 function exportStates(){
   return playlist.length?playlist.map(normalizeState):[normalizeState(state)];
+}
+
+async function invalidExportLayouts(){
+  const original=deepCopy(state);
+  const originalSelected=selectedObjKey;
+  const snapshots=exportStates().map(deepCopy);
+  const invalid=[];
+  suppressPersistence=true;
+
+  try{
+    for(let i=0;i<snapshots.length;i++){
+      state=normalizeState(snapshots[i]);
+      selectedObjKey=null;
+      renderAll();
+      await waitImages(page);
+      await sleep(0);
+      const issues=collectLayoutIssues();
+      if(issues.length)invalid.push({index:i+1,issues});
+    }
+  }finally{
+    state=normalizeState(original);
+    selectedObjKey=originalSelected;
+    suppressPersistence=false;
+    renderAll();
+  }
+  return invalid;
+}
+
+async function ensureExportLayoutsValid(){
+  const invalid=await invalidExportLayouts();
+  if(!invalid.length)return true;
+  const first=invalid[0];
+  const details=invalid.slice(0,3).map(item=>
+    `${item.index}번 화면: ${item.issues.slice(0,3).join(", ")}`
+  ).join("\n");
+  const more=invalid.length>3?`\n외 ${invalid.length-3}개 화면`:"";
+  updateStatus(`출력 차단 · ${first.index}번 화면 ${first.issues[0]}`,"error");
+  alert(`레이아웃 충돌 때문에 출력을 중단했어.\n문제 요소를 이동하거나 내용을 줄인 뒤 다시 시도해줘.\n\n${details}${more}`);
+  return false;
 }
 
 async function buildExportBlobs(){
@@ -1486,6 +1706,7 @@ async function buildExportBlobs(){
 
 /* ───────── Export ───────── */
 async function exportCurrentPNG(){
+  if(!await ensureExportLayoutsValid())return;
   try{
     updateStatus("PNG 생성 중…","warn");
     const scale=Number($("quality").value)||1;
@@ -1505,6 +1726,8 @@ async function exportMagicZip(){
     alert("ZIP 라이브러리를 불러오지 못했어. 인터넷 연결을 확인해줘.");
     return;
   }
+
+  if(!await ensureExportLayoutsValid())return;
 
   try{
     const files=await buildExportBlobs();
@@ -1534,6 +1757,8 @@ async function exportMagicFolder(){
     alert("이 브라우저는 폴더 직접 저장을 지원하지 않아.\n위의 MagicInfoSlide ZIP을 사용해줘.");
     return;
   }
+
+  if(!await ensureExportLayoutsValid())return;
 
   try{
     const files=await buildExportBlobs();
@@ -1573,7 +1798,7 @@ async function exportMagicFolder(){
 function saveJob(){
   const payload={
     app:"digital-signage-maker",
-    version:"1.0.1",
+    version:APP_VERSION,
     savedAt:new Date().toISOString(),
     state,
     playlist,
@@ -1616,10 +1841,18 @@ document.querySelectorAll("#richToolbar button").forEach(btn=>{
 $("richBold").onclick=applyRichBold;
 $("richClear").onclick=clearRichFormat;
 document.querySelectorAll("[data-rich-color]").forEach(btn=>{
-  btn.onclick=()=>applyRichColor(btn.dataset.richColor);
+  btn.onclick=()=>{
+    if(!applyRichColor(btn.dataset.richColor))return;
+    document.querySelectorAll("[data-rich-color]").forEach(swatch=>{
+      swatch.setAttribute("aria-pressed",String(swatch===btn));
+    });
+  };
 });
 $("richColor").addEventListener("mousedown",rememberRichSelection);
-$("richColor").oninput=e=>applyRichColor(e.target.value);
+$("richColor").oninput=e=>{
+  if(!applyRichColor(e.target.value))return;
+  document.querySelectorAll("[data-rich-color]").forEach(swatch=>swatch.setAttribute("aria-pressed","false"));
+};
 
 document.querySelectorAll(".text-block").forEach(el=>{
   el.addEventListener("pointerdown",textDragStart);
@@ -1695,27 +1928,29 @@ $("photoFile").onchange=async e=>{
 $("logo1File").onchange=async e=>{
   const f=e.target.files?.[0];if(!f)return;
   state.objects.logo1.src=await fileToDataURL(f);
+  state.objects.logo1.aspect=null;
   selectedObjKey="logo1";
   renderAll();saveLocal();
 };
 $("logo2File").onchange=async e=>{
   const f=e.target.files?.[0];if(!f)return;
   state.objects.logo2.src=await fileToDataURL(f);
+  state.objects.logo2.aspect=null;
   selectedObjKey="logo2";
   renderAll();saveLocal();
 };
 
-$("photoW").oninput=e=>{state.objects.photo.w=Number(e.target.value);renderObjects();saveLocal();};
-$("photoH").oninput=e=>{state.objects.photo.h=Number(e.target.value);renderObjects();saveLocal();};
+$("photoW").oninput=e=>{state.objects.photo.w=Number(e.target.value);renderObjects();updateLayoutStatus();saveLocal();};
+$("photoH").oninput=e=>{state.objects.photo.h=Number(e.target.value);renderObjects();updateLayoutStatus();saveLocal();};
 $("logo1W").oninput=e=>{
   state.objects.logo1.w=Number(e.target.value);
-  state.objects.logo1.h=Math.max(4,Math.round(state.objects.logo1.w*.42));
-  renderObjects();saveLocal();
+  state.objects.logo1.h=logoHeightPercent(state.objects.logo1.w,state.objects.logo1.aspect)||state.objects.logo1.h;
+  renderObjects();updateLayoutStatus();saveLocal();
 };
 $("logo2W").oninput=e=>{
   state.objects.logo2.w=Number(e.target.value);
-  state.objects.logo2.h=Math.max(4,Math.round(state.objects.logo2.w*.42));
-  renderObjects();saveLocal();
+  state.objects.logo2.h=logoHeightPercent(state.objects.logo2.w,state.objects.logo2.aspect)||state.objects.logo2.h;
+  renderObjects();updateLayoutStatus();saveLocal();
 };
 
 $("photoRemove").onclick=()=>{state.objects.photo.src="";selectedObjKey=null;renderAll();saveLocal();};
@@ -1726,6 +1961,7 @@ document.querySelectorAll("[data-preset-logo]").forEach(btn=>{
   btn.onclick=()=>{
     const key=btn.dataset.targetLogo;
     state.objects[key].src=btn.dataset.presetLogo;
+    state.objects[key].aspect=null;
     selectedObjKey=key;
     renderAll();saveLocal();
   };
@@ -1778,10 +2014,23 @@ $("resetAll").onclick=()=>{
 };
 
 $("folderSupport").textContent=window.showDirectoryPicker
-  ?"이 브라우저는 폴더 직접 저장을 지원해. USB 루트나 상위 폴더를 선택하면 그 안에 MagicInfoSlide 폴더를 자동 생성해."
-  :"이 브라우저에서는 폴더 직접 저장이 지원되지 않아. MagicInfoSlide ZIP을 사용하면 돼.";
+  ?"폴더 직접 저장을 지원해. 저장된 PNG는 MagicINFO 미디어에 등록한 뒤 재생목록·스케줄을 별도로 만들어야 해. 실제 서버 검증은 수행하지 않았어."
+  :"폴더 직접 저장은 지원되지 않아 ZIP을 사용해줘. ZIP은 PNG 묶음이며 실제 MagicINFO 서버 검증은 수행하지 않았어.";
 
-window.addEventListener("resize",fitPreview);
+function setMobilePreview(open){
+  const enabled=open&&window.innerWidth<=760;
+  document.body.classList.toggle("mobile-preview-open",enabled);
+  $("mobilePreviewToggle").setAttribute("aria-expanded",String(enabled));
+  $("mobilePreviewToggle").textContent=enabled?"미리보기 닫기":"미리보기 열기";
+  requestAnimationFrame(fitPreview);
+}
+
+$("mobilePreviewToggle").onclick=()=>setMobilePreview(!document.body.classList.contains("mobile-preview-open"));
+
+window.addEventListener("resize",()=>{
+  if(window.innerWidth>760)setMobilePreview(false);
+  else fitPreview();
+});
 
 renderAll();
 fitPreview();
