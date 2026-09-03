@@ -26,7 +26,15 @@ function inlineScript(){
 function functionSource(source,name){
   const start=source.indexOf(`function ${name}(`);
   assert.ok(start>=0,`${name} 함수를 찾지 못했습니다.`);
-  const brace=source.indexOf("{",start);
+  // Destructured/default parameters can contain braces before the function body.
+  let parameterDepth=0;
+  let parameterEnd=-1;
+  for(let i=source.indexOf("(",start);i<source.length;i++){
+    if(source[i]==="(")parameterDepth++;
+    if(source[i]===")"&&--parameterDepth===0){parameterEnd=i;break;}
+  }
+  assert.ok(parameterEnd>=0,`${name} 함수 매개변수 끝을 찾지 못했습니다.`);
+  const brace=source.indexOf("{",parameterEnd);
   let depth=0;
   let quote="";
   let escaped=false;
@@ -63,8 +71,8 @@ const templates=vm.runInNewContext(`(${templateMatch[1]})`,Object.create(null));
 check("inline JavaScript 문법",()=>new vm.Script(script,{filename:"index.html"}));
 
 check("APP_VERSION과 화면/패키지/README 버전 일치",()=>{
-  assert.equal(appVersion,"1.3.1");
-  assert.equal(releaseName,"QUICK START");
+  assert.equal(appVersion,"1.4.0");
+  assert.equal(releaseName,"WARM WELCOME");
   assert.equal(pkg.version,appVersion);
   assert.match(index,new RegExp(`id="appVersionCurrent">V${appVersion} · ${releaseName}<`));
   assert.equal(readme.split(/\r?\n/,1)[0],`디지털 사이니지 제작기 V${appVersion} · ${releaseName}`);
@@ -72,12 +80,36 @@ check("APP_VERSION과 화면/패키지/README 버전 일치",()=>{
   assert.match(script,/merged\.version=APP_VERSION/);
 });
 
-check("템플릿 22종 및 그룹별 개수",()=>{
-  assert.equal(templates.length,22);
-  assert.equal(new Set(templates.map(item=>item.id)).size,22);
-  assert.equal(templates.filter(item=>item.group==="basic").length,6);
+check("템플릿 23종 및 그룹별 개수",()=>{
+  assert.equal(templates.length,23);
+  assert.equal(new Set(templates.map(item=>item.id)).size,23);
+  assert.equal(templates.filter(item=>item.group==="basic").length,7);
   assert.equal(templates.filter(item=>item.group==="image").length,10);
   assert.equal(templates.filter(item=>item.group==="brand").length,6);
+});
+
+check("웜 웰컴 우선 표시와 기존 템플릿 ID·자산 연결 보존",()=>{
+  assert.equal(templates[0].id,23);
+  assert.equal(templates[0].group,"basic");
+  assert.equal(templates[1].id,1,"기존 ERICA 블루는 두 번째 시안으로 유지해야 합니다.");
+  templates.forEach((item,i)=>assert.equal(Number(item.name.match(/^\d+/)?.[0]),i+1,
+    `${item.name}: 시안 표시 번호가 순서와 다릅니다.`));
+  const originalPaths={
+    1:"",2:"",3:"",4:"",5:"",6:"",
+    7:"templates/signage_01.png",8:"templates/signage_02.png",9:"templates/signage_03.png",
+    10:"",11:"",12:"",13:"",14:"",15:"",
+    16:"templates/signage_04.png",17:"templates/signage_05.png",
+    18:"templates/signage_vertical_01_navy_gold_letterhead.png",
+    19:"templates/signage_vertical_02_navy_gold_border.png",
+    20:"templates/signage_vertical_03_blue_wave.png",
+    21:"templates/signage_vertical_04_navy_gold_curve_frame.png",
+    22:"templates/signage_vertical_05_ivory_gold_frame.png"
+  };
+  for(const [id,originalPath] of Object.entries(originalPaths)){
+    const item=templates.find(template=>template.id===Number(id));
+    assert.ok(item,`기존 템플릿 ID ${id}가 사라졌습니다.`);
+    assert.equal(item.path,originalPath,`ID ${id}에 저장된 기존 배경이 바뀌었습니다.`);
+  }
 });
 
 check("모든 이미지 템플릿 자산 존재",()=>{
@@ -216,22 +248,173 @@ check("WCAG 상대휘도와 대비율",()=>{
   assert.ok(context.contrastRatio("#FFFFFF","#16283B")>14.5);
 });
 
-check("V1.0.1 / V1.3.0 작업 JSON 호환",()=>{
-  const fixture130={
-    app:"digital-signage-maker",
-    version:"1.3.0",
-    state:{version:"1.3.0",title:"V1.3.0 행사",subtitle:"2026. 9. 15.",body:"ERICA 컨벤션센터",textColor:"#FFFFFF"},
-    playlist:[{version:"1.3.0",title:"V1.3.0 재생목록",textColor:"#FFFFFF"}]
-  };
+function stateContext(){
+  const context=Object.create(null);
+  vm.runInNewContext([
+    `const APP_VERSION=${JSON.stringify(appVersion)};`,
+    'const RICH_KEYS=["title","subtitle","body","emphasis","footer"];',
+    functionSource(script,"clamp"),
+    functionSource(script,"normalizeColor"),
+    functionSource(script,"escapeHtml"),
+    // These fixtures contain trusted rich markup. Browser QA covers DOM sanitizing;
+    // the real migration function still handles escaping and newline conversion.
+    'function sanitizeRichHtml(value){return String(value??"");}',
+    functionSource(script,"migrateRich"),
+    functionSource(script,"defaultTextBlocks"),
+    functionSource(script,"defaultObjects"),
+    functionSource(script,"defaultTextColors"),
+    functionSource(script,"defaultTextColorModes"),
+    functionSource(script,"freshState"),
+    functionSource(script,"normalizeState")
+  ].join("\n"),context);
+  return context;
+}
+
+function plainObject(value){return JSON.parse(JSON.stringify(value));}
+
+check("새 작업의 환영 문구·정보 블록·중앙 ERICA 로고",()=>{
+  const context=stateContext();
+  const welcome=context.freshState();
+  assert.equal(welcome.version,appVersion);
+  assert.equal(welcome.layout,"warm-welcome");
+  assert.equal(welcome.template,23);
+  assert.equal(welcome.title,"OOO대학 OOO방문단의\nERICA 방문을 환영합니다");
+  assert.equal(welcome.title.split("\n").length,2);
+  assert.ok(!welcome.title.includes("\\n"),"기본 문구에 문자 그대로의 \\n이 노출되면 안 됩니다.");
+  assert.equal(welcome.subtitle,"20XX년 X월 X일");
+  assert.equal(welcome.body,"본관 2층 프라임 컨퍼런스 홀");
+  const {title,subtitle,body}=welcome.textBlocks;
+  assert.ok(title.size>=88&&title.size<=116);
+  assert.ok(subtitle.size>=50&&subtitle.size<=64);
+  assert.ok(body.size>=50&&body.size<=64);
+  assert.ok(title.size>subtitle.size&&title.size>body.size);
+  assert.ok(title.fitMin>=60&&title.fitMin<=title.size);
+  assert.ok(subtitle.fitMin>=50&&body.fitMin>=50);
+  assert.ok(title.w>=80&&title.w<=85);
+  assert.ok(title.y>=20&&title.y<=40);
+  assert.ok(title.y<subtitle.y&&subtitle.y<body.y);
+  assert.ok(body.y-title.y<30,"안내 정보가 화면 전체에 흩어지면 안 됩니다.");
+  for(const block of [title,subtitle,body]){
+    assert.equal(block.x,50);
+    assert.equal(block.align,"center");
+  }
+  const logo=welcome.objects.logo1;
+  assert.equal(logo.x,50);
+  assert.ok(logo.y>=85&&logo.y<=93);
+  assert.match(logo.src,/^logos\/hyu_erica(?:_white)?\.png$/);
+  assert.ok(fs.existsSync(path.join(root,logo.src)),"기본 ERICA 로고가 없습니다.");
+  assert.ok(logo.aspect>0);
+  assert.equal(welcome.objects.logo2.src,"");
+  assert.ok(Object.values(welcome.textColorModes).every(mode=>mode==="auto"));
+});
+
+check("V1.0.1 / V1.3.0 / V1.3.1 부분 작업의 원래 기본값 보존",()=>{
+  const context=stateContext();
+  for(const version of ["1.0.1","1.3.0","1.3.1"]){
+    for(let template=1;template<=22;template++){
+      const original={version,template,title:`${version} 행사\n두 번째 줄`,textColor:"#FFFFFF"};
+      const restored=context.normalizeState(original);
+      assert.equal(restored.version,appVersion);
+      assert.equal(restored.layout,"legacy");
+      assert.equal(restored.template,template);
+      assert.equal(restored.title,`${version} 행사<br>두 번째 줄`);
+      for(const [key,size,y] of [["title",86,13],["subtitle",46,28],["body",38,43]]){
+        assert.equal(restored.textBlocks[key].size,size,`${version} ${key}: 기존 크기 변경`);
+        assert.equal(restored.textBlocks[key].y,y,`${version} ${key}: 기존 위치 변경`);
+        assert.equal(restored.textBlocks[key].fitMin,undefined,`${version}: 자동 축소가 소급 적용됨`);
+      }
+      for(const [key,x] of [["logo1",35],["logo2",65]]){
+        assert.equal(restored.objects[key].src,"",`${version}: 이전 작업에 로고가 추가됨`);
+        assert.equal(restored.objects[key].x,x);
+        assert.equal(restored.objects[key].y,92);
+      }
+      assert.ok(Object.values(restored.textColorModes).every(mode=>mode==="manual"));
+      assert.equal(original.title,`${version} 행사\n두 번째 줄`,"불러오기가 원본 데이터를 변경했습니다.");
+    }
+    assert.equal(context.normalizeState({version}).template,1);
+  }
+
   assert.equal(fixture.version,"1.0.1");
-  assert.ok(fixture.state);
-  assert.equal(typeof fixture.state.title,"string");
-  assert.equal(fixture130.version,"1.3.0");
-  assert.equal(fixture130.state.version,"1.3.0");
-  assert.equal(fixture130.playlist[0].version,"1.3.0");
+  const migrated=context.normalizeState(fixture.state);
+  assert.equal(migrated.title,fixture.state.title);
+  assert.equal(migrated.body,"첫 문단<br>둘째 문단<br>Third line");
+  assert.equal(migrated.objects.logo1.src,"");
+  const customized=context.normalizeState({
+    version:"1.3.1",template:8,title:"기존 사용자 행사",
+    textBlocks:{title:{x:46,y:17,size:91,align:"left"}},
+    objects:{logo1:{src:"logos/hyu_erica.png",x:41,y:87,w:32}},
+    textColor:"#FFFFFF",textColors:{title:"#123456"},textColorModes:{title:"manual",body:"auto"}
+  });
+  assert.equal(customized.textBlocks.title.size,91);
+  assert.equal(customized.textBlocks.title.x,46);
+  assert.equal(customized.textBlocks.title.y,17);
+  assert.equal(customized.textBlocks.title.align,"left");
+  assert.equal(customized.objects.logo1.src,"logos/hyu_erica.png");
+  assert.equal(customized.objects.logo1.x,41);
+  assert.equal(customized.objects.logo1.w,32);
+  assert.equal(customized.textColors.title,"#123456");
+  assert.equal(customized.textColorModes.title,"manual");
+  assert.equal(customized.textColorModes.body,"auto");
   assert.match(script,/state=normalizeState\(data\.state\|\|data\)/);
   assert.match(script,/playlist\.map\(normalizeState\)/);
   assert.match(script,/hasLegacyColor\?"manual":"auto"/);
+});
+
+check("웜 웰컴 저장·불러오기와 수동 크기·색상·배치 보존",()=>{
+  const context=stateContext();
+  const welcome=context.normalizeState(context.freshState());
+  assert.equal(welcome.title,"OOO대학 OOO방문단의<br>ERICA 방문을 환영합니다");
+  const restored=context.normalizeState(plainObject(welcome));
+  assert.deepEqual(plainObject(restored),plainObject(welcome));
+
+  welcome.template=7;
+  welcome.title="<strong>수정한 행사명</strong><br>두 번째 줄";
+  welcome.textBlocks.title={...welcome.textBlocks.title,x:47,y:25,size:92,fitMin:null};
+  welcome.textColors.title="#123456";
+  welcome.textColorModes.title="manual";
+  welcome.objects.logo1.x=48;
+  const edited=context.normalizeState(plainObject(welcome));
+  assert.deepEqual(plainObject(edited),plainObject(welcome));
+  assert.equal(edited.layout,"warm-welcome");
+  assert.equal(edited.textBlocks.title.fitMin,null,"수동 크기에 자동 축소를 다시 적용하면 안 됩니다.");
+  assert.equal(edited.textBlocks.body.fitMin,welcome.textBlocks.body.fitMin);
+});
+
+check("명시적 줄의 자동 크기 조절·최소 크기·수동 설정·축척 독립성",()=>{
+  const context=Object.create(null);
+  vm.runInNewContext(`const PAGE_W=1080;\n${functionSource(script,"fitTextSize")}`,context);
+  function measure(options={}){
+    const {size=100,w=84,measured=1200,text="첫 줄\n두 번째 줄",scale=1}=options;
+    const fitMin=Object.prototype.hasOwnProperty.call(options,"fitMin")?options.fitMin:64;
+    const cfg=Object.freeze({size,fitMin,w});
+    let reads=0;
+    const element={
+      textContent:text,
+      style:{fontSize:`${size}px`,width:`${w}%`,whiteSpace:"",transform:`scale(${scale})`},
+      dataset:{},
+      get scrollWidth(){
+        reads++;
+        assert.equal(this.style.whiteSpace,"pre","명시적 줄바꿈을 유지한 채 측정해야 합니다.");
+        assert.equal(this.style.width,"max-content");
+        return measured;
+      },
+      getBoundingClientRect(){throw new Error("변환된 미리보기 크기로 글자 크기를 계산하면 안 됩니다.");}
+    };
+    const actual=context.fitTextSize(element,cfg);
+    assert.equal(element.style.fontSize,`${actual}px`);
+    assert.equal(element.dataset.renderedSize,String(actual));
+    assert.equal(element.style.width,`${w}%`);
+    assert.equal(element.style.whiteSpace,"");
+    assert.equal(cfg.size,size,"자동 축소가 요청 글자 크기를 덮어썼습니다.");
+    return {actual,reads};
+  }
+  assert.equal(measure({measured:700}).actual,100,"짧은 문구를 불필요하게 축소했습니다.");
+  for(const scale of [.18,.48,1,2])assert.equal(measure({scale}).actual,75);
+  assert.equal(measure({measured:2400}).actual,64,"긴 문구가 최소 글자 크기 아래로 줄었습니다.");
+  assert.equal(measure({size:48,fitMin:64,measured:2400}).actual,48,"최소 크기로 인해 수동 요청값보다 커졌습니다.");
+  assert.deepEqual(measure({size:92,fitMin:null,measured:2400}),{actual:92,reads:0});
+  assert.deepEqual(measure({size:92,fitMin:undefined,measured:2400}),{actual:92,reads:0});
+  assert.deepEqual(measure({text:"   ",measured:2400}),{actual:100,reads:0});
 });
 
 console.log(`\n검증 완료: V${appVersion}, 템플릿 ${templates.length}종`);

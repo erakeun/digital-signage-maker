@@ -418,7 +418,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   <aside class="sidebar">
     <div class="header">
       <h1>디지털 사이니지 제작기</h1>
-      <span class="badge" id="appVersionBadge">V1.3.1</span>
+      <span class="badge" id="appVersionBadge">V1.4.0</span>
     </div>
     <p class="desc">
       ERICA 세로형 디지털 사이니지용 9:16 안내 화면 제작기.
@@ -445,18 +445,18 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       <div class="quick-start-grid">
         <div class="field">
           <label for="quickEventName"><strong>행사명</strong></label>
-          <textarea id="quickEventName" rows="1" data-quick-key="title"
-                    placeholder="예: ERICA Innovation Day"></textarea>
+          <textarea id="quickEventName" rows="2" data-quick-key="title"
+                    placeholder="예: OOO대학 OOO방문단의 ERICA 방문을 환영합니다"></textarea>
         </div>
         <div class="field">
           <label for="quickDate"><strong>일시</strong></label>
           <textarea id="quickDate" rows="1" data-quick-key="subtitle"
-                    placeholder="예: 2026. 9. 15. 14:00"></textarea>
+                    placeholder="예: 20XX년 X월 X일"></textarea>
         </div>
         <div class="field">
           <label for="quickLocation"><strong>장소</strong></label>
           <textarea id="quickLocation" rows="1" data-quick-key="body"
-                    placeholder="예: ERICA 컨벤션센터"></textarea>
+                    placeholder="예: 본관 2층 프라임 컨퍼런스 홀"></textarea>
         </div>
       </div>
       <p class="quick-start-help" id="quickStartStatus" role="status" aria-live="polite">
@@ -497,7 +497,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
     <section class="section">
       <h2>1. 사이니지 디자인</h2>
       <p class="note">
-        기존 기본 시안 6종 + 이미지 시안 10종 + 한양대학교 공식 색상 기반 그라데이션 6종.
+        웜 웰컴 포함 기본 시안 7종 + 이미지 시안 10종 + 한양대학교 공식 색상 기반 그라데이션 6종.
         작은 미리보기 옆 설명을 보고 선택하면 돼.
       </p>
       <div class="template-sections" id="templateSections"></div>
@@ -586,6 +586,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
     <section class="section" id="advancedStyleSection" data-advanced-only hidden>
       <h2>3. 글자 스타일</h2>
+      <p class="note">새 환영 화면은 긴 문구를 자동으로 맞춰. 크기를 직접 조절하면 해당 항목은 지정한 크기로 표시돼.</p>
       <div class="field">
         <label for="font"><strong>글꼴</strong><span>상업적 이용 가능 무료 폰트</span></label>
         <select id="font">
@@ -756,11 +757,13 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
         <section class="patch-panel">
           <div class="patch-head">
-            <strong id="appVersionHeading">디지털 사이니지 제작기 V1.3.1</strong>
-            <span class="patch-current" id="appVersionCurrent">V1.3.1 · QUICK START</span>
+            <strong id="appVersionHeading">디지털 사이니지 제작기 V1.4.0</strong>
+            <span class="patch-current" id="appVersionCurrent">V1.4.0 · WARM WELCOME</span>
           </div>
           <ul>
-            <li>템플릿 07~09 파일명 정합성 복구 및 22종 자산 자동 검사</li>
+            <li>현장 공간에 어울리는 웜그레이 기본 시안 · 기존 22종 보존</li>
+            <li>두 줄 환영 행사명과 큰 일시·장소를 하나의 안내 블록으로 배치</li>
+            <li>긴 문구 자동 크기 조절 · 하단 중앙 ERICA 로고</li>
             <li>행사명·일시·장소 3개 입력 QUICK START와 고급 편집 상태 공유</li>
             <li>QUICK START 실제 텍스트 영역 기반 WCAG 자동 글자색과 수동색 보존</li>
             <li>다중 줄 붙여넣기 줄바꿈 보존</li>
@@ -772,7 +775,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
             <li>제목·부제목·본문·강조문·하단문구 직접 드래그 이동</li>
             <li>부분 볼드·부분 글자색 지원</li>
             <li>사진·로고 업로드 및 직접 드래그 이동</li>
-            <li>기본 6종 + 이미지 10종 + 한양 공식색 그라데이션 6종, 총 22종</li>
+            <li>기본 7종 + 이미지 10종 + 한양 공식색 그라데이션 6종, 총 23종</li>
             <li>여러 화면을 재생목록으로 묶어 순차 파일 생성</li>
             <li>ZIP 내 <strong>MagicInfoSlide</strong> 폴더 자동 생성</li>
             <li>지원 브라우저에서는 선택 위치에 <strong>MagicInfoSlide</strong> 폴더 직접 생성</li>
@@ -790,8 +793,8 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 "use strict";
 
 const $=id=>document.getElementById(id);
-const APP_VERSION="1.3.1";
-const APP_RELEASE_NAME="QUICK START";
+const APP_VERSION="1.4.0";
+const APP_RELEASE_NAME="WARM WELCOME";
 const PAGE_W=1080;
 const PAGE_H=1920;
 const SAFE_MARGIN=54;
@@ -815,42 +818,50 @@ const AUTO_SAFE_COLORS=[{name:"Safe Black",value:"#000000"}];
 
 const TEMPLATES=[
   {
-    id:1,group:"basic",name:"01 · ERICA 블루",
+    // IDs 1–22 are persisted in existing jobs; only display numbers change.
+    id:23,group:"basic",name:"01 · 웜 웰컴",
+    desc:"기본 시안 · 목재·석재 공간에 어울리는 웜그레이 환영 화면",
+    chip:"WARM WELCOME · 기본",
+    path:"",textColor:"#FFFFFF",
+    fallback:"linear-gradient(160deg,#625C56 0%,#746C63 48%,#57534F 100%)"
+  },
+  {
+    id:1,group:"basic",name:"02 · ERICA 블루",
     desc:"기본 시안 · 한양 블루 중심의 정석형",
     chip:"기존 기본 시안",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(180deg,#082f5b 0%,#0E4A84 55%,#051d36 100%)"
   },
   {
-    id:2,group:"basic",name:"02 · 딥 네이비",
+    id:2,group:"basic",name:"03 · 딥 네이비",
     desc:"기본 시안 · 차분하고 어두운 안내용",
     chip:"기존 기본 시안",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(160deg,#071523 0%,#14263a 48%,#07111c 100%)"
   },
   {
-    id:3,group:"basic",name:"03 · 화이트 미니멀",
+    id:3,group:"basic",name:"04 · 화이트 미니멀",
     desc:"기본 시안 · 밝고 행정 안내에 무난",
     chip:"기존 기본 시안",
     path:"",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#ffffff 0%,#f2f5f7 100%)"
   },
   {
-    id:4,group:"basic",name:"04 · 골드 다크",
+    id:4,group:"basic",name:"05 · 골드 다크",
     desc:"기본 시안 · 행사·VIP·환영 안내용",
     chip:"기존 기본 시안",
     path:"",textColor:"#FFFFFF",autoTextColor:"#F3C866",
     fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"
   },
   {
-    id:5,group:"basic",name:"05 · 블루 그라데이션",
+    id:5,group:"basic",name:"06 · 블루 그라데이션",
     desc:"기본 시안 · 밝은 블루에서 네이비 전환",
     chip:"기존 기본 시안",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(145deg,#6ca7d8 0%,#0E4A84 45%,#071d33 100%)"
   },
   {
-    id:6,group:"basic",name:"06 · 차콜 블랙",
+    id:6,group:"basic",name:"07 · 차콜 블랙",
     desc:"기본 시안 · 사진·백색 로고와 잘 맞음",
     chip:"기존 기본 시안",
     path:"",textColor:"#FFFFFF",
@@ -858,70 +869,70 @@ const TEMPLATES=[
   },
 
   {
-    id:7,group:"image",name:"07 · 화이트 네이비 골드",
+    id:7,group:"image",name:"08 · 화이트 네이비 골드",
     desc:"이미지 시안 · 화이트 중심 + 네이비·골드 프레임",
     chip:"templates/signage_01.png",
     path:"templates/signage_01.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#f7f4ed 0%,#ffffff 72%,#0b376d 100%)"
   },
   {
-    id:8,group:"image",name:"08 · 다크 골드",
+    id:8,group:"image",name:"09 · 다크 골드",
     desc:"이미지 시안 · 블랙/골드의 격식 있는 구성",
     chip:"templates/signage_02.png",
     path:"templates/signage_02.png",textColor:"#FFFFFF",autoTextColor:"#F3C866",
     fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"
   },
   {
-    id:9,group:"image",name:"09 · 화이트 블루",
+    id:9,group:"image",name:"10 · 화이트 블루",
     desc:"이미지 시안 · 화이트 중심의 현대적 구성",
     chip:"templates/signage_03.png",
     path:"templates/signage_03.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#ffffff 0%,#f5f7fa 78%,#183b70 100%)"
   },
   {
-    id:16,group:"image",name:"10 · 블랙 골드 클래식",
+    id:16,group:"image",name:"11 · 블랙 골드 클래식",
     desc:"이미지 시안 · 블랙 중심 + 화려한 골드 장식 프레임",
     chip:"templates/signage_04.png",
     path:"templates/signage_04.png",textColor:"#FFFFFF",autoTextColor:"#F3C866",
     fallback:"linear-gradient(180deg,#16110d 0%,#21170f 50%,#080706 100%)"
   },
   {
-    id:17,group:"image",name:"11 · 화이트 네이비 골드 웨이브",
+    id:17,group:"image",name:"12 · 화이트 네이비 골드 웨이브",
     desc:"이미지 시안 · 화이트 중심 + 네이비·골드 곡선 프레임",
     chip:"templates/signage_05.png",
     path:"templates/signage_05.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#ffffff 0%,#f6f3ea 74%,#173a70 100%)"
   },
   {
-    id:18,group:"image",name:"12 · 네이비 골드 레터헤드",
+    id:18,group:"image",name:"13 · 네이비 골드 레터헤드",
     desc:"세로형 변환 시안 · 네이비 상하단 + 골드 라인 + 넓은 화이트 본문",
     chip:"templates/signage_vertical_01_navy_gold_letterhead.png",
     path:"templates/signage_vertical_01_navy_gold_letterhead.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#0E3F78 0%,#ffffff 18%,#ffffff 82%,#0E3F78 100%)"
   },
   {
-    id:19,group:"image",name:"13 · 네이비 골드 보더",
+    id:19,group:"image",name:"14 · 네이비 골드 보더",
     desc:"세로형 변환 시안 · 네이비와 골드 곡선 테두리가 감싸는 밝은 구성",
     chip:"templates/signage_vertical_02_navy_gold_border.png",
     path:"templates/signage_vertical_02_navy_gold_border.png",textColor:"#16283B",
     fallback:"linear-gradient(160deg,#0E3F78 0%,#ffffff 22%,#ffffff 78%,#0E3F78 100%)"
   },
   {
-    id:20,group:"image",name:"14 · 블루 웨이브",
+    id:20,group:"image",name:"15 · 블루 웨이브",
     desc:"세로형 변환 시안 · 블루 그라데이션 + 하단 웨이브",
     chip:"templates/signage_vertical_03_blue_wave.png",
     path:"templates/signage_vertical_03_blue_wave.png",textColor:"#FFFFFF",
     fallback:"linear-gradient(180deg,#083768 0%,#0E5A9A 52%,#1878B3 100%)"
   },
   {
-    id:21,group:"image",name:"15 · 네이비 골드 커브 프레임",
+    id:21,group:"image",name:"16 · 네이비 골드 커브 프레임",
     desc:"세로형 변환 시안 · 좌상단/우하단 골드 곡선 프레임",
     chip:"templates/signage_vertical_04_navy_gold_curve_frame.png",
     path:"templates/signage_vertical_04_navy_gold_curve_frame.png",textColor:"#16283B",
     fallback:"linear-gradient(150deg,#0E3F78 0%,#ffffff 24%,#ffffff 76%,#0E3F78 100%)"
   },
   {
-    id:22,group:"image",name:"16 · 아이보리 골드 프레임",
+    id:22,group:"image",name:"17 · 아이보리 골드 프레임",
     desc:"세로형 변환 시안 · 아이보리 바탕 + 얇은 골드 프레임",
     chip:"templates/signage_vertical_05_ivory_gold_frame.png",
     path:"templates/signage_vertical_05_ivory_gold_frame.png",textColor:"#263746",
@@ -929,42 +940,42 @@ const TEMPLATES=[
   },
 
   {
-    id:10,group:"brand",name:"17 · 한양 블루 × 실버",
+    id:10,group:"brand",name:"18 · 한양 블루 × 실버",
     desc:"공식색 · Blue #0E4A84 + Silver #898C8E",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(155deg,#0E4A84 0%,#365f86 46%,#898C8E 100%)"
   },
   {
-    id:11,group:"brand",name:"18 · 한양 블루 × 골드",
+    id:11,group:"brand",name:"19 · 한양 블루 × 골드",
     desc:"공식색 · Blue #0E4A84 + Gold #88774F",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(160deg,#082f5b 0%,#0E4A84 48%,#88774F 100%)"
   },
   {
-    id:12,group:"brand",name:"19 · 한양 블루 × 민트",
+    id:12,group:"brand",name:"20 · 한양 블루 × 민트",
     desc:"공식색 · Blue #0E4A84 + Retro Mint #6CCA98",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(150deg,#0E4A84 0%,#287a8f 48%,#6CCA98 100%)"
   },
   {
-    id:13,group:"brand",name:"20 · 한양 블루 × 코랄",
+    id:13,group:"brand",name:"21 · 한양 블루 × 코랄",
     desc:"공식색 · Blue #0E4A84 + Retro Coral #FF8672",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(150deg,#0E4A84 0%,#6d6682 52%,#FF8672 100%)"
   },
   {
-    id:14,group:"brand",name:"21 · 한양 블루 × 오렌지",
+    id:14,group:"brand",name:"22 · 한양 블루 × 오렌지",
     desc:"공식색 · Blue #0E4A84 + Orange #F08100",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(155deg,#0E4A84 0%,#285b7d 50%,#F08100 100%)"
   },
   {
-    id:15,group:"brand",name:"22 · 한양 블루 × 옐로그린",
+    id:15,group:"brand",name:"23 · 한양 블루 × 옐로그린",
     desc:"공식색 · Blue #0E4A84 + Yellow Green #7DB928",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
@@ -972,22 +983,33 @@ const TEMPLATES=[
   }
 ];
 
-function defaultTextBlocks(){
-  return {
+function defaultTextBlocks(welcome=false){
+  const blocks={
     title:{x:50,y:13,w:84,size:86,align:"center"},
     subtitle:{x:50,y:28,w:82,size:46,align:"center"},
     body:{x:50,y:43,w:82,size:38,align:"center"},
     emphasis:{x:50,y:67,w:82,size:50,align:"center"},
     footer:{x:50,y:84,w:82,size:30,align:"center"}
   };
+  if(welcome){
+    blocks.title={x:50,y:30,w:84,size:104,fitMin:64,align:"center"};
+    blocks.subtitle={x:50,y:47,w:84,size:60,fitMin:50,align:"center"};
+    blocks.body={x:50,y:53.5,w:84,size:58,fitMin:50,align:"center"};
+  }
+  return blocks;
 }
 
-function defaultObjects(){
-  return {
+function defaultObjects(welcome=false){
+  const objects={
     photo:{src:"",x:50,y:54,w:78,h:34},
     logo1:{src:"",x:35,y:92,w:24,h:10,aspect:null},
     logo2:{src:"",x:65,y:92,w:24,h:10,aspect:null}
   };
+  if(welcome){
+    objects.photo={src:"",x:50,y:72,w:64,h:20};
+    objects.logo1={src:"logos/hyu_erica_white.png",x:50,y:89,w:42,h:3.686,aspect:2269/354};
+  }
+  return objects;
 }
 
 function defaultTextColors(color="#FFFFFF"){
@@ -998,22 +1020,23 @@ function defaultTextColorModes(mode="auto"){
   return Object.fromEntries(RICH_KEYS.map(key=>[key,mode]));
 }
 
-function freshState(){
+function freshState({legacy=false}={}){
   return {
     version:APP_VERSION,
-    template:1,
+    layout:legacy?"legacy":"warm-welcome",
+    template:legacy?1:23,
     customBg:"",
-    title:"디지털 사이니지 안내",
-    subtitle:"행사 일시를 입력하세요",
-    body:"행사 장소를 입력하세요",
+    title:legacy?"디지털 사이니지 안내":"OOO대학 OOO방문단의\nERICA 방문을 환영합니다",
+    subtitle:legacy?"행사 일시를 입력하세요":"20XX년 X월 X일",
+    body:legacy?"행사 장소를 입력하세요":"본관 2층 프라임 컨퍼런스 홀",
     emphasis:"",
     footer:"",
     font:"pretendard",
     textColor:"#FFFFFF",
     textColors:defaultTextColors(),
     textColorModes:defaultTextColorModes(),
-    textBlocks:defaultTextBlocks(),
-    objects:defaultObjects()
+    textBlocks:defaultTextBlocks(!legacy),
+    objects:defaultObjects(!legacy)
   };
 }
 
@@ -1138,8 +1161,9 @@ function migrateRich(value){
 }
 
 function normalizeState(raw){
-  const b=freshState();
   const x=raw&&typeof raw==="object"?raw:{};
+  // Older and partial jobs retain the original defaults, including empty logos.
+  const b=freshState({legacy:x.layout!=="warm-welcome"});
   const merged={...b,...x};
   merged.version=APP_VERSION;
 
@@ -1157,14 +1181,14 @@ function normalizeState(raw){
 
   for(const key of RICH_KEYS)merged[key]=migrateRich(merged[key]);
 
-  merged.textBlocks={...defaultTextBlocks(),...(x.textBlocks||{})};
+  merged.textBlocks={...b.textBlocks,...(x.textBlocks||{})};
   for(const key of RICH_KEYS){
-    merged.textBlocks[key]={...defaultTextBlocks()[key],...(merged.textBlocks[key]||{})};
+    merged.textBlocks[key]={...b.textBlocks[key],...(merged.textBlocks[key]||{})};
   }
 
-  merged.objects={...defaultObjects(),...(x.objects||{})};
+  merged.objects={...b.objects,...(x.objects||{})};
   for(const key of ["photo","logo1","logo2"]){
-    merged.objects[key]={...defaultObjects()[key],...(merged.objects[key]||{})};
+    merged.objects[key]={...b.objects[key],...(merged.objects[key]||{})};
   }
   return merged;
 }
@@ -1174,7 +1198,7 @@ function buildTemplateGrid(){
   host.innerHTML="";
 
   const groups=[
-    {key:"basic",title:"기본 시안",sub:"기존 01~06"},
+    {key:"basic",title:"기본 시안",sub:"01~07 · 웜 웰컴 추가"},
     {key:"image",title:"이미지 시안",sub:"PNG 10종"},
     {key:"brand",title:"한양 공식색 그라데이션",sub:"공식 지정색 조합"}
   ];
@@ -1273,6 +1297,32 @@ function resolvedTextColor(key){
   return state.textColors?.[key]||state.textColor;
 }
 
+function fitTextSize(el,cfg){
+  // Fit explicit lines in canvas pixels, independently of preview/export scale.
+  // Keep requested size in state; a manual size change disables fitting.
+  let size=Number(cfg.size);
+  if(Number(cfg.fitMin)>0&&el.textContent.trim()){
+    const width=PAGE_W*cfg.w/100;
+    el.style.width="max-content";
+    el.style.whiteSpace="pre";
+    const measured=el.scrollWidth;
+    if(measured>width){
+      size=Math.max(Math.min(size,Number(cfg.fitMin)),Math.floor(size*(width-2)/measured));
+    }
+    el.style.width=cfg.w+"%";
+    el.style.whiteSpace="";
+  }
+  el.style.fontSize=size+"px";
+  el.dataset.renderedSize=String(size);
+  return size;
+}
+
+function renderSizeOutput(key){
+  const ids={title:"titleSizeOut",subtitle:"subtitleSizeOut",body:"bodySizeOut",emphasis:"emSizeOut",footer:"footerSizeOut"};
+  const actual=Number(previewTextElement(key).dataset.renderedSize)||state.textBlocks[key].size;
+  $(ids[key]).textContent=actual<state.textBlocks[key].size?`${actual} (자동)`:String(actual);
+}
+
 function renderText(){
   const map={
     title:$("pTitle"),
@@ -1293,6 +1343,8 @@ function renderText(){
     el.style.textAlign=cfg.align||"center";
     el.style.fontFamily=fontFamily(state.font);
     el.style.color=resolvedTextColor(key);
+    fitTextSize(el,cfg);
+    renderSizeOutput(key);
   }
 
   $("pEmphasis").style.padding=richPlainText(state.emphasis).trim()?"22px 26px":"0";
@@ -1418,9 +1470,9 @@ function renderControls(){
     footerSize:["footer","footerSizeOut"]
   };
 
-  for(const [id,[key,outId]] of Object.entries(sizes)){
+  for(const [id,[key]] of Object.entries(sizes)){
     $(id).value=state.textBlocks[key].size;
-    $(outId).textContent=state.textBlocks[key].size;
+    renderSizeOutput(key);
   }
 
   document.querySelectorAll(".align-btn").forEach(btn=>{
@@ -1808,6 +1860,7 @@ async function resolveAutoTextColors({persist=true}={}){
     await Promise.all([document.fonts.ready,waitImages(page)]);
     await sleep(0);
     if(runId!==autoColorRunId||targetState!==state)return null;
+    renderText();
     signature=autoColorStateSignature();
     autoColorReport={status:"pending",signature};
     renderAutoColorControls();
@@ -2272,6 +2325,7 @@ async function captureStateBlob(snapshot,scale=1){
 
     await document.fonts.ready;
     await waitImages(page);
+    renderText();
     await resolveStableAutoTextColors({persist:false});
     await sleep(30);
 
@@ -2343,7 +2397,8 @@ async function inspectExportLayouts(sourceSnapshots=exportStates()){
       selectedObjKey=null;
       autoColorReport=null;
       renderAll({scheduleAutoColor:false});
-      await waitImages(page);
+      await Promise.all([document.fonts.ready,waitImages(page)]);
+      renderText();
       await resolveStableAutoTextColors({persist:false});
       await sleep(0);
       const issues=collectLayoutIssues();
@@ -2639,6 +2694,7 @@ const sizeBindings={
 for(const [id,key] of Object.entries(sizeBindings)){
   $(id).oninput=e=>{
     state.textBlocks[key].size=Number(e.target.value);
+    state.textBlocks[key].fitMin=null;
     renderAll();saveLocal();
   };
 }
@@ -2677,7 +2733,7 @@ document.querySelectorAll(".align-btn").forEach(btn=>{
 });
 
 $("resetTextPosition").onclick=()=>{
-  const defaults=defaultTextBlocks();
+  const defaults=defaultTextBlocks(state.layout==="warm-welcome");
   for(const key of RICH_KEYS){
     state.textBlocks[key].x=defaults[key].x;
     state.textBlocks[key].y=defaults[key].y;
@@ -2808,6 +2864,16 @@ window.addEventListener("resize",()=>{
 setEditorMode(editorMode);
 renderAll();
 fitPreview();
+document.fonts.ready.then(()=>{
+  renderText();
+  updateLayoutStatus();
+  scheduleAutoTextColor();
+});
+document.fonts.addEventListener("loadingdone",()=>{
+  renderText();
+  updateLayoutStatus();
+  if(!suppressPersistence)scheduleAutoTextColor();
+});
 </script>
 </body>
 </html>
