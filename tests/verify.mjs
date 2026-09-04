@@ -91,6 +91,13 @@ check("템플릿 23종 및 그룹별 개수",()=>{
 check("웜 웰컴 우선 표시와 기존 템플릿 ID·자산 연결 보존",()=>{
   assert.equal(templates[0].id,23);
   assert.equal(templates[0].group,"basic");
+  assert.equal(templates[0].name,"01 · 브라운 클래식");
+  assert.equal(templates[0].path,"templates/signage_vertical_06_brown_classic_frame.svg");
+  assert.ok(fs.existsSync(path.join(root,templates[0].path)),"브라운 클래식 세로형 배경이 없습니다.");
+  assert.ok(readme.includes(templates[0].path),"브라운 클래식 배경 경로가 README에 없습니다.");
+  const welcomeSvg=fs.readFileSync(path.join(root,templates[0].path),"utf8");
+  assert.match(welcomeSvg,/viewBox="0 0 1080 1920"/);
+  assert.match(welcomeSvg,/id="gold"/);
   assert.equal(templates[1].id,1,"기존 ERICA 블루는 두 번째 시안으로 유지해야 합니다.");
   templates.forEach((item,i)=>assert.equal(Number(item.name.match(/^\d+/)?.[0]),i+1,
     `${item.name}: 시안 표시 번호가 순서와 다릅니다.`));
