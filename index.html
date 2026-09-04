@@ -448,11 +448,11 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       <div class="quick-start-head">
         <div>
           <div class="quick-start-kicker">QUICK START</div>
-          <h2>행사 안내 빠르게 만들기</h2>
+          <h2 id="quickStartHeading">행사 안내 빠르게 만들기</h2>
         </div>
         <span class="quick-start-count" id="quickStartCount">3개 입력</span>
       </div>
-      <p class="note">행사명·일시·장소만 입력하면 기본 사이니지와 미리보기에 바로 반영돼.</p>
+      <p class="note" id="quickStartIntro">행사명·일시·장소만 입력하면 기본 사이니지와 미리보기에 바로 반영돼.</p>
 
       <div class="editor-mode-switch" role="group" aria-label="편집 모드">
         <button type="button" id="quickModeButton" aria-pressed="true">QUICK START</button>
@@ -462,17 +462,17 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
 
       <div class="quick-start-grid">
         <div class="field">
-          <label for="quickEventName"><strong>행사명</strong></label>
+          <label for="quickEventName"><strong id="quickTitleLabel">행사명</strong></label>
           <textarea id="quickEventName" rows="2" data-quick-key="title"
                     placeholder="예: OOO대학 OOO방문단의 ERICA 방문을 환영합니다"></textarea>
         </div>
         <div class="field">
-          <label for="quickDate"><strong>일시</strong></label>
+          <label for="quickDate"><strong id="quickSubtitleLabel">일시</strong></label>
           <textarea id="quickDate" rows="1" data-quick-key="subtitle"
                     placeholder="예: 20XX년 X월 X일"></textarea>
         </div>
         <div class="field">
-          <label for="quickLocation"><strong>장소</strong></label>
+          <label for="quickLocation"><strong id="quickBodyLabel">장소</strong></label>
           <textarea id="quickLocation" rows="1" data-quick-key="body"
                     placeholder="예: 본관 2층 프라임 컨퍼런스 홀"></textarea>
         </div>
@@ -515,8 +515,8 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
     <section class="section">
       <h2>1. 사이니지 디자인</h2>
       <p class="note">
-        브라운 클래식 웰컴보드 포함 기본 시안 7종 + 이미지 시안 10종 + 한양대학교 공식 색상 기반 그라데이션 6종.
-        작은 미리보기 옆 설명을 보고 선택하면 돼.
+        기본 시안 7종 + 디자이너 제공 공지·행사 프리셋 6종 + 이미지 시안 10종 + 한양대학교 공식 색상 기반 그라데이션 6종.
+        디자이너 프리셋은 선택 즉시 예시의 글자색·크기·배치까지 함께 적용돼.
       </p>
       <div class="template-sections" id="templateSections"></div>
 
@@ -818,7 +818,8 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
             <li>제목·부제목·본문·강조문·하단문구 직접 드래그 이동</li>
             <li>부분 볼드·부분 글자색 지원</li>
             <li>사진·로고 업로드 및 직접 드래그 이동</li>
-            <li>기본 7종 + 이미지 10종 + 한양 공식색 그라데이션 6종, 총 23종</li>
+            <li>기본 7종 + 디자이너 프리셋 6종 + 이미지 10종 + 한양 공식색 그라데이션 6종, 총 29종</li>
+            <li>디자이너 공지·행사 프리셋 선택 시 예시 문구 구조와 색상·크기·배치 동시 적용</li>
             <li>여러 화면을 재생목록으로 묶어 순차 파일 생성</li>
             <li>ZIP 내 <strong>MagicInfoSlide</strong> 폴더 자동 생성</li>
             <li>지원 브라우저에서는 선택 위치에 <strong>MagicInfoSlide</strong> 폴더 직접 생성</li>
@@ -912,70 +913,191 @@ const TEMPLATES=[
   },
 
   {
-    id:7,group:"image",name:"08 · 화이트 네이비 골드",
+    id:24,group:"designer",name:"08 · 공지사항 카드",
+    desc:"디자이너 프리셋 · 블루 그리드와 라운드 안내 카드",
+    chip:"원본 배경 + 공지 스타일",
+    path:"templates/designer_notice_01.png",textColor:"#111820",
+    fallback:"linear-gradient(180deg,#0b5591 0%,#eaf3ff 24%,#eaf3ff 88%,#0b5591 100%)",
+    quick:{heading:"공지사항 빠르게 만들기",intro:"공지 제목·안내 문구·변경 일정만 바꾸면 예시 배치와 색상이 유지돼.",labels:["공지 제목","안내 문구","변경 일정"],placeholders:["예: 발전협력팀 단축근무 시행안내","예: 근무 일정이 조정되었습니다","예: 변경 일시·시간"]},
+    preset:{font:"pretendard",text:{
+      title:"발전협력팀<br>단축근무 시행안내",
+      subtitle:"발전 협력팀 단축근무에 따라<br><span style=\"color:#FF2626\"><strong>근무 일정</strong></span>이 조정되었으므로<br>일정 확인 후 방문 부탁드립니다.",
+      body:"<strong>변경 일시 : 2026. 09. 04. (금)</strong><br><strong>변경 시간 : 10:00 ~ 17:00</strong>",
+      emphasis:"관련 문의: 031-400-0000",footer:""
+    },colors:{title:"#FFFFFF",subtitle:"#111820",body:"#111820",emphasis:"#111820",footer:"#111820"},blocks:{
+      title:{x:50,y:5.5,w:82,size:72,fitMin:52,lineHeight:1.22,letterSpacing:-.045,align:"center",fontWeight:850,textShadow:"none"},
+      subtitle:{x:50,y:34,w:76,size:45,fitMin:34,lineHeight:1.55,letterSpacing:-.025,align:"center",fontWeight:550,textShadow:"none"},
+      body:{x:50,y:51,w:72,size:39,fitMin:30,lineHeight:1.75,letterSpacing:-.02,align:"center",fontWeight:650,background:"rgba(255,255,255,.76)",padding:"28px 24px",borderRadius:"24px",textShadow:"none"},
+      emphasis:{x:50,y:70,w:72,size:38,fitMin:30,lineHeight:1.35,letterSpacing:-.02,align:"center",fontWeight:800,background:"rgba(14,74,132,.12)",padding:"24px",borderRadius:"20px",textShadow:"none"},
+      footer:{x:50,y:84,w:82,size:30,lineHeight:1.45,letterSpacing:0,align:"center"}
+    }}
+  },
+  {
+    id:25,group:"designer",name:"09 · 공지사항 클래식",
+    desc:"디자이너 프리셋 · 화이트 보드와 한양 블루 라벨",
+    chip:"원본 배경 + 공지 스타일",
+    path:"templates/designer_notice_02.png",textColor:"#111820",
+    fallback:"linear-gradient(90deg,#0b5591 0%,#ffffff 6%,#ffffff 94%,#0b5591 100%)",
+    quick:{heading:"공지사항 빠르게 만들기",intro:"공지 제목·안내 문구·변경 일정만 바꾸면 예시 배치와 색상이 유지돼.",labels:["공지 제목","안내 문구","변경 일정"],placeholders:["예: 발전협력팀 단축근무 시행안내","예: 근무 일정이 조정되었습니다","예: 변경 일시·시간"]},
+    preset:{font:"pretendard",text:{
+      title:"발전협력팀<br>단축근무 시행안내",
+      subtitle:"발전 협력팀 단축근무에 따라<br><span style=\"color:#FF2626\"><strong>근무 일정</strong></span>이 조정되었으므로<br>일정 확인 후 방문 부탁드립니다.",
+      body:"<strong>변경 일시</strong><br>2026. 09. 04. (금)<br>10:00 ~ 17:00<br><br><strong>변경 시간</strong><br>변경 전: 8:30 ~ 17:00<br>변경 후: 10:00 ~ 17:00",
+      emphasis:"관련 문의: 031-400-0000",footer:"공지사항"
+    },colors:{title:"#111820",subtitle:"#30363B",body:"#111820",emphasis:"#111820",footer:"#FFFFFF"},blocks:{
+      title:{x:50,y:14,w:76,size:67,fitMin:48,lineHeight:1.28,letterSpacing:-.045,align:"center",fontWeight:850,textShadow:"none"},
+      subtitle:{x:50,y:31,w:72,size:42,fitMin:32,lineHeight:1.55,letterSpacing:-.025,align:"center",fontWeight:500,textShadow:"none"},
+      body:{x:50,y:47,w:70,size:37,fitMin:28,lineHeight:1.55,letterSpacing:-.025,align:"center",fontWeight:550,textShadow:"none"},
+      emphasis:{x:50,y:82,w:62,size:34,fitMin:27,lineHeight:1.35,letterSpacing:-.02,align:"center",fontWeight:800,background:"rgba(14,74,132,.10)",padding:"20px",borderRadius:"18px",textShadow:"none"},
+      footer:{x:50,y:5.8,w:28,size:55,fitMin:42,lineHeight:1.2,letterSpacing:-.035,align:"center",fontWeight:850,background:"#0E4A84",padding:"18px 14px",borderRadius:"0",opacity:1,textShadow:"none"}
+    }}
+  },
+  {
+    id:26,group:"designer",name:"10 · 공지사항 엠블럼",
+    desc:"디자이너 프리셋 · 상단 블루 헤더와 중앙 교표",
+    chip:"원본 배경 + 공지 스타일",
+    path:"templates/designer_notice_03.png",textColor:"#111820",
+    fallback:"linear-gradient(180deg,#0b5591 0%,#0b5591 19%,#ffffff 19%,#ffffff 100%)",
+    quick:{heading:"공지사항 빠르게 만들기",intro:"공지 제목·안내 문구·변경 일정만 바꾸면 예시 배치와 색상이 유지돼.",labels:["공지 제목","안내 문구","변경 일정"],placeholders:["예: 발전협력팀 단축근무 시행안내","예: 근무 일정이 조정되었습니다","예: 변경 일시·시간"]},
+    preset:{font:"pretendard",text:{
+      title:"발전협력팀<br>단축근무 시행안내",
+      subtitle:"발전 협력팀 단축근무에 따라<br><span style=\"color:#FF2626\"><strong>근무 일정</strong></span>이 조정되었으므로<br>일정 확인 후 방문 부탁드립니다.",
+      body:"<strong>변경 일시</strong><br>2026. 09. 04. (금)<br>10:00 ~ 17:00<br><br><strong>변경 시간</strong><br>변경 전: 8:30 ~ 17:00<br>변경 후: 10:00 ~ 17:00",
+      emphasis:"관련 문의: 031-400-0000",footer:""
+    },colors:{title:"#FFFFFF",subtitle:"#30363B",body:"#111820",emphasis:"#111820",footer:"#111820"},blocks:{
+      title:{x:50,y:4.5,w:82,size:70,fitMin:50,lineHeight:1.2,letterSpacing:-.045,align:"center",fontWeight:850,textShadow:"none"},
+      subtitle:{x:50,y:25,w:76,size:42,fitMin:32,lineHeight:1.55,letterSpacing:-.025,align:"center",fontWeight:500,textShadow:"none"},
+      body:{x:50,y:45,w:70,size:36,fitMin:27,lineHeight:1.52,letterSpacing:-.025,align:"center",fontWeight:550,textShadow:"none"},
+      emphasis:{x:50,y:75,w:62,size:34,fitMin:27,lineHeight:1.35,letterSpacing:-.02,align:"center",fontWeight:800,background:"#0E4A84",padding:"22px",borderRadius:"18px",textShadow:"none"},
+      footer:{x:50,y:84,w:82,size:30,lineHeight:1.45,letterSpacing:0,align:"center"}
+    }}
+  },
+  {
+    id:27,group:"designer",name:"11 · 행사 블랙 골드",
+    desc:"디자이너 프리셋 · 블랙 바탕과 골드 프레임",
+    chip:"원본 배경 + 행사 스타일",
+    path:"templates/designer_event_01.png",textColor:"#FFFFFF",autoTextColor:"#FFFFFF",
+    fallback:"linear-gradient(180deg,#050505 0%,#000000 100%)",
+    quick:{heading:"행사 안내 빠르게 만들기",intro:"행사명·환영 문구·일시와 장소만 바꾸면 예시 배치와 색상이 유지돼.",labels:["행사명","환영 문구","일시·장소"],placeholders:["예: 땡땡사업 구축협력 협약식","예: ERICA 방문을 환영합니다","예: 일시와 장소"]},
+    preset:{font:"pretendard",text:{
+      title:"한양대학교 ERICA-회사명<br>땡땡사업 구축협력 협약식",
+      subtitle:"김성학 직함님 및 외빈분들의<br>ERICA 방문을 환영합니다.",
+      body:"일시 : 2026. 4. 29. (수) 11:50<br>장소 : 본관 2층 프라임컨퍼런스홀",
+      emphasis:"",footer:""
+    },colors:{title:"#FFFFFF",subtitle:"#FFFFFF",body:"#FFFFFF",emphasis:"#FFFFFF",footer:"#FFFFFF"},blocks:{
+      title:{x:50,y:20,w:78,size:55,fitMin:42,lineHeight:1.5,letterSpacing:-.035,align:"center",fontWeight:700,textShadow:"0 2px 4px rgba(0,0,0,.3)"},
+      subtitle:{x:50,y:45,w:80,size:66,fitMin:46,lineHeight:1.55,letterSpacing:-.035,align:"center",fontWeight:850,textShadow:"0 2px 4px rgba(0,0,0,.3)"},
+      body:{x:50,y:72,w:76,size:41,fitMin:31,lineHeight:1.85,letterSpacing:-.02,align:"center",fontWeight:500,textShadow:"0 2px 4px rgba(0,0,0,.3)"},
+      emphasis:{x:50,y:82,w:82,size:40,lineHeight:1.35,letterSpacing:0,align:"center"},
+      footer:{x:50,y:86,w:82,size:30,lineHeight:1.45,letterSpacing:0,align:"center"}
+    },objects:{logo1:{src:"logos/hyu_round.png",x:39,y:10,w:16,h:9,aspect:1}}}
+  },
+  {
+    id:28,group:"designer",name:"12 · 행사 화이트 웨이브",
+    desc:"디자이너 프리셋 · 화이트 캔버스와 네이비 웨이브",
+    chip:"원본 배경 + 행사 스타일",
+    path:"templates/designer_event_02.png",textColor:"#111820",autoTextColor:"#16283B",
+    fallback:"linear-gradient(160deg,#0b376d 0%,#ffffff 18%,#ffffff 84%,#0b376d 100%)",
+    quick:{heading:"행사 안내 빠르게 만들기",intro:"행사명·환영 문구·일시와 장소만 바꾸면 예시 배치와 색상이 유지돼.",labels:["행사명","환영 문구","일시·장소"],placeholders:["예: 땡땡 사업 구축 업무협약식","예: ERICA 방문을 환영합니다","예: 일시와 장소"]},
+    preset:{font:"pretendard",text:{
+      title:"땡땡 사업<br>구축 업무협약식",
+      subtitle:"김성학 직함님 및 외빈분들의<br>ERICA 방문을 환영합니다.",
+      body:"<strong>일시 :</strong> 2026. 9. 03. (목) 11:50<br><strong>장소 :</strong> 본관 4층 409호 발전협력팀",
+      emphasis:"",footer:""
+    },colors:{title:"#0E4A84",subtitle:"#242424",body:"#30363B",emphasis:"#111820",footer:"#111820"},blocks:{
+      title:{x:50,y:39,w:78,size:86,fitMin:58,lineHeight:1.35,letterSpacing:-.05,align:"center",fontWeight:900,textShadow:"none"},
+      subtitle:{x:50,y:25,w:74,size:46,fitMin:34,lineHeight:1.45,letterSpacing:-.03,align:"center",fontWeight:500,textShadow:"none"},
+      body:{x:50,y:72,w:72,size:40,fitMin:30,lineHeight:1.85,letterSpacing:-.025,align:"left",fontWeight:500,textShadow:"none"},
+      emphasis:{x:50,y:82,w:82,size:40,lineHeight:1.35,letterSpacing:0,align:"center"},
+      footer:{x:50,y:86,w:82,size:30,lineHeight:1.45,letterSpacing:0,align:"center"}
+    },objects:{logo1:{src:"logos/hyu_round.png",x:40,y:12,w:18,h:10,aspect:1}}}
+  },
+  {
+    id:29,group:"designer",name:"13 · 행사 ERICA 블루",
+    desc:"디자이너 프리셋 · 한양 블루와 대형 행사 제목",
+    chip:"원본 배경 + 행사 스타일",
+    path:"templates/designer_event_03.png",textColor:"#FFFFFF",autoTextColor:"#FFFFFF",
+    fallback:"linear-gradient(180deg,#083768 0%,#0E4A84 100%)",
+    quick:{heading:"행사 안내 빠르게 만들기",intro:"행사명·주최 문구·일시와 장소만 바꾸면 예시 배치와 색상이 유지돼.",labels:["행사명","주최·환영 문구","일시·장소"],placeholders:["예: 땡땡 사업 구축 업무 협약식","예: 한양대학교 ERICA-회사명","예: 일시와 장소"]},
+    preset:{font:"pretendard",text:{
+      title:"땡땡 사업<br>구축 업무<br>협약식",
+      subtitle:"한양대학교 ERICA-회사명",
+      body:"<strong>일시</strong>　2026. 09. 03. (목) 11:30<br><strong>장소</strong>　본관 4층 409호 발전협력팀",
+      emphasis:"",footer:""
+    },colors:{title:"#FFFFFF",subtitle:"#FFFFFF",body:"#FFFFFF",emphasis:"#FFFFFF",footer:"#FFFFFF"},blocks:{
+      title:{x:50,y:24,w:70,size:105,fitMin:68,lineHeight:1.35,letterSpacing:-.055,align:"left",fontWeight:900,textShadow:"none"},
+      subtitle:{x:50,y:17,w:70,size:47,fitMin:35,lineHeight:1.35,letterSpacing:-.03,align:"left",fontWeight:500,textShadow:"none"},
+      body:{x:50,y:68,w:70,size:40,fitMin:30,lineHeight:2.1,letterSpacing:-.025,align:"left",fontWeight:500,textShadow:"none"},
+      emphasis:{x:50,y:82,w:82,size:40,lineHeight:1.35,letterSpacing:0,align:"center"},
+      footer:{x:50,y:86,w:82,size:30,lineHeight:1.45,letterSpacing:0,align:"center"}
+    }}
+  },
+
+  {
+    id:7,group:"image",name:"14 · 화이트 네이비 골드",
     desc:"이미지 시안 · 화이트 중심 + 네이비·골드 프레임",
     chip:"templates/signage_01.png",
     path:"templates/signage_01.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#f7f4ed 0%,#ffffff 72%,#0b376d 100%)"
   },
   {
-    id:8,group:"image",name:"09 · 다크 골드",
+    id:8,group:"image",name:"15 · 다크 골드",
     desc:"이미지 시안 · 블랙/골드의 격식 있는 구성",
     chip:"templates/signage_02.png",
     path:"templates/signage_02.png",textColor:"#FFFFFF",autoTextColor:"#F3C866",
     fallback:"linear-gradient(180deg,#171410 0%,#2b2419 55%,#0c0b09 100%)"
   },
   {
-    id:9,group:"image",name:"10 · 화이트 블루",
+    id:9,group:"image",name:"16 · 화이트 블루",
     desc:"이미지 시안 · 화이트 중심의 현대적 구성",
     chip:"templates/signage_03.png",
     path:"templates/signage_03.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#ffffff 0%,#f5f7fa 78%,#183b70 100%)"
   },
   {
-    id:16,group:"image",name:"11 · 블랙 골드 클래식",
+    id:16,group:"image",name:"17 · 블랙 골드 클래식",
     desc:"이미지 시안 · 블랙 중심 + 화려한 골드 장식 프레임",
     chip:"templates/signage_04.png",
     path:"templates/signage_04.png",textColor:"#FFFFFF",autoTextColor:"#F3C866",
     fallback:"linear-gradient(180deg,#16110d 0%,#21170f 50%,#080706 100%)"
   },
   {
-    id:17,group:"image",name:"12 · 화이트 네이비 골드 웨이브",
+    id:17,group:"image",name:"18 · 화이트 네이비 골드 웨이브",
     desc:"이미지 시안 · 화이트 중심 + 네이비·골드 곡선 프레임",
     chip:"templates/signage_05.png",
     path:"templates/signage_05.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#ffffff 0%,#f6f3ea 74%,#173a70 100%)"
   },
   {
-    id:18,group:"image",name:"13 · 네이비 골드 레터헤드",
+    id:18,group:"image",name:"19 · 네이비 골드 레터헤드",
     desc:"세로형 변환 시안 · 네이비 상하단 + 골드 라인 + 넓은 화이트 본문",
     chip:"templates/signage_vertical_01_navy_gold_letterhead.png",
     path:"templates/signage_vertical_01_navy_gold_letterhead.png",textColor:"#16283B",
     fallback:"linear-gradient(180deg,#0E3F78 0%,#ffffff 18%,#ffffff 82%,#0E3F78 100%)"
   },
   {
-    id:19,group:"image",name:"14 · 네이비 골드 보더",
+    id:19,group:"image",name:"20 · 네이비 골드 보더",
     desc:"세로형 변환 시안 · 네이비와 골드 곡선 테두리가 감싸는 밝은 구성",
     chip:"templates/signage_vertical_02_navy_gold_border.png",
     path:"templates/signage_vertical_02_navy_gold_border.png",textColor:"#16283B",
     fallback:"linear-gradient(160deg,#0E3F78 0%,#ffffff 22%,#ffffff 78%,#0E3F78 100%)"
   },
   {
-    id:20,group:"image",name:"15 · 블루 웨이브",
+    id:20,group:"image",name:"21 · 블루 웨이브",
     desc:"세로형 변환 시안 · 블루 그라데이션 + 하단 웨이브",
     chip:"templates/signage_vertical_03_blue_wave.png",
     path:"templates/signage_vertical_03_blue_wave.png",textColor:"#FFFFFF",
     fallback:"linear-gradient(180deg,#083768 0%,#0E5A9A 52%,#1878B3 100%)"
   },
   {
-    id:21,group:"image",name:"16 · 네이비 골드 커브 프레임",
+    id:21,group:"image",name:"22 · 네이비 골드 커브 프레임",
     desc:"세로형 변환 시안 · 좌상단/우하단 골드 곡선 프레임",
     chip:"templates/signage_vertical_04_navy_gold_curve_frame.png",
     path:"templates/signage_vertical_04_navy_gold_curve_frame.png",textColor:"#16283B",
     fallback:"linear-gradient(150deg,#0E3F78 0%,#ffffff 24%,#ffffff 76%,#0E3F78 100%)"
   },
   {
-    id:22,group:"image",name:"17 · 아이보리 골드 프레임",
+    id:22,group:"image",name:"23 · 아이보리 골드 프레임",
     desc:"세로형 변환 시안 · 아이보리 바탕 + 얇은 골드 프레임",
     chip:"templates/signage_vertical_05_ivory_gold_frame.png",
     path:"templates/signage_vertical_05_ivory_gold_frame.png",textColor:"#263746",
@@ -983,42 +1105,42 @@ const TEMPLATES=[
   },
 
   {
-    id:10,group:"brand",name:"18 · 한양 블루 × 실버",
+    id:10,group:"brand",name:"24 · 한양 블루 × 실버",
     desc:"공식색 · Blue #0E4A84 + Silver #898C8E",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(155deg,#0E4A84 0%,#365f86 46%,#898C8E 100%)"
   },
   {
-    id:11,group:"brand",name:"19 · 한양 블루 × 골드",
+    id:11,group:"brand",name:"25 · 한양 블루 × 골드",
     desc:"공식색 · Blue #0E4A84 + Gold #88774F",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(160deg,#082f5b 0%,#0E4A84 48%,#88774F 100%)"
   },
   {
-    id:12,group:"brand",name:"20 · 한양 블루 × 민트",
+    id:12,group:"brand",name:"26 · 한양 블루 × 민트",
     desc:"공식색 · Blue #0E4A84 + Retro Mint #6CCA98",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(150deg,#0E4A84 0%,#287a8f 48%,#6CCA98 100%)"
   },
   {
-    id:13,group:"brand",name:"21 · 한양 블루 × 코랄",
+    id:13,group:"brand",name:"27 · 한양 블루 × 코랄",
     desc:"공식색 · Blue #0E4A84 + Retro Coral #FF8672",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(150deg,#0E4A84 0%,#6d6682 52%,#FF8672 100%)"
   },
   {
-    id:14,group:"brand",name:"22 · 한양 블루 × 오렌지",
+    id:14,group:"brand",name:"28 · 한양 블루 × 오렌지",
     desc:"공식색 · Blue #0E4A84 + Orange #F08100",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
     fallback:"linear-gradient(155deg,#0E4A84 0%,#285b7d 50%,#F08100 100%)"
   },
   {
-    id:15,group:"brand",name:"23 · 한양 블루 × 옐로그린",
+    id:15,group:"brand",name:"29 · 한양 블루 × 옐로그린",
     desc:"공식색 · Blue #0E4A84 + Yellow Green #7DB928",
     chip:"한양 공식색",
     path:"",textColor:"#FFFFFF",
@@ -1061,6 +1183,44 @@ function defaultTextColors(color="#FFFFFF"){
 
 function defaultTextColorModes(mode="auto"){
   return Object.fromEntries(RICH_KEYS.map(key=>[key,mode]));
+}
+
+function currentTemplate(){
+  return TEMPLATES.find(item=>item.id===Number(state.template))||TEMPLATES[0];
+}
+
+function mergedPresetTextBlocks(template){
+  const blocks=defaultTextBlocks(false);
+  const presetBlocks=template?.preset?.blocks||{};
+  for(const key of RICH_KEYS)blocks[key]={...blocks[key],...(presetBlocks[key]||{})};
+  return blocks;
+}
+
+function textBlockDefaultsForState(){
+  const template=currentTemplate();
+  return template.preset?mergedPresetTextBlocks(template):defaultTextBlocks(state.layout==="warm-welcome");
+}
+
+function applyDesignerPreset(template){
+  const preset=template?.preset;
+  if(!preset)return;
+  state.layout="designer-preset";
+  state.font=preset.font||"pretendard";
+  for(const key of RICH_KEYS)state[key]=migrateRich(preset.text?.[key]||"");
+  state.textBlocks=mergedPresetTextBlocks(template);
+  state.objects=defaultObjects(false);
+  for(const [key,value] of Object.entries(preset.objects||{})){
+    if(state.objects[key])state.objects[key]={...state.objects[key],...value};
+  }
+  const baseColor=normalizeColor(preset.colors?.title)||normalizeColor(template.textColor)||"#FFFFFF";
+  state.textColor=baseColor;
+  state.textColors=Object.fromEntries(RICH_KEYS.map(key=>[
+    key,normalizeColor(preset.colors?.[key])||baseColor
+  ]));
+  state.textColorModes=defaultTextColorModes("manual");
+  autoColorReport=null;
+  selectedObjKey=null;
+  spacingTargetKey="title";
 }
 
 function freshState({legacy=false}={}){
@@ -1249,7 +1409,8 @@ function buildTemplateGrid(){
 
   const groups=[
     {key:"basic",title:"기본 시안",sub:"01~07 · 브라운 클래식 추가"},
-    {key:"image",title:"이미지 시안",sub:"PNG 10종"},
+    {key:"designer",title:"디자이너 제공 프리셋",sub:"08~13 · 배경 + 글자 스타일"},
+    {key:"image",title:"이미지 시안",sub:"14~23 · PNG 10종"},
     {key:"brand",title:"한양 공식색 그라데이션",sub:"공식 지정색 조합"}
   ];
 
@@ -1300,6 +1461,7 @@ function buildTemplateGrid(){
         state.template=t.id;
         state.customBg="";
         $("customBgFile").value="";
+        if(t.preset)applyDesignerPreset(t);
         renderAll();
         saveLocal();
       };
@@ -1313,11 +1475,13 @@ function buildTemplateGrid(){
 }
 
 function applyTemplate(){
-  const t=TEMPLATES.find(v=>v.id===Number(state.template))||TEMPLATES[0];
+  const t=currentTemplate();
   const src=state.customBg||t.path;
 
   page.style.background=t.fallback;
-  templateOverlay.style.background=[3,7,9,17,18,19,21,22].includes(Number(state.template))
+  templateOverlay.style.background=t.preset
+    ?"none"
+    :[3,7,9,17,18,19,21,22].includes(Number(state.template))
     ?"linear-gradient(180deg,rgba(255,255,255,.01),rgba(0,0,0,.025))"
     :"linear-gradient(180deg,rgba(0,0,0,.03),rgba(0,0,0,.06))";
 
@@ -1395,13 +1559,24 @@ function renderText(){
     el.style.textAlign=cfg.align||"center";
     el.style.fontFamily=fontFamily(state.font);
     el.style.color=resolvedTextColor(key);
+    el.style.fontWeight=cfg.fontWeight==null?"":String(cfg.fontWeight);
+    el.style.background=cfg.background||"transparent";
+    el.style.padding=cfg.padding||"0";
+    el.style.borderRadius=cfg.borderRadius||"0";
+    el.style.opacity=cfg.opacity==null?"":String(cfg.opacity);
+    el.style.textShadow=cfg.textShadow==null?"":cfg.textShadow;
+    el.style.boxSizing="border-box";
     fitTextSize(el,cfg);
     renderSizeOutput(key);
   }
 
-  $("pEmphasis").style.padding=richPlainText(state.emphasis).trim()?"22px 26px":"0";
-  $("pEmphasis").style.background=richPlainText(state.emphasis).trim()?"rgba(255,255,255,.10)":"transparent";
-  $("pEmphasis").style.borderRadius=richPlainText(state.emphasis).trim()?"18px":"0";
+  const emphasisCfg=state.textBlocks.emphasis;
+  const customEmphasis=Object.prototype.hasOwnProperty.call(emphasisCfg,"background");
+  if(!customEmphasis){
+    $("pEmphasis").style.padding=richPlainText(state.emphasis).trim()?"22px 26px":"0";
+    $("pEmphasis").style.background=richPlainText(state.emphasis).trim()?"rgba(255,255,255,.10)":"transparent";
+    $("pEmphasis").style.borderRadius=richPlainText(state.emphasis).trim()?"18px":"0";
+  }
   $("pEmphasis").style.backdropFilter=richPlainText(state.emphasis).trim()?"blur(3px)":"none";
 }
 
@@ -1462,6 +1637,22 @@ function renderObjects(){
 }
 
 function renderQuickStart(){
+  const quick=currentTemplate().quick||{
+    heading:"행사 안내 빠르게 만들기",
+    intro:"행사명·일시·장소만 입력하면 기본 사이니지와 미리보기에 바로 반영돼.",
+    labels:["행사명","일시","장소"],
+    placeholders:[
+      "예: OOO대학 OOO방문단의 ERICA 방문을 환영합니다",
+      "예: 20XX년 X월 X일",
+      "예: 본관 2층 프라임 컨퍼런스 홀"
+    ]
+  };
+  $("quickStartHeading").textContent=quick.heading;
+  $("quickStartIntro").textContent=quick.intro;
+  ["quickTitleLabel","quickSubtitleLabel","quickBodyLabel"].forEach((id,index)=>{
+    $(id).textContent=quick.labels[index];
+    $(QUICK_START_FIELDS[index].id).placeholder=quick.placeholders[index];
+  });
   let filled=0;
   for(const field of QUICK_START_FIELDS){
     const input=$(field.id);
@@ -2776,7 +2967,7 @@ $("letterSpacing").oninput=e=>{
   renderAll();saveLocal();
 };
 $("resetSpacing").onclick=()=>{
-  const defaults=defaultTextBlocks(state.layout==="warm-welcome");
+  const defaults=textBlockDefaultsForState();
   state.textBlocks[spacingTargetKey].lineHeight=defaults[spacingTargetKey].lineHeight;
   state.textBlocks[spacingTargetKey].letterSpacing=defaults[spacingTargetKey].letterSpacing;
   renderAll();saveLocal();
@@ -2816,7 +3007,7 @@ document.querySelectorAll(".align-btn").forEach(btn=>{
 });
 
 $("resetTextPosition").onclick=()=>{
-  const defaults=defaultTextBlocks(state.layout==="warm-welcome");
+  const defaults=textBlockDefaultsForState();
   for(const key of RICH_KEYS){
     state.textBlocks[key].x=defaults[key].x;
     state.textBlocks[key].y=defaults[key].y;

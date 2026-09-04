@@ -15,6 +15,8 @@ https://erakeun.github.io/digital-signage-maker/
 
 주요 기능
 - QUICK START에서 행사명, 일시, 장소 3개만 입력해 기본 사이니지 제작
+- 디자이너 제공 공지사항 3종·행사 3종은 배경뿐 아니라 예시의 문구 구조, 색상, 크기, 위치, 행간·자간까지 함께 적용
+- 디자이너 공지 프리셋에서는 QUICK START가 공지 제목·안내 문구·변경 일정 입력으로 자동 전환
 - QUICK START와 고급 편집이 제목, 부제목, 본문 상태를 함께 사용해 전환 후에도 입력값 유지
 - 제목, 부제목, 본문, 강조문, 하단 문구 입력 및 직접 드래그
 - 부분 굵게와 부분 글자색, 글꼴, 크기, 기본 색상, 정렬
@@ -29,9 +31,16 @@ https://erakeun.github.io/digital-signage-maker/
 - 여러 화면을 재생목록에 저장한 뒤 순번이 붙은 PNG로 일괄 출력
 - 모바일 QUICK START의 “빠른 미리보기” 또는 하단의 “미리보기 열기” 버튼으로 9:16 오버레이 확인
 
-템플릿 23종
+템플릿 29종
 - 기본 시안 7종: 브라운 클래식 웰컴보드 + 기존 6종 코드 내 그라데이션 배경
   - templates/signage_vertical_06_brown_classic_frame.svg
+- 디자이너 제공 프리셋 6종: 본관 1층용 공지사항 3종 + 행사 3종
+  - templates/designer_notice_01.png
+  - templates/designer_notice_02.png
+  - templates/designer_notice_03.png
+  - templates/designer_event_01.png
+  - templates/designer_event_02.png
+  - templates/designer_event_03.png
 - 이미지 시안 10종:
   - templates/signage_01.png
   - templates/signage_02.png
@@ -70,6 +79,9 @@ QUICK START
 
 고급 편집의 수동 기본색과 부분 글자색 기능은 그대로 유지됩니다. 수동 상태의 항목은 배경이나 템플릿을 바꿔도 자동으로 덮어쓰지 않습니다. 다시 자동 모드를 선택하면 해당 항목의 부분 색상을 정리하고 계산된 자동색을 일관되게 적용합니다. V1.3.0 이하 형식처럼 자동/수동 정보가 없는 작업 JSON은 기존 외관을 보존하기 위해 저장된 기본색을 수동 상태로 복원합니다.
 
+디자이너 제공 프리셋
+`빈 템플릿` 원본 6종은 4501 × 8001 해상도를 그대로 사용합니다. 각 카드를 선택하면 같은 이름의 `내용 삽입 예시안`을 기준으로 제목·안내·일정/장소·문의 문구와 색상, 글자 크기, 위치, 굵기, 행간·자간, 라벨 배경이 함께 적용됩니다. 공지형과 행사형에 맞춰 QUICK START의 제목과 입력 라벨도 자동으로 바뀌며, 적용 후에는 기존 고급 편집에서 모든 문구와 스타일을 다시 조정할 수 있습니다. 디자이너 권장 색을 보존하기 위해 처음 적용할 때는 각 항목이 수동 색상으로 시작하고, 사용자가 원하면 기존 “자동 색상 사용”으로 전환할 수 있습니다.
+
 MagicInfoSlide ZIP의 의미
 생성되는 ZIP은 MagicINFO 서버에 곧바로 가져오는 manifest/playlist/schedule 완성 패키지가 아닙니다. 아래처럼 번호가 붙은 PNG 파일을 한 폴더에 모은 전달용 묶음입니다.
 
@@ -97,11 +109,11 @@ digital-signage-maker/
 ├─ tests/
 │  ├─ verify.mjs
 │  └─ fixtures/work-v1.0.1.json
-├─ templates/              이미지 템플릿 10종 + 기본 시안 SVG 1종
+├─ templates/              이미지 템플릿 16종 + 기본 시안 SVG 1종
 └─ logos/                  기본 로고 8종
 
 검증
-- `npm test`: JavaScript 문법, 템플릿 23종 구성 및 자산 존재, 중복 DOM ID, APP_VERSION, QUICK START 3개 입력과 편집 모드 상태 공유, 저장 JSON 버전, V1.0.1/V1.3.0/V1.3.1 복원과 웜 웰컴 기본값·왕복 저장, 자동 축소 하한과 수동 크기 보존, WCAG 대비 계산, 자동/수동 색상 및 출력 전 재검증 계약, README 자산 목록, signage/sinage 오타를 검사합니다.
+- `npm test`: JavaScript 문법, 템플릿 29종 구성과 디자이너 프리셋 6종 및 자산 존재, 중복 DOM ID, APP_VERSION, QUICK START 3개 입력과 편집 모드 상태 공유, 저장 JSON 버전, V1.0.1/V1.3.0/V1.3.1 복원과 웜 웰컴 기본값·왕복 저장, 자동 축소 하한과 수동 크기 보존, WCAG 대비 계산, 자동/수동 색상 및 출력 전 재검증 계약, README 자산 목록, signage/sinage 오타를 검사합니다.
 - 브라우저 회귀 테스트 권장 폭: Desktop 1440px, Tablet 768px, Mobile 390px
 - `git diff --check`: 공백 오류를 검사합니다.
 

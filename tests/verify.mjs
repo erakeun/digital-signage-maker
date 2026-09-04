@@ -80,10 +80,11 @@ check("APP_VERSION과 화면/패키지/README 버전 일치",()=>{
   assert.match(script,/merged\.version=APP_VERSION/);
 });
 
-check("템플릿 23종 및 그룹별 개수",()=>{
-  assert.equal(templates.length,23);
-  assert.equal(new Set(templates.map(item=>item.id)).size,23);
+check("템플릿 29종 및 그룹별 개수",()=>{
+  assert.equal(templates.length,29);
+  assert.equal(new Set(templates.map(item=>item.id)).size,29);
   assert.equal(templates.filter(item=>item.group==="basic").length,7);
+  assert.equal(templates.filter(item=>item.group==="designer").length,6);
   assert.equal(templates.filter(item=>item.group==="image").length,10);
   assert.equal(templates.filter(item=>item.group==="brand").length,6);
 });
@@ -127,6 +128,39 @@ check("모든 이미지 템플릿 자산 존재",()=>{
     assert.ok(fs.existsSync(path.join(root,item.path)),`${item.name}: ${item.path} 없음`);
     assert.ok(readme.includes(item.path),`${item.path}: README 목록 누락`);
   }
+});
+
+check("디자이너 원본 6종과 글자 스타일 프리셋",()=>{
+  const designer=templates.filter(item=>item.group==="designer");
+  assert.equal(designer.map(item=>item.id).join(","),"24,25,26,27,28,29");
+  assert.equal(designer.filter(item=>item.name.includes("공지사항")).length,3);
+  assert.equal(designer.filter(item=>item.name.includes("행사")).length,3);
+  for(const item of designer){
+    const asset=path.join(root,item.path);
+    assert.ok(fs.existsSync(asset),`${item.name}: ${item.path} 없음`);
+    assert.ok(readme.includes(item.path),`${item.path}: README 목록 누락`);
+    const png=fs.readFileSync(asset);
+    assert.equal(png.toString("ascii",1,4),"PNG",`${item.path}: PNG 형식 아님`);
+    assert.equal(png.readUInt32BE(16),4501,`${item.path}: 원본 너비 변경`);
+    assert.equal(png.readUInt32BE(20),8001,`${item.path}: 원본 높이 변경`);
+    assert.equal(item.quick.labels.length,3,`${item.name}: QUICK START 라벨 누락`);
+    assert.equal(item.quick.placeholders.length,3,`${item.name}: QUICK START 예시 누락`);
+    assert.ok(item.preset?.text?.title,`${item.name}: 제목 예시 누락`);
+    assert.ok(item.preset?.text?.subtitle,`${item.name}: 보조 문구 예시 누락`);
+    assert.ok(item.preset?.text?.body,`${item.name}: 일정·장소 예시 누락`);
+    for(const key of ["title","subtitle","body"]){
+      assert.ok(item.preset.blocks[key],`${item.name}: ${key} 배치 누락`);
+      assert.ok(item.preset.colors[key],`${item.name}: ${key} 색상 누락`);
+    }
+  }
+  assert.match(script,/function applyDesignerPreset\(template\)/);
+  assert.match(script,/state\.textColorModes=defaultTextColorModes\("manual"\)/);
+  assert.match(script,/if\(t\.preset\)applyDesignerPreset\(t\)/);
+  assert.match(script,/function mergedPresetTextBlocks\(template\)/);
+  assert.match(script,/\$\("quickStartHeading"\)\.textContent=quick\.heading/);
+  assert.match(script,/el\.style\.fontWeight=cfg\.fontWeight/);
+  assert.match(script,/el\.style\.background=cfg\.background/);
+  assert.match(script,/templateOverlay\.style\.background=t\.preset/);
 });
 
 check("sinage 오타 잔존 없음",()=>{
