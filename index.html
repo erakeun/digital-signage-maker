@@ -49,7 +49,13 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 }
 .header{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .header h1{margin:0;font-size:24px;letter-spacing:-.04em}
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex:0 0 auto}
 .badge{font-size:11px;padding:5px 9px;border-radius:999px;background:#edf3f8;color:#45647e}
+.header-reset{
+  min-height:32px;padding:5px 8px;border:1px solid #efcaca;border-radius:8px;
+  background:#fff7f7;color:#9b3535;font-size:10.5px;font-weight:800
+}
+.header-reset:hover{background:#fff0f0;border-color:#e7aaaa}
 .desc{font-size:12.5px;line-height:1.6;color:var(--muted);margin:8px 0 15px}
 .section{padding:16px 0;border-top:1px solid #edf0f2}
 .section h2{font-size:14px;margin:0 0 11px}
@@ -388,6 +394,7 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   .template-grid{grid-template-columns:1fr}
   .app{display:block}
   .sidebar{height:auto;position:relative;border-right:0;border-bottom:1px solid var(--line);padding-bottom:78px}
+  .header-reset{min-height:44px;padding:8px 10px}
   .workspace{height:auto;min-height:100vh}
   .stage{min-height:760px;padding-left:10px;padding-right:10px}
   .btn,.rich-toolbar button,.logo-presets button,.play-actions button,
@@ -418,7 +425,11 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
   <aside class="sidebar">
     <div class="header">
       <h1>디지털 사이니지 제작기</h1>
-      <span class="badge" id="appVersionBadge">V1.4.0</span>
+      <div class="header-actions">
+        <span class="badge" id="appVersionBadge">V1.4.0</span>
+        <button type="button" class="header-reset" id="resetAllTop"
+                title="저장된 편집 상태와 재생목록 초기화">전체 초기화</button>
+      </div>
     </div>
     <p class="desc">
       ERICA 세로형 디지털 사이니지용 9:16 안내 화면 제작기.
@@ -2829,7 +2840,7 @@ $("jobLoad").onchange=e=>{
   e.target.value="";
 };
 
-$("resetAll").onclick=()=>{
+function resetAllWork(){
   if(!confirm("사이니지 제작기의 모든 작업내용과 재생 목록을 초기화할까?"))return;
   localStorage.removeItem("digitalSignageMakerV1");
   state=normalizeState(freshState());
@@ -2839,7 +2850,10 @@ $("resetAll").onclick=()=>{
   setEditorMode("quick");
   renderAll();
   updateStatus("전체 초기화 완료");
-};
+}
+
+$("resetAll").onclick=resetAllWork;
+$("resetAllTop").onclick=resetAllWork;
 
 $("folderSupport").textContent=window.showDirectoryPicker
   ?"폴더 직접 저장을 지원해. 저장된 PNG는 MagicINFO 미디어에 등록한 뒤 재생목록·스케줄을 별도로 만들어야 해. 실제 서버 검증은 수행하지 않았어."
