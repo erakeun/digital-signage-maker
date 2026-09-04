@@ -1,4 +1,4 @@
-디지털 사이니지 제작기 V1.5.0 · SIGNATURE TYPE
+디지털 사이니지 제작기 V1.5.1 · NOTICE FRAME
 
 한양대학교 ERICA의 9:16 세로형 안내 화면을 브라우저에서 만들고 PNG로 저장하는 정적 웹 앱입니다.
 설치나 서버 없이 index.html을 열어 사용할 수 있으며, GitHub Pages 공개 버전은 아래 주소에서 제공합니다.
@@ -58,6 +58,12 @@ https://erakeun.github.io/digital-signage-maker/
 - 한양 공식색 그라데이션 6종: Blue를 중심으로 Silver, Gold, Retro Mint, Retro Coral, Orange, Yellow Green 조합
 
 템플릿 파일명은 대소문자를 포함해 코드와 정확히 같아야 합니다. `npm test`는 코드에 등록된 모든 이미지 템플릿 경로가 실제로 존재하는지 검사하며 하나라도 없으면 실패합니다.
+
+V1.5.1 · NOTICE FRAME
+공지사항 카드·클래식·엠블럼 프리셋의 관련 문의 프레임을 같은 반투명 한양 블루로 통일했습니다.
+- 디자이너가 지정한 공지사항 클래식의 옅은 블루 색상과 투명도 사용
+- 공지사항 엠블럼의 불투명한 파란 프레임을 반투명 프레임으로 교체
+- 공지사항 카드의 투명도를 클래식과 동일하게 미세 조정
 
 V1.5.0 · SIGNATURE TYPE
 디자이너의 시그니처 Black·Blue·White 빈 템플릿 3종과 예시안의 타이포그래피 감각을 프리셋으로 추가했습니다.
