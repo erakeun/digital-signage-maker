@@ -1,4 +1,4 @@
-디지털 사이니지 제작기 V1.4.0 · WARM WELCOME
+디지털 사이니지 제작기 V1.5.0 · SIGNATURE TYPE
 
 한양대학교 ERICA의 9:16 세로형 안내 화면을 브라우저에서 만들고 PNG로 저장하는 정적 웹 앱입니다.
 설치나 서버 없이 index.html을 열어 사용할 수 있으며, GitHub Pages 공개 버전은 아래 주소에서 제공합니다.
@@ -31,16 +31,19 @@ https://erakeun.github.io/digital-signage-maker/
 - 여러 화면을 재생목록에 저장한 뒤 순번이 붙은 PNG로 일괄 출력
 - 모바일 QUICK START의 “빠른 미리보기” 또는 하단의 “미리보기 열기” 버튼으로 9:16 오버레이 확인
 
-템플릿 29종
+템플릿 32종
 - 기본 시안 7종: 브라운 클래식 웰컴보드 + 기존 6종 코드 내 그라데이션 배경
   - templates/signage_vertical_06_brown_classic_frame.svg
-- 디자이너 제공 프리셋 6종: 본관 1층용 공지사항 3종 + 행사 3종
+- 디자이너 제공 프리셋 9종: 본관 1층용 공지사항 3종 + 행사 3종 + 시그니처 Black·Blue·White 3종
   - templates/designer_notice_01.png
   - templates/designer_notice_02.png
   - templates/designer_notice_03.png
   - templates/designer_event_01.png
   - templates/designer_event_02.png
   - templates/designer_event_03.png
+  - templates/designer_signage_black.png
+  - templates/designer_signage_blue.png
+  - templates/designer_signage_white.png
 - 이미지 시안 10종:
   - templates/signage_01.png
   - templates/signage_02.png
@@ -55,6 +58,14 @@ https://erakeun.github.io/digital-signage-maker/
 - 한양 공식색 그라데이션 6종: Blue를 중심으로 Silver, Gold, Retro Mint, Retro Coral, Orange, Yellow Green 조합
 
 템플릿 파일명은 대소문자를 포함해 코드와 정확히 같아야 합니다. `npm test`는 코드에 등록된 모든 이미지 템플릿 경로가 실제로 존재하는지 검사하며 하나라도 없으면 실패합니다.
+
+V1.5.0 · SIGNATURE TYPE
+디자이너의 시그니처 Black·Blue·White 빈 템플릿 3종과 예시안의 타이포그래피 감각을 프리셋으로 추가했습니다.
+- 행사 정보, 대형 행사명, 일시·장소의 위계와 위치를 시안 기준으로 적용
+- 대형 행사명은 촘촘한 행간과 넓은 자간을 함께 사용
+- Blue·White 정보 행에는 시안과 같은 ERICA 블루 라벨 표시
+- 배경에 맞춘 흰색/컬러 ERICA 로고를 하단 중앙에 자동 배치
+- 모든 값은 기존 고급 편집의 글꼴·크기·행간·자간·위치 컨트롤에서 다시 조정 가능
 
 V1.4.0 · WARM WELCOME
 기존 웰컴보드의 브라운 클래식 양식을 9:16 세로형으로 다시 구성했습니다. 짙은 브라운 배경에 골드 이중선, 곡선 코너와 네 모서리 별 장식을 넣고 FHD/4K에서 선명하게 확장되는 SVG 자산으로 제작했습니다.
@@ -80,7 +91,7 @@ QUICK START
 고급 편집의 수동 기본색과 부분 글자색 기능은 그대로 유지됩니다. 수동 상태의 항목은 배경이나 템플릿을 바꿔도 자동으로 덮어쓰지 않습니다. 다시 자동 모드를 선택하면 해당 항목의 부분 색상을 정리하고 계산된 자동색을 일관되게 적용합니다. V1.3.0 이하 형식처럼 자동/수동 정보가 없는 작업 JSON은 기존 외관을 보존하기 위해 저장된 기본색을 수동 상태로 복원합니다.
 
 디자이너 제공 프리셋
-`빈 템플릿` 원본 6종은 4501 × 8001 해상도를 그대로 사용합니다. 각 카드를 선택하면 같은 이름의 `내용 삽입 예시안`을 기준으로 제목·안내·일정/장소·문의 문구와 색상, 글자 크기, 위치, 굵기, 행간·자간, 라벨 배경이 함께 적용됩니다. 공지형과 행사형에 맞춰 QUICK START의 제목과 입력 라벨도 자동으로 바뀌며, 적용 후에는 기존 고급 편집에서 모든 문구와 스타일을 다시 조정할 수 있습니다. 디자이너 권장 색을 보존하기 위해 처음 적용할 때는 각 항목이 수동 색상으로 시작하고, 사용자가 원하면 기존 “자동 색상 사용”으로 전환할 수 있습니다.
+`빈 템플릿` 원본 9종은 4501 × 8001 해상도를 그대로 사용합니다. 각 카드를 선택하면 같은 이름의 `내용 삽입 예시안`을 기준으로 제목·안내·일정/장소·문의 문구와 색상, 글자 크기, 위치, 굵기, 행간·자간, 라벨 배경이 함께 적용됩니다. 공지형과 행사형에 맞춰 QUICK START의 제목과 입력 라벨도 자동으로 바뀌며, 적용 후에는 기존 고급 편집에서 모든 문구와 스타일을 다시 조정할 수 있습니다. 디자이너 권장 색을 보존하기 위해 처음 적용할 때는 각 항목이 수동 색상으로 시작하고, 사용자가 원하면 기존 “자동 색상 사용”으로 전환할 수 있습니다.
 
 MagicInfoSlide ZIP의 의미
 생성되는 ZIP은 MagicINFO 서버에 곧바로 가져오는 manifest/playlist/schedule 완성 패키지가 아닙니다. 아래처럼 번호가 붙은 PNG 파일을 한 폴더에 모은 전달용 묶음입니다.
@@ -109,11 +120,11 @@ digital-signage-maker/
 ├─ tests/
 │  ├─ verify.mjs
 │  └─ fixtures/work-v1.0.1.json
-├─ templates/              이미지 템플릿 16종 + 기본 시안 SVG 1종
+├─ templates/              이미지 템플릿 19종 + 기본 시안 SVG 1종
 └─ logos/                  기본 로고 8종
 
 검증
-- `npm test`: JavaScript 문법, 템플릿 29종 구성과 디자이너 프리셋 6종 및 자산 존재, 중복 DOM ID, APP_VERSION, QUICK START 3개 입력과 편집 모드 상태 공유, 저장 JSON 버전, V1.0.1/V1.3.0/V1.3.1 복원과 웜 웰컴 기본값·왕복 저장, 자동 축소 하한과 수동 크기 보존, WCAG 대비 계산, 자동/수동 색상 및 출력 전 재검증 계약, README 자산 목록, signage/sinage 오타를 검사합니다.
+- `npm test`: JavaScript 문법, 템플릿 32종 구성과 디자이너 프리셋 9종 및 자산 존재, 중복 DOM ID, APP_VERSION, QUICK START 3개 입력과 편집 모드 상태 공유, 저장 JSON 버전, V1.0.1/V1.3.0/V1.3.1 복원과 웜 웰컴 기본값·왕복 저장, 자동 축소 하한과 수동 크기 보존, WCAG 대비 계산, 자동/수동 색상 및 출력 전 재검증 계약, README 자산 목록, signage/sinage 오타를 검사합니다.
 - 브라우저 회귀 테스트 권장 폭: Desktop 1440px, Tablet 768px, Mobile 390px
 - `git diff --check`: 공백 오류를 검사합니다.
 
