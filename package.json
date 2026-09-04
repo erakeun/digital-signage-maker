@@ -1,7 +1,7 @@
 {
   "name": "digital-signage-maker",
   "private": true,
-  "version": "1.5.1",
+  "version": "1.5.2",
   "scripts": {
     "test": "node tests/verify.mjs"
   }

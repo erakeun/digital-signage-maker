@@ -71,8 +71,8 @@ const templates=vm.runInNewContext(`(${templateMatch[1]})`,Object.create(null));
 check("inline JavaScript 문법",()=>new vm.Script(script,{filename:"index.html"}));
 
 check("APP_VERSION과 화면/패키지/README 버전 일치",()=>{
-  assert.equal(appVersion,"1.5.1");
-  assert.equal(releaseName,"NOTICE FRAME");
+  assert.equal(appVersion,"1.5.2");
+  assert.equal(releaseName,"CONTACT COLOR");
   assert.equal(pkg.version,appVersion);
   assert.match(index,new RegExp(`id="appVersionCurrent">V${appVersion} · ${releaseName}<`));
   assert.equal(readme.split(/\r?\n/,1)[0],`디지털 사이니지 제작기 V${appVersion} · ${releaseName}`);
@@ -137,7 +137,7 @@ check("디자이너 원본 9종과 글자 스타일 프리셋",()=>{
   assert.equal(designer.filter(item=>item.name.includes("행사")).length,3);
   assert.equal(designer.filter(item=>item.name.includes("시그니처")).length,3);
   const noticeFrames=designer.filter(item=>item.name.includes("공지사항"));
-  assert.ok(noticeFrames.every(item=>item.preset.blocks.emphasis.background==="rgba(14,74,132,.10)"),"공지사항 문의 프레임의 색상·투명도가 클래식과 다릅니다.");
+  assert.ok(noticeFrames.every(item=>item.preset.blocks.emphasis.background==="rgba(34,73,128,.105)"),"공지사항 문의 배경이 지정 청회색과 다릅니다.");
   for(const item of designer){
     const asset=path.join(root,item.path);
     assert.ok(fs.existsSync(asset),`${item.name}: ${item.path} 없음`);
@@ -455,6 +455,17 @@ check("V1.0.1 / V1.3.0 / V1.3.1 부분 작업의 원래 기본값 보존",()=>{
   assert.match(script,/state=normalizeState\(data\.state\|\|data\)/);
   assert.match(script,/playlist\.map\(normalizeState\)/);
   assert.match(script,/hasLegacyColor\?"manual":"auto"/);
+});
+
+check("이전 공지 프리셋 문의 배경 자동 교정",()=>{
+  const context=stateContext();
+  for(const [template,background] of [[24,"rgba(14,74,132,.12)"],[25,"rgba(14,74,132,.10)"],[26,"#0E4A84"]]){
+    const restored=context.normalizeState({
+      version:"1.5.1",layout:"designer-preset",template,
+      textBlocks:{emphasis:{background}}
+    });
+    assert.equal(restored.textBlocks.emphasis.background,"rgba(34,73,128,.105)");
+  }
 });
 
 check("웜 웰컴 저장·불러오기와 수동 크기·색상·배치 보존",()=>{
