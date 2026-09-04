@@ -225,6 +225,13 @@ input:focus,select:focus,textarea:focus,.rich-editor:focus{
 .range output{text-align:right;font-variant-numeric:tabular-nums}
 input[type=range]{width:100%;accent-color:var(--blue)}
 input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-radius:7px;padding:2px;background:white}
+.type-spacing-card{
+  margin:12px 0;padding:11px;border:1px solid #d8e4ec;border-radius:10px;
+  background:#f7fafc
+}
+.type-spacing-card .field{margin-bottom:8px}
+.type-spacing-card .range{grid-template-columns:58px 1fr 66px}
+.type-spacing-card .note{margin:2px 0 8px}
 .color-pair{display:flex;gap:7px;align-items:center}
 .color-pair span{font-size:11px;color:var(--muted)}
 .quick-color{
@@ -614,6 +621,31 @@ input[type=color]{width:42px;height:34px;border:1px solid var(--line);border-rad
       <div class="range"><label for="emSize">강조문 크기</label><input id="emSize" type="range" min="28" max="84" step="1"><output id="emSizeOut" for="emSize"></output></div>
       <div class="range"><label for="footerSize">하단 크기</label><input id="footerSize" type="range" min="20" max="52" step="1"><output id="footerSizeOut" for="footerSize"></output></div>
 
+      <div class="type-spacing-card">
+        <div class="field">
+          <label for="spacingTarget"><strong>행간·자간 조절 대상</strong><span>항목별 저장</span></label>
+          <select id="spacingTarget">
+            <option value="title">제목</option>
+            <option value="subtitle">부제목</option>
+            <option value="body">본문</option>
+            <option value="emphasis">강조문</option>
+            <option value="footer">하단 문구</option>
+          </select>
+        </div>
+        <p class="note">행간은 줄 사이 간격, 자간은 글자 사이 간격이야. 미리보기와 PNG/ZIP에 그대로 적용돼.</p>
+        <div class="range">
+          <label for="lineHeight">행간</label>
+          <input id="lineHeight" type="range" min="0.9" max="2.2" step="0.01">
+          <output id="lineHeightOut" for="lineHeight"></output>
+        </div>
+        <div class="range">
+          <label for="letterSpacing">자간</label>
+          <input id="letterSpacing" type="range" min="-0.1" max="0.15" step="0.005">
+          <output id="letterSpacingOut" for="letterSpacing"></output>
+        </div>
+        <button class="btn outline" type="button" id="resetSpacing" style="width:100%;margin-top:5px">선택 항목 기본값</button>
+      </div>
+
       <div class="field">
         <label for="textColor"><strong>고급 편집 · 수동 기본색</strong><span id="textColorModeLabel">자동</span></label>
         <div class="color-pair">
@@ -996,16 +1028,16 @@ const TEMPLATES=[
 
 function defaultTextBlocks(welcome=false){
   const blocks={
-    title:{x:50,y:13,w:84,size:86,align:"center"},
-    subtitle:{x:50,y:28,w:82,size:46,align:"center"},
-    body:{x:50,y:43,w:82,size:38,align:"center"},
-    emphasis:{x:50,y:67,w:82,size:50,align:"center"},
-    footer:{x:50,y:84,w:82,size:30,align:"center"}
+    title:{x:50,y:13,w:84,size:86,lineHeight:1.15,letterSpacing:-.045,align:"center"},
+    subtitle:{x:50,y:28,w:82,size:46,lineHeight:1.35,letterSpacing:-.02,align:"center"},
+    body:{x:50,y:43,w:82,size:38,lineHeight:1.58,letterSpacing:-.015,align:"center"},
+    emphasis:{x:50,y:67,w:82,size:50,lineHeight:1.35,letterSpacing:0,align:"center"},
+    footer:{x:50,y:84,w:82,size:30,lineHeight:1.45,letterSpacing:0,align:"center"}
   };
   if(welcome){
-    blocks.title={x:50,y:30,w:84,size:104,fitMin:64,align:"center"};
-    blocks.subtitle={x:50,y:47,w:84,size:60,fitMin:50,align:"center"};
-    blocks.body={x:50,y:53.5,w:84,size:58,fitMin:50,align:"center"};
+    blocks.title={...blocks.title,x:50,y:30,w:84,size:104,fitMin:64,align:"center"};
+    blocks.subtitle={...blocks.subtitle,x:50,y:47,w:84,size:60,fitMin:50,align:"center"};
+    blocks.body={...blocks.body,x:50,y:53.5,w:84,size:58,fitMin:50,align:"center"};
   }
   return blocks;
 }
@@ -1065,6 +1097,7 @@ let autoColorTimer=null;
 let autoColorRunId=0;
 let lastExportContrastWarningCount=0;
 let exportInProgress=false;
+let spacingTargetKey="title";
 
 const page=$("page");
 const templateBg=$("templateBg");
@@ -1195,6 +1228,12 @@ function normalizeState(raw){
   merged.textBlocks={...b.textBlocks,...(x.textBlocks||{})};
   for(const key of RICH_KEYS){
     merged.textBlocks[key]={...b.textBlocks[key],...(merged.textBlocks[key]||{})};
+    const lineHeight=Number(merged.textBlocks[key].lineHeight);
+    const letterSpacing=Number(merged.textBlocks[key].letterSpacing);
+    merged.textBlocks[key].lineHeight=Number.isFinite(lineHeight)
+      ?clamp(lineHeight,.9,2.2):b.textBlocks[key].lineHeight;
+    merged.textBlocks[key].letterSpacing=Number.isFinite(letterSpacing)
+      ?clamp(letterSpacing,-.1,.15):b.textBlocks[key].letterSpacing;
   }
 
   merged.objects={...b.objects,...(x.objects||{})};
@@ -1351,6 +1390,8 @@ function renderText(){
     el.style.top=cfg.y+"%";
     el.style.width=cfg.w+"%";
     el.style.fontSize=cfg.size+"px";
+    el.style.lineHeight=String(cfg.lineHeight);
+    el.style.letterSpacing=cfg.letterSpacing+"em";
     el.style.textAlign=cfg.align||"center";
     el.style.fontFamily=fontFamily(state.font);
     el.style.color=resolvedTextColor(key);
@@ -1485,6 +1526,7 @@ function renderControls(){
     $(id).value=state.textBlocks[key].size;
     renderSizeOutput(key);
   }
+  renderSpacingControls();
 
   document.querySelectorAll(".align-btn").forEach(btn=>{
     const allSame=RICH_KEYS.every(k=>(state.textBlocks[k].align||"center")===btn.dataset.align);
@@ -1496,6 +1538,17 @@ function renderControls(){
 
   renderQuickStart();
   renderAutoColorControls();
+}
+
+function renderSpacingControls(){
+  if(!RICH_KEYS.includes(spacingTargetKey))spacingTargetKey="title";
+  const cfg=state.textBlocks[spacingTargetKey];
+  $("spacingTarget").value=spacingTargetKey;
+  $("lineHeight").value=String(cfg.lineHeight);
+  $("letterSpacing").value=String(cfg.letterSpacing);
+  $("lineHeightOut").textContent=Number(cfg.lineHeight).toFixed(2);
+  const tracking=Number(cfg.letterSpacing);
+  $("letterSpacingOut").textContent=(tracking>0?"+":"")+tracking.toFixed(3)+"em";
 }
 
 function renderPlaylist(){
@@ -1619,7 +1672,7 @@ function autoColorStateSignature(){
     modes:RICH_KEYS.map(key=>state.textColorModes?.[key]),
     blocks:RICH_KEYS.map(key=>{
       const cfg=state.textBlocks[key];
-      return [cfg.x,cfg.y,cfg.w,cfg.size,cfg.align];
+      return [cfg.x,cfg.y,cfg.w,cfg.size,cfg.lineHeight,cfg.letterSpacing,cfg.align];
     }),
     objects:["photo","logo1","logo2"].map(key=>{
       const cfg=state.objects[key];
@@ -2709,6 +2762,25 @@ for(const [id,key] of Object.entries(sizeBindings)){
     renderAll();saveLocal();
   };
 }
+
+$("spacingTarget").onchange=e=>{
+  spacingTargetKey=RICH_KEYS.includes(e.target.value)?e.target.value:"title";
+  renderSpacingControls();
+};
+$("lineHeight").oninput=e=>{
+  state.textBlocks[spacingTargetKey].lineHeight=clamp(Number(e.target.value),.9,2.2);
+  renderAll();saveLocal();
+};
+$("letterSpacing").oninput=e=>{
+  state.textBlocks[spacingTargetKey].letterSpacing=clamp(Number(e.target.value),-.1,.15);
+  renderAll();saveLocal();
+};
+$("resetSpacing").onclick=()=>{
+  const defaults=defaultTextBlocks(state.layout==="warm-welcome");
+  state.textBlocks[spacingTargetKey].lineHeight=defaults[spacingTargetKey].lineHeight;
+  state.textBlocks[spacingTargetKey].letterSpacing=defaults[spacingTargetKey].letterSpacing;
+  renderAll();saveLocal();
+};
 
 $("font").onchange=e=>{state.font=e.target.value;renderAll();saveLocal();};
 $("textColor").oninput=e=>{

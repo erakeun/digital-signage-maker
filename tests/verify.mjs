@@ -149,10 +149,44 @@ check("접근성 핵심 계약",()=>{
   for(const id of ["titleSize","subtitleSize","bodySize","emSize","footerSize","photoW","photoH","logo1W","logo2W"]){
     assert.match(index,new RegExp(`<label for="${id}"`),`${id}: label 누락`);
   }
+  for(const id of ["spacingTarget","lineHeight","letterSpacing"]){
+    assert.match(index,new RegExp(`<label for="${id}"`),`${id}: 행간·자간 label 누락`);
+  }
   for(const id of ["quickEventName","quickDate","quickLocation"]){
     assert.match(index,new RegExp(`<label for="${id}"`),`${id}: QUICK START label 누락`);
   }
   assert.match(index,/id="resetAllTop"/);
+});
+
+check("항목별 행간·자간 조절과 출력·저장 계약",()=>{
+  for(const id of ["spacingTarget","lineHeight","lineHeightOut","letterSpacing","letterSpacingOut","resetSpacing"]){
+    assert.match(index,new RegExp(`id="${id}"`),`${id}: 행간·자간 컨트롤 누락`);
+  }
+  assert.match(script,/el\.style\.lineHeight=String\(cfg\.lineHeight\)/);
+  assert.match(script,/el\.style\.letterSpacing=cfg\.letterSpacing\+"em"/);
+  assert.match(script,/state\.textBlocks\[spacingTargetKey\]\.lineHeight=/);
+  assert.match(script,/state\.textBlocks\[spacingTargetKey\]\.letterSpacing=/);
+  assert.match(script,/cfg\.lineHeight,cfg\.letterSpacing,cfg\.align/);
+
+  const context=stateContext();
+  const legacy=context.normalizeState({version:"1.3.1",template:1});
+  assert.equal(legacy.textBlocks.title.lineHeight,1.15);
+  assert.equal(legacy.textBlocks.title.letterSpacing,-.045);
+  assert.equal(legacy.textBlocks.body.lineHeight,1.58);
+  assert.equal(legacy.textBlocks.body.letterSpacing,-.015);
+
+  const customized=context.normalizeState({
+    version:"1.4.0",layout:"warm-welcome",
+    textBlocks:{title:{lineHeight:1.8,letterSpacing:.065}}
+  });
+  assert.equal(customized.textBlocks.title.lineHeight,1.8);
+  assert.equal(customized.textBlocks.title.letterSpacing,.065);
+  const clamped=context.normalizeState({
+    version:"1.4.0",layout:"warm-welcome",
+    textBlocks:{title:{lineHeight:8,letterSpacing:-2}}
+  });
+  assert.equal(clamped.textBlocks.title.lineHeight,2.2);
+  assert.equal(clamped.textBlocks.title.letterSpacing,-.1);
 });
 
 check("상단·하단 전체 초기화가 같은 안전한 기본화면 복귀 동작 사용",()=>{
