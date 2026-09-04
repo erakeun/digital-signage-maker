@@ -152,6 +152,18 @@ check("접근성 핵심 계약",()=>{
   for(const id of ["quickEventName","quickDate","quickLocation"]){
     assert.match(index,new RegExp(`<label for="${id}"`),`${id}: QUICK START label 누락`);
   }
+  assert.match(index,/id="resetAllTop"/);
+});
+
+check("상단·하단 전체 초기화가 같은 안전한 기본화면 복귀 동작 사용",()=>{
+  const resetSource=functionSource(script,"resetAllWork");
+  assert.match(resetSource,/localStorage\.removeItem\("digitalSignageMakerV1"\)/);
+  assert.match(resetSource,/state=normalizeState\(freshState\(\)\)/);
+  assert.match(resetSource,/playlist=\[\]/);
+  assert.match(resetSource,/selectedPlaylistIndex=-1/);
+  assert.match(resetSource,/setEditorMode\("quick"\)/);
+  assert.match(script,/\$\("resetAll"\)\.onclick=resetAllWork/);
+  assert.match(script,/\$\("resetAllTop"\)\.onclick=resetAllWork/);
 });
 
 check("출력 신뢰성 계약",()=>{
