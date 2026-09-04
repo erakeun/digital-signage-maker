@@ -71,8 +71,8 @@ const templates=vm.runInNewContext(`(${templateMatch[1]})`,Object.create(null));
 check("inline JavaScript 문법",()=>new vm.Script(script,{filename:"index.html"}));
 
 check("APP_VERSION과 화면/패키지/README 버전 일치",()=>{
-  assert.equal(appVersion,"1.4.0");
-  assert.equal(releaseName,"WARM WELCOME");
+  assert.equal(appVersion,"1.5.0");
+  assert.equal(releaseName,"SIGNATURE TYPE");
   assert.equal(pkg.version,appVersion);
   assert.match(index,new RegExp(`id="appVersionCurrent">V${appVersion} · ${releaseName}<`));
   assert.equal(readme.split(/\r?\n/,1)[0],`디지털 사이니지 제작기 V${appVersion} · ${releaseName}`);
@@ -80,11 +80,11 @@ check("APP_VERSION과 화면/패키지/README 버전 일치",()=>{
   assert.match(script,/merged\.version=APP_VERSION/);
 });
 
-check("템플릿 29종 및 그룹별 개수",()=>{
-  assert.equal(templates.length,29);
-  assert.equal(new Set(templates.map(item=>item.id)).size,29);
+check("템플릿 32종 및 그룹별 개수",()=>{
+  assert.equal(templates.length,32);
+  assert.equal(new Set(templates.map(item=>item.id)).size,32);
   assert.equal(templates.filter(item=>item.group==="basic").length,7);
-  assert.equal(templates.filter(item=>item.group==="designer").length,6);
+  assert.equal(templates.filter(item=>item.group==="designer").length,9);
   assert.equal(templates.filter(item=>item.group==="image").length,10);
   assert.equal(templates.filter(item=>item.group==="brand").length,6);
 });
@@ -130,11 +130,12 @@ check("모든 이미지 템플릿 자산 존재",()=>{
   }
 });
 
-check("디자이너 원본 6종과 글자 스타일 프리셋",()=>{
+check("디자이너 원본 9종과 글자 스타일 프리셋",()=>{
   const designer=templates.filter(item=>item.group==="designer");
-  assert.equal(designer.map(item=>item.id).join(","),"24,25,26,27,28,29");
+  assert.equal(designer.map(item=>item.id).join(","),"24,25,26,27,28,29,30,31,32");
   assert.equal(designer.filter(item=>item.name.includes("공지사항")).length,3);
   assert.equal(designer.filter(item=>item.name.includes("행사")).length,3);
+  assert.equal(designer.filter(item=>item.name.includes("시그니처")).length,3);
   for(const item of designer){
     const asset=path.join(root,item.path);
     assert.ok(fs.existsSync(asset),`${item.name}: ${item.path} 없음`);
@@ -161,6 +162,13 @@ check("디자이너 원본 6종과 글자 스타일 프리셋",()=>{
   assert.match(script,/el\.style\.fontWeight=cfg\.fontWeight/);
   assert.match(script,/el\.style\.background=cfg\.background/);
   assert.match(script,/templateOverlay\.style\.background=t\.preset/);
+  assert.match(script,/page\.dataset\.designerPreset=t\.presetKey/);
+  for(const tone of ["black","blue","white"]){
+    const item=designer.find(template=>template.presetKey===`signature-${tone}`);
+    assert.ok(item,`${tone}: 시그니처 프리셋 누락`);
+    assert.ok(item.preset.blocks.subtitle.letterSpacing>0,`${tone}: 넓은 행사명 자간 누락`);
+    assert.ok(item.preset.blocks.subtitle.lineHeight<=1.04,`${tone}: 촘촘한 행사명 행간 누락`);
+  }
 });
 
 check("sinage 오타 잔존 없음",()=>{
@@ -210,13 +218,13 @@ check("항목별 행간·자간 조절과 출력·저장 계약",()=>{
   assert.equal(legacy.textBlocks.body.letterSpacing,-.015);
 
   const customized=context.normalizeState({
-    version:"1.4.0",layout:"warm-welcome",
+    version:"1.5.0",layout:"warm-welcome",
     textBlocks:{title:{lineHeight:1.8,letterSpacing:.065}}
   });
   assert.equal(customized.textBlocks.title.lineHeight,1.8);
   assert.equal(customized.textBlocks.title.letterSpacing,.065);
   const clamped=context.normalizeState({
-    version:"1.4.0",layout:"warm-welcome",
+    version:"1.5.0",layout:"warm-welcome",
     textBlocks:{title:{lineHeight:8,letterSpacing:-2}}
   });
   assert.equal(clamped.textBlocks.title.lineHeight,2.2);
