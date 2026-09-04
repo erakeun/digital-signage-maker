@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920" role="img" aria-labelledby="title desc">
+  <title id="title">브라운 클래식 세로형 웰컴보드 배경</title>
+  <desc id="desc">짙은 브라운 바탕에 골드 이중선과 곡선 코너, 네 모서리 별 장식을 배치한 9대16 세로형 배경</desc>
+  <defs>
+    <radialGradient id="brown" cx="50%" cy="43%" r="78%">
+      <stop offset="0" stop-color="#302A27"/>
+      <stop offset=".58" stop-color="#282320"/>
+      <stop offset="1" stop-color="#201C1A"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9C7129"/>
+      <stop offset=".22" stop-color="#D6BA60"/>
+      <stop offset=".5" stop-color="#F0DC85"/>
+      <stop offset=".78" stop-color="#C49A40"/>
+      <stop offset="1" stop-color="#946722"/>
+    </linearGradient>
+    <radialGradient id="warmGlow" cx="50%" cy="12%" r="80%">
+      <stop offset="0" stop-color="#8B7147" stop-opacity=".12"/>
+      <stop offset=".42" stop-color="#5D4932" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#000000" stop-opacity=".18"/>
+    </radialGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2.4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <g id="star" fill="none" stroke="url(#gold)" stroke-linecap="round">
+      <path d="M0-15V15M-15 0H15" stroke-width="2.4"/>
+      <path d="M-10.5-10.5L10.5 10.5M10.5-10.5L-10.5 10.5" stroke-width="1.5"/>
+      <path d="M-4-11L4 11M11-4L-11 4M4-11L-4 11M11 4L-11-4" stroke-width=".9" opacity=".9"/>
+      <circle r="2.3" fill="#E4CB71" stroke="none"/>
+    </g>
+  </defs>
+
+  <rect width="1080" height="1920" fill="url(#brown)"/>
+  <rect width="1080" height="1920" fill="url(#warmGlow)"/>
+
+  <path
+    d="M88 58H992
+       C998 76 1012 88 1030 94
+       V1826
+       C1012 1832 998 1844 992 1862
+       H88
+       C82 1844 68 1832 50 1826
+       V94
+       C68 88 82 76 88 58Z"
+    fill="none"
+    stroke="url(#gold)"
+    stroke-width="7"
+    stroke-linejoin="round"
+    filter="url(#softGlow)"/>
+
+  <path d="M112 80H968M112 1840H968"
+        fill="none"
+        stroke="url(#gold)"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        opacity=".92"/>
+
+  <g filter="url(#softGlow)">
+    <use href="#star" transform="translate(51 50)"/>
+    <use href="#star" transform="translate(1029 50)"/>
+    <use href="#star" transform="translate(51 1870)"/>
+    <use href="#star" transform="translate(1029 1870)"/>
+  </g>
+</svg>

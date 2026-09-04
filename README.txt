@@ -28,7 +28,8 @@ https://erakeun.github.io/digital-signage-maker/
 - 모바일 QUICK START의 “빠른 미리보기” 또는 하단의 “미리보기 열기” 버튼으로 9:16 오버레이 확인
 
 템플릿 23종
-- 기본 시안 7종: 웜 웰컴 + 기존 6종 코드 내 그라데이션 배경
+- 기본 시안 7종: 브라운 클래식 웰컴보드 + 기존 6종 코드 내 그라데이션 배경
+  - templates/signage_vertical_06_brown_classic_frame.svg
 - 이미지 시안 10종:
   - templates/signage_01.png
   - templates/signage_02.png
@@ -45,8 +46,8 @@ https://erakeun.github.io/digital-signage-maker/
 템플릿 파일명은 대소문자를 포함해 코드와 정확히 같아야 합니다. `npm test`는 코드에 등록된 모든 이미지 템플릿 경로가 실제로 존재하는지 검사하며 하나라도 없으면 실패합니다.
 
 V1.4.0 · WARM WELCOME
-현장 사진의 목재 벽면·회색 석재·따뜻한 조명을 참고해 새 웜그레이 시안을 설계했습니다. 기존 웰컴보드 색상을 복제한 것은 아닙니다.
-- 첫 시안: 웜 웰컴 (#625C56 → #746C63 → #57534F), 흰 글자
+기존 웰컴보드의 브라운 클래식 양식을 9:16 세로형으로 다시 구성했습니다. 짙은 브라운 배경에 골드 이중선, 곡선 코너와 네 모서리 별 장식을 넣고 FHD/4K에서 선명하게 확장되는 SVG 자산으로 제작했습니다.
+- 첫 시안: 브라운 클래식 (#302A27 → #201C1A), 골드 프레임, 흰 글자
 - 기존 ERICA 블루는 두 번째로 이동; 저장 파일의 내부 템플릿 ID 1~22는 그대로 보존
 - 기본 행사명: OOO대학 OOO방문단의 / ERICA 방문을 환영합니다 (실제 두 줄)
 - 기본 일시: 20XX년 X월 X일
@@ -94,7 +95,7 @@ digital-signage-maker/
 ├─ tests/
 │  ├─ verify.mjs
 │  └─ fixtures/work-v1.0.1.json
-├─ templates/              이미지 템플릿 10종
+├─ templates/              이미지 템플릿 10종 + 기본 시안 SVG 1종
 └─ logos/                  기본 로고 8종
 
 검증
