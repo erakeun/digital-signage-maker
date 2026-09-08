@@ -71,8 +71,8 @@ const templates=vm.runInNewContext(`(${templateMatch[1]})`,Object.create(null));
 check("inline JavaScript 문법",()=>new vm.Script(script,{filename:"index.html"}));
 
 check("APP_VERSION과 화면/패키지/README 버전 일치",()=>{
-  assert.equal(appVersion,"1.5.2");
-  assert.equal(releaseName,"CONTACT COLOR");
+  assert.equal(appVersion,"1.5.3");
+  assert.equal(releaseName,"LOGO-FREE PRESETS");
   assert.equal(pkg.version,appVersion);
   assert.match(index,new RegExp(`id="appVersionCurrent">V${appVersion} · ${releaseName}<`));
   assert.equal(readme.split(/\r?\n/,1)[0],`디지털 사이니지 제작기 V${appVersion} · ${releaseName}`);
@@ -170,6 +170,7 @@ check("디자이너 원본 9종과 글자 스타일 프리셋",()=>{
     assert.ok(item,`${tone}: 시그니처 프리셋 누락`);
     assert.ok(item.preset.blocks.subtitle.letterSpacing>0,`${tone}: 넓은 행사명 자간 누락`);
     assert.ok(item.preset.blocks.subtitle.lineHeight<=1.04,`${tone}: 촘촘한 행사명 행간 누락`);
+    assert.ok(!item.preset.objects?.logo1?.src,`${tone}: 자동 생성 로고가 남아 있습니다.`);
   }
 });
 
@@ -465,6 +466,24 @@ check("이전 공지 프리셋 문의 배경 자동 교정",()=>{
       textBlocks:{emphasis:{background}}
     });
     assert.equal(restored.textBlocks.emphasis.background,"rgba(34,73,128,.105)");
+  }
+});
+
+check("14~16번의 이전 자동 로고만 제거",()=>{
+  const context=stateContext();
+  const oldLogos={30:"logos/hyu_erica_white.png",31:"logos/hyu_erica_white.png",32:"logos/hyu_erica.png"};
+  for(const [template,src] of Object.entries(oldLogos)){
+    const restored=context.normalizeState({
+      version:"1.5.2",layout:"designer-preset",template:Number(template),
+      objects:{logo1:{src,x:50,y:90,w:36,h:3.1,aspect:2269/354}}
+    });
+    assert.equal(restored.objects.logo1.src,"",`${template}: 이전 자동 로고가 제거되지 않았습니다.`);
+
+    const customized=context.normalizeState({
+      version:"1.5.2",layout:"designer-preset",template:Number(template),
+      objects:{logo1:{src,x:48,y:88,w:32,h:3.1,aspect:2269/354}}
+    });
+    assert.equal(customized.objects.logo1.src,src,`${template}: 사용자가 조정한 로고가 제거됐습니다.`);
   }
 });
 
