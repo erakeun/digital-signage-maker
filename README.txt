@@ -1,4 +1,4 @@
-디지털 사이니지 제작기 V1.5.3 · LOGO-FREE PRESETS
+디지털 사이니지 제작기 V1.5.4 · PRESET TYPE ROLES
 
 한양대학교 ERICA의 9:16 세로형 안내 화면을 브라우저에서 만들고 PNG로 저장하는 정적 웹 앱입니다.
 설치나 서버 없이 index.html을 열어 사용할 수 있으며, GitHub Pages 공개 버전은 아래 주소에서 제공합니다.
@@ -58,6 +58,12 @@ https://erakeun.github.io/digital-signage-maker/
 - 한양 공식색 그라데이션 6종: Blue를 중심으로 Silver, Gold, Retro Mint, Retro Coral, Orange, Yellow Green 조합
 
 템플릿 파일명은 대소문자를 포함해 코드와 정확히 같아야 합니다. `npm test`는 코드에 등록된 모든 이미지 템플릿 경로가 실제로 존재하는지 검사하며 하나라도 없으면 실패합니다.
+
+V1.5.4 · PRESET TYPE ROLES
+13번 프리셋의 기본 글자 크기를 디자이너 지정값으로 조정하고, 14~16번의 대형 행사명을 제목 항목으로 전환했습니다.
+- 13번 기본 크기: 제목 121, 부제목 52, 본문 51, 강조문 52, 하단 30
+- 14~16번 행사명은 제목 크기 범위(최대 130)를 사용하고 상단 기관 문구는 부제목으로 이동
+- 기존 저장본은 문구·배치·스타일을 함께 교환해 화면 모양을 유지
 
 V1.5.3 · LOGO-FREE PRESETS
 14~16번 시그니처 Black·Blue·White 프리셋에서 자동 생성되던 ERICA 로고를 제거했습니다.

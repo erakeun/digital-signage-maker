@@ -71,8 +71,8 @@ const templates=vm.runInNewContext(`(${templateMatch[1]})`,Object.create(null));
 check("inline JavaScript 문법",()=>new vm.Script(script,{filename:"index.html"}));
 
 check("APP_VERSION과 화면/패키지/README 버전 일치",()=>{
-  assert.equal(appVersion,"1.5.3");
-  assert.equal(releaseName,"LOGO-FREE PRESETS");
+  assert.equal(appVersion,"1.5.4");
+  assert.equal(releaseName,"PRESET TYPE ROLES");
   assert.equal(pkg.version,appVersion);
   assert.match(index,new RegExp(`id="appVersionCurrent">V${appVersion} · ${releaseName}<`));
   assert.equal(readme.split(/\r?\n/,1)[0],`디지털 사이니지 제작기 V${appVersion} · ${releaseName}`);
@@ -165,11 +165,19 @@ check("디자이너 원본 9종과 글자 스타일 프리셋",()=>{
   assert.match(script,/el\.style\.background=cfg\.background/);
   assert.match(script,/templateOverlay\.style\.background=t\.preset/);
   assert.match(script,/page\.dataset\.designerPreset=t\.presetKey/);
+  const preset13=designer.find(template=>template.id===29);
+  for(const [key,size] of Object.entries({title:121,subtitle:52,body:51,emphasis:52,footer:30})){
+    assert.equal(preset13.preset.blocks[key].size,size,`13번 ${key}: 지정 기본 크기 불일치`);
+  }
   for(const tone of ["black","blue","white"]){
     const item=designer.find(template=>template.presetKey===`signature-${tone}`);
     assert.ok(item,`${tone}: 시그니처 프리셋 누락`);
-    assert.ok(item.preset.blocks.subtitle.letterSpacing>0,`${tone}: 넓은 행사명 자간 누락`);
-    assert.ok(item.preset.blocks.subtitle.lineHeight<=1.04,`${tone}: 촘촘한 행사명 행간 누락`);
+    assert.match(item.preset.text.title,/ABCDE/,`${tone}: 행사명이 제목으로 전환되지 않았습니다.`);
+    assert.match(item.preset.text.subtitle,/ERICA/,`${tone}: 기관 문구가 부제목으로 전환되지 않았습니다.`);
+    assert.ok(item.preset.blocks.title.letterSpacing>0,`${tone}: 넓은 행사명 자간 누락`);
+    assert.ok(item.preset.blocks.title.lineHeight<=1.04,`${tone}: 촘촘한 행사명 행간 누락`);
+    assert.equal(item.preset.blocks.title.size,98,`${tone}: 행사명 기본 크기 불일치`);
+    assert.ok(item.preset.blocks.title.size<=130,`${tone}: 제목 크기 조절 범위 초과`);
     assert.ok(!item.preset.objects?.logo1?.src,`${tone}: 자동 생성 로고가 남아 있습니다.`);
   }
 });
@@ -484,6 +492,39 @@ check("14~16번의 이전 자동 로고만 제거",()=>{
       objects:{logo1:{src,x:48,y:88,w:32,h:3.1,aspect:2269/354}}
     });
     assert.equal(customized.objects.logo1.src,src,`${template}: 사용자가 조정한 로고가 제거됐습니다.`);
+  }
+});
+
+check("13번 기본 크기와 14~16번 제목 역할 자동 전환",()=>{
+  const context=stateContext();
+  const preset13=context.normalizeState({
+    version:"1.5.3",layout:"designer-preset",template:29,
+    textBlocks:{title:{size:105},subtitle:{size:47},body:{size:40},emphasis:{size:40},footer:{size:30}}
+  });
+  for(const [key,size] of Object.entries({title:121,subtitle:52,body:51,emphasis:52,footer:30})){
+    assert.equal(preset13.textBlocks[key].size,size,`13번 ${key}: 이전 기본 크기 전환 실패`);
+  }
+  const customized13=context.normalizeState({
+    version:"1.5.3",layout:"designer-preset",template:29,
+    textBlocks:{title:{size:112},subtitle:{size:60},body:{size:40},emphasis:{size:40},footer:{size:30}}
+  });
+  assert.equal(customized13.textBlocks.title.size,112,"13번 사용자 제목 크기가 변경됐습니다.");
+  assert.equal(customized13.textBlocks.subtitle.size,60,"13번 사용자 부제목 크기가 변경됐습니다.");
+
+  for(const template of [30,31,32]){
+    const restored=context.normalizeState({
+      version:"1.5.3",layout:"designer-preset",template,
+      title:"한양대학교 ERICA-회사명",subtitle:"가나사업<br>ABCDE<br>업무협약식",
+      textColors:{title:"#111111",subtitle:"#222222"},
+      textColorModes:{title:"manual",subtitle:"auto"},
+      textBlocks:{title:{x:50,y:17,size:49},subtitle:{x:50,y:28,size:98}}
+    });
+    assert.match(restored.title,/ABCDE/,`${template}: 행사명 제목 전환 실패`);
+    assert.match(restored.subtitle,/ERICA/,`${template}: 기관 문구 부제목 전환 실패`);
+    assert.equal(restored.textBlocks.title.size,98,`${template}: 행사명 크기 보존 실패`);
+    assert.equal(restored.textBlocks.subtitle.size,49,`${template}: 기관 문구 크기 보존 실패`);
+    assert.equal(restored.textColors.title,"#222222",`${template}: 제목 색상 전환 실패`);
+    assert.equal(restored.textColorModes.title,"auto",`${template}: 제목 색상 모드 전환 실패`);
   }
 });
 
